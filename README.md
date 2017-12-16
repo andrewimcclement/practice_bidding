@@ -19,15 +19,15 @@ If you refactor it, please create a .bat file for me to use as a replacement.
 Defining the XML bidding system:
 See chimaera.xml as an example.
 
-<bid> element must always have a <value> element and a <desc> element.
-For a bid to be recognised by the program, it must have a <condition> element.
-A <condition> element must have a "type" tag as either "include" or "exclude"
-depending on whether the hand type should be included as a valid hand type or
-excluded as an invalid hand type for that bid.
+&lt;bid&gt; element must always have a &lt;value&gt; element and a &lt;desc&gt;
+element. For a bid to be recognised by the program, it must have a <condition>
+element. A &lt;condition&gt; element must have a "type" tag as either "include"
+or "exclude" depending on whether the hand type should be included as a valid
+hand type or excluded as an invalid hand type for that bid.
 
-An <evaluation> element can be added inside a <condition> element. This can
-have various evaluation methods: <hcp>, <points> and <tricks>.
-Note that <tricks> is not yet implemented.
+An &lt;evaluation&gt; element can be added inside a &lt;condition&lt; element. This can
+have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and &lt;tricks&gt;.
+Note that &lt;tricks&gt; is not yet implemented.
 With these elements, you can define <min> and <max> elements.
 
     <hcp> evaluates a hand using (A, K, Q, J, T) = (4.5, 3, 1.5, 0.75, 0.25)
