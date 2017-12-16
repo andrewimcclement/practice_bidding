@@ -25,7 +25,7 @@ from redeal import Evaluator, Deal, Shape
 from redeal.global_defs import Strain
 
 XML_SOURCE = ("C:\\Users\\andre\\Documents\\Python\\bridge\\practice-bidding\\"
-              "redeal_chimaera.xml")
+              "chimaera.xml")
 
 
 class EvaluationCondition:
