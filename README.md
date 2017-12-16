@@ -25,7 +25,7 @@ element. A &lt;condition&gt; element must have a "type" tag as either "include"
 or "exclude" depending on whether the hand type should be included as a valid
 hand type or excluded as an invalid hand type for that bid.
 
-An &lt;evaluation&gt; element can be added inside a &lt;condition&lt; element.
+An &lt;evaluation&gt; element can be added inside a &lt;condition&gt; element.
 This can have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and
 &lt;tricks&gt;. Note that &lt;tricks&gt; is not yet implemented.
 With these elements, you can define &lt;min&gt; and &lt;max&gt; elements.
@@ -49,6 +49,6 @@ must have a "type" tag, which must be one of "general", "shape", "clubs",
 
   - A suit allows you define <min> and <max> lengths for that suit (inclusive).
 
-  - <longer_than> and <strictly_longer_than> elements require <longer_suit>
-    and <shorter_suit> elements inside and allow you to define conditions such
-    as len(hearts) > len(spades) for a hand.
+  - "longer_than" and "strictly_longer_than" <shape> elements require
+    <longer_suit> and <shorter_suit> elements inside and allow you to define
+    conditions such as len(hearts) > len(spades) for a hand.

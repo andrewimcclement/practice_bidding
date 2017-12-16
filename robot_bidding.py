@@ -13,13 +13,11 @@ Notes:
 
 import sys
 import os
-import traceback
 import xml.etree.ElementTree as ET
 import math
 import re
 
 from random import choice
-from time import sleep
 from enum import Enum, auto
 from redeal import Evaluator, Deal, Shape
 from redeal.global_defs import Strain
@@ -283,7 +281,8 @@ class BiddingProgram:
         return self._board_state["opening_bids"]
 
     @property
-    def _deal(self):
+    def deal(self):
+        """ The current deal. """
         return self._board_state["deal"]
 
     def generate_new_deal(self):
@@ -291,21 +290,6 @@ class BiddingProgram:
         self._board_state["deal"] = self._board_state["deal_generator"]()
         self._board_state["bidding_sequence"] = []
         self._board_state["board_number"] += 1
-
-    def play(self):
-        """
-        Start practising bridge bidding.
-        """
-        raise NotImplementedError
-
-    def autoplay(self):
-        """
-        Program bids with itself, waiting for input upon each bid.
-        """
-        self.generate_new_deal()
-        while True:
-            self.bid()
-            print(self.bidding_sequence)
 
     @property
     def bidding_sequence(self):
@@ -369,18 +353,6 @@ class BiddingProgram:
 
         return result
 
-    # Checks if the user wants to deal another hand.
-    # If so, deals a new deck of cards.
-    def _new_hand(self):
-        result = self._get_user_input(
-            "Do you want to play another hand? (y/n) ",
-            {self.ParseResults.Yes, self.ParseResults.No})
-        if result == self.ParseResults.Yes:
-            self._deal = Deal.prepare({})()
-            return True
-        elif result == self.ParseResults.No:
-            return False
-
     @property
     def _mode(self):
         return self._settings["mode"]
@@ -388,20 +360,21 @@ class BiddingProgram:
     def get_hand(self, seat=Players.South):
         """ Returns the hand of the player in the given seat. """
         if seat == self.Players.North:
-            return self._deal.north
+            return self.deal.north
         elif seat == self.Players.East:
-            return self._deal.east
+            return self.deal.east
         elif seat == self.Players.South:
-            return self._deal.south
+            return self.deal.south
         elif seat == self.Players.West:
-            return self._deal.west
+            return self.deal.west
         elif isinstance(seat, self.Players):
             raise ValueError(seat)
         else:
             raise TypeError(seat, self.Players)
 
     @classmethod
-    def _is_passout(cls, bidding_sequence):
+    def is_passed_out(cls, bidding_sequence):
+        """ Checks if a bidding sequence is a passout. """
         if len(bidding_sequence) < 4:
             return False
 
@@ -415,7 +388,7 @@ class BiddingProgram:
     def bid(self):
         # Should have defined bids before trying to bid.
         assert self._root
-        if self._is_passout(self.bidding_sequence):
+        if self.is_passed_out(self.bidding_sequence):
             # No further bids can be made.
             return
 
@@ -530,7 +503,7 @@ class BiddingProgram:
 
         if bidding_sequence is None:
             bidding_sequence = self.bidding_sequence
-        assert self._is_passout(bidding_sequence)
+        assert self.is_passed_out(bidding_sequence)
         # Must have 3 passes.
         last_bid = bidding_sequence[-4][1]
         if last_bid == self._pass:
@@ -701,8 +674,12 @@ class BiddingProgram:
             self._root[bid.value] = bid
             _find_all_children_bids(bid, xml_bid)
 
-    def _check_double_dummy_result(self, contract):
-        pass
+    def get_double_dummy_result(self, contract):
+        """ Get the number of tricks and corresponding score. """
+        vulnerability = self.vulnerability in {self.Vulnerability.All,
+                                               self.Vulnerability.Unfavourable}
+        return (self.deal.dd_tricks(contract),
+                self.deal.dd_score(contract, vulnerability))
 
     @property
     def _xml_source(self):
@@ -734,78 +711,3 @@ class BiddingProgram:
     def get_bids(self):
         """ Get bids from predefined xml source """
         self._parse_xml(self._xml_source)
-
-
-def main():
-    """
-    Bid practice hands opposite a robot.
-
-    The system is taken from an xml document, which can be defined at runtime.
-    """
-
-    program = BiddingProgram()
-
-    def _main():
-        program.get_bids()
-        while True:
-            print(f"Board: {program.board_number}. Vulnerability: "
-                  f"{program.vulnerability}")
-            print(program.get_hand())
-            while not program._is_passout(program.bidding_sequence):
-                program.bid()
-                print([value for value, bid in program.bidding_sequence])
-
-            contract = program.get_contract()
-            print(f"Contract: {program.get_contract()}")
-
-            for seat in program.Players:
-                print(seat, program.get_hand(seat))
-
-            input_ = input("Is this the correct final contract? (y/n) ")
-            if program._parse(input_) == program.ParseResults.No:
-                result = None
-                while result != program.ParseResults.BridgeContract:
-                    input_ = input("Please enter the final contract: ")
-                    result = program._parse(input_)
-                    if result == program.ParseResults.No:
-                        result = contract
-                        break
-
-                contract = result.upper()
-
-            vulnerable = program.vulnerability in {
-                    program.Vulnerability.All,
-                    program.Vulnerability.Unfavourable}
-
-            dd_result = (program._deal.dd_tricks(contract),
-                         program._deal.dd_score(contract, vulnerable))
-            print(f"Double dummy result: {contract} {dd_result}")
-
-            result = None
-            while result not in {program.ParseResults.Yes,
-                                 program.ParseResults.No}:
-                input_ = input("Play another hand? (y/n) ")
-                result = program._parse(input_)
-
-            if result == program.ParseResults.No:
-                raise KeyboardInterrupt
-
-            program.generate_new_deal()
-
-    try:
-        _main()
-    except KeyboardInterrupt:
-        print("Thank you for playing!")
-        sleep(1)
-    except Exception as ex:
-        print("Sorry! We've hit an error:")
-        print(ex)
-        traceback.print_exc()
-        print("Copy the exception and email andrewimcclement@gmail.com with "
-              "the results to help fix your problem.")
-        sleep(10)
-        raise
-
-
-if __name__ == "__main__":
-    main()

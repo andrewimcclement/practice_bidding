@@ -2411,6 +2411,12 @@ Law of total tricks.
     </condition>
     
     <condition type="include">
+      <evaluation>
+        <points>
+          <min>11.5</min>
+        </points>
+      </evaluation>
+    
       <shape type="general">unbalanced</shape>
       
       <shape type="clubs">
