@@ -24,7 +24,7 @@ from enum import Enum, auto
 from redeal import Evaluator, Deal, Shape
 from redeal.global_defs import Strain
 
-XML_SOURCE = ("C:\\Users\\andre\\Documents\\Python\\bridge\\chimaera\\"
+XML_SOURCE = ("C:\\Users\\andre\\Documents\\Python\\bridge\\practice-bidding\\"
               "redeal_chimaera.xml")
 
 
