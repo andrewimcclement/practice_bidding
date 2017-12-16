@@ -25,19 +25,19 @@ element. A &lt;condition&gt; element must have a "type" tag as either "include"
 or "exclude" depending on whether the hand type should be included as a valid
 hand type or excluded as an invalid hand type for that bid.
 
-An &lt;evaluation&gt; element can be added inside a &lt;condition&lt; element. This can
-have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and &lt;tricks&gt;.
-Note that &lt;tricks&gt; is not yet implemented.
-With these elements, you can define <min> and <max> elements.
+An &lt;evaluation&gt; element can be added inside a &lt;condition&lt; element.
+This can have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and
+&lt;tricks&gt;. Note that &lt;tricks&gt; is not yet implemented.
+With these elements, you can define &lt;min&gt; and &lt;max&gt; elements.
 
-    <hcp> evaluates a hand using (A, K, Q, J, T) = (4.5, 3, 1.5, 0.75, 0.25)
+  - <hcp> evaluates a hand using (A, K, Q, J, T) = (4.5, 3, 1.5, 0.75, 0.25)
     This can be changed in the __init__ method of BiddingProgram.
 
-    <points> is the sum of <hcp> and the number of cards above 4 in each suit.
+  - <points> is the sum of <hcp> and the number of cards above 4 in each suit.
 
-    <tricks> will be the number of playing tricks.
+  - <tricks> will be the number of playing tricks.
 
-Multiple <shape> elements can be defined inside a <condition> element. These
+Multiple &lt;shape&gt; elements can be defined inside a &lt;condition&gt; element. These
 must have a "type" tag, which must be one of "general", "shape", "clubs",
 "diamonds", "hearts", "spades", "longer_than" or "strictly_longer_than".
 
