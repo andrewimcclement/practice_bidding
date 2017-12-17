@@ -27,7 +27,7 @@ except ImportError:
     from redeal import Evaluator, Deal, Shape
     from redeal.global_defs import Strain
 
-XML_SOURCE = ("C:\\Users\\andre\\Documents\\Python\\bridge\\practice-bidding\\"
+XML_SOURCE = ("C:\\Users\\andre\\Documents\\Python\\bridge\\practice_bidding\\"
               "chimaera.xml")
 
 
