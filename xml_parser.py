@@ -8,13 +8,8 @@ Created on Sun Dec 17 04:44:04 2017
 import math
 import xml.etree.ElementTree as ET
 
-try:
-    from .redeal.redeal import Shape, Evaluator
-    from .redeal.redeal.global_defs import Strain
-except ImportError:
-    print("Redeal package not available. Attempt to find redeal on system...")
-    from redeal import Shape, Evaluator
-    from redeal.global_defs import Strain
+from redeal import Shape, Evaluator
+from redeal.global_defs import Strain
 
 
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
@@ -178,143 +173,157 @@ def get_bids_from_xml(filepath=None, use_chimaera_hcp=True):
         return (hcp(hand) + club_length + diamond_length + heart_length
                 + spade_length)
 
-    def _parse_xml(source=filepath):
-        def _define_bid(xml_bid):
-            value, desc = xml_bid.find("value"), xml_bid.find("desc")
-            xml_conditions = xml_bid.findall("condition")
-            conditions = []
+    source = filepath
 
-            for xml_condition in xml_conditions:
-                evaluation_conditions = \
-                    _get_evaluation_condition(xml_condition)
-                shape_conditions = _get_shape_conditions(xml_condition)
-                type_ = xml_condition.attrib["type"]
-                if type_ == "include":
-                    include = True
-                elif type_ == "exclude":
-                    include = False
-                else:
-                    raise NotImplementedError(
-                        type_, "Expected 'include' or 'exclude'")
+    def _define_bid(xml_bid):
+        value, desc = xml_bid.find("value"), xml_bid.find("desc")
+        xml_conditions = xml_bid.findall("condition")
+        conditions = []
 
-                conditions.append(Condition(include, evaluation_conditions,
-                                            shape_conditions))
+        for xml_condition in xml_conditions:
+            evaluation_conditions = \
+                _get_evaluation_condition(xml_condition)
+            shape_conditions = _get_shape_conditions(xml_condition)
+            type_ = xml_condition.attrib["type"]
+            if type_ == "include":
+                include = True
+            elif type_ == "exclude":
+                include = False
+            else:
+                raise NotImplementedError(
+                    type_, "Expected 'include' or 'exclude'")
 
-            return Bid(value.text, desc.text, conditions)
+            conditions.append(Condition(include, evaluation_conditions,
+                                        shape_conditions))
 
-        def _get_evaluation_condition(xml_condition):
-            evaluation_conditions = []
-            evaluation = xml_condition.find("evaluation")
-            if not evaluation:
-                return evaluation_conditions
+        return Bid(value.text, desc.text, conditions)
 
-            for method in evaluation:
-                if method.tag == "hcp":
-                    try:
-                        minimum = float(method.find("min").text)
-                    except AttributeError:
-                        # Minimum is not defined, so is assumed to be 0.
-                        minimum = 0
-
-                    try:
-                        maximum = float(method.find("max").text)
-                    except AttributeError:
-                        # Maximum is not defined, so use infinity.
-                        maximum = math.inf
-
-                    evaluation_condition = EvaluationCondition(
-                        hcp, minimum, maximum)
-
-                    evaluation_conditions.append(evaluation_condition)
-                elif method.tag == "tricks":
-                    # TODO: Add tricks method.
-                    continue
-                elif method.tag == "points":
-                    try:
-                        minimum = float(method.find("min").text)
-                    except AttributeError:
-                        # Minimum is not defined, assumed to be 0.
-                        minimum = 0
-
-                    try:
-                        maximum = float(method.find("max").text)
-                    except AttributeError:
-                        maximum = math.inf
-
-                    evaluation_condition = EvaluationCondition(
-                        _points, minimum, maximum)
-
-                    evaluation_conditions.append(evaluation_condition)
-                else:
-                    raise NotImplementedError(method.tag)
-
+    def _get_evaluation_condition(xml_condition):
+        evaluation_conditions = []
+        evaluation = xml_condition.find("evaluation")
+        if not evaluation:
             return evaluation_conditions
 
-        def _get_shape_conditions(xml_condition):
-            shapes = xml_condition.findall("shape")
-            shape_conditions = []
-            for shape in shapes:
+        for method in evaluation:
+            if method.tag == "hcp":
                 try:
-                    type_ = shape.attrib["type"]
+                    minimum = float(method.find("min").text)
+                except AttributeError:
+                    # Minimum is not defined, so is assumed to be 0.
+                    minimum = 0
+
+                try:
+                    maximum = float(method.find("max").text)
+                except AttributeError:
+                    # Maximum is not defined, so use infinity.
+                    maximum = math.inf
+
+                evaluation_condition = EvaluationCondition(
+                    hcp, minimum, maximum)
+
+                evaluation_conditions.append(evaluation_condition)
+            elif method.tag == "tricks":
+                # TODO: Add tricks method.
+                continue
+            elif method.tag == "points":
+                try:
+                    minimum = float(method.find("min").text)
+                except AttributeError:
+                    # Minimum is not defined, assumed to be 0.
+                    minimum = 0
+
+                try:
+                    maximum = float(method.find("max").text)
+                except AttributeError:
+                    maximum = math.inf
+
+                evaluation_condition = EvaluationCondition(
+                    _points, minimum, maximum)
+
+                evaluation_conditions.append(evaluation_condition)
+            else:
+                raise NotImplementedError(method.tag)
+
+        return evaluation_conditions
+
+    def _get_shape_conditions(xml_condition):
+        shapes = xml_condition.findall("shape")
+        shape_conditions = []
+        for shape in shapes:
+            try:
+                type_ = shape.attrib["type"]
+            except KeyError:
+                # Empty shape definition.
+                print("Warning: empty shape definition.")
+                break
+
+            if type_ == "shape":
+                shape_conditions.append(
+                    ShapeCondition(type_, shape=shape.text))
+            elif type_ == "general":
+                shape_conditions.append(
+                    ShapeCondition(type_, general=shape.text))
+            elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
+                try:
+                    minimum = shape.find("minimum").text
+                except AttributeError:
+                    minimum = 0
+                try:
+                    maximum = shape.find("maximum").text
+                except AttributeError:
+                    maximum = 13
+
+                assert minimum <= maximum, f"{type_}: {minimum}->{maximum}"
+
+                shape_conditions.append(
+                    ShapeCondition(type_, minimum=minimum,
+                                   maximum=maximum))
+            elif type_ in {"longer_than", "strictly_longer_than"}:
+                longer_suit = shape.find("longer_suit").text
+                shorter_suit = shape.find("shorter_suit").text
+                shape_conditions.append(
+                    ShapeCondition(type_, longer_suit=longer_suit,
+                                   shorter_suit=shorter_suit))
+            else:
+                raise NotImplementedError(type_)
+
+        return shape_conditions
+
+    def _find_all_children_bids(bid, xml_bid):
+        for child_xml_bid in xml_bid.findall("bid"):
+            try:
+                child_bid = _define_bid(child_xml_bid)
+            except Exception:
+                value = child_xml_bid.find("value")
+                if value:
+                    print(f"Error in XML of {value.text}")
+
+                try:
+                    id_ = child_xml_bid.attrib["id"]
+                    print(f"Error in XML of bid with ID {id_}")
                 except KeyError:
-                    # Empty shape definition.
-                    break
+                    pass
 
-                if type_ == "shape":
-                    shape_conditions.append(
-                        ShapeCondition(type_, shape=shape.text))
-                elif type_ == "general":
-                    shape_conditions.append(
-                        ShapeCondition(type_, general=shape.text))
-                elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
-                    try:
-                        minimum = shape.find("minimum").text
-                    except AttributeError:
-                        minimum = 0
-                    try:
-                        maximum = shape.find("maximum").text
-                    except AttributeError:
-                        maximum = 13
+                print(f"Error in XML in child of {bid.value}")
+                while bid.parent:
+                    print(f"Parent is {bid.parent.value}")
+                    bid = bid.parent
+                raise
 
-                    assert minimum <= maximum, f"{type_}: {minimum}->{maximum}"
+            child_bid.parent = bid
+            assert child_bid.value not in bid.children
+            bid.children[child_bid.value] = child_bid
+            _find_all_children_bids(child_bid, child_xml_bid)
 
-                    shape_conditions.append(
-                        ShapeCondition(type_, minimum=minimum,
-                                       maximum=maximum))
-                elif type_ in {"longer_than", "strictly_longer_than"}:
-                    longer_suit = shape.find("longer_suit").text
-                    shorter_suit = shape.find("shorter_suit").text
-                    shape_conditions.append(
-                        ShapeCondition(type_, longer_suit=longer_suit,
-                                       shorter_suit=shorter_suit))
-                else:
-                    raise NotImplementedError(type_)
+    # The actual function.
+    tree = ET.parse(source, ET.XMLParser(encoding="utf-8"))
+    root = tree.getroot()
+    # Reset self._root to empty dictionary of opening bids.
+    result = {}
+    for xml_bid in root:
+        bid = _define_bid(xml_bid)
+        assert bid.value not in result
+        result[bid.value] = bid
+        _find_all_children_bids(bid, xml_bid)
 
-            return shape_conditions
-
-        def _find_all_children_bids(bid, xml_bid):
-            for child_xml_bid in xml_bid.findall("bid"):
-                try:
-                    child_bid = _define_bid(child_xml_bid)
-                except (NotImplementedError, AssertionError):
-                    print(f"Error in XML in child of {bid.value}")
-                    while bid.parent:
-                        print(f"Parent is {bid.parent.value}")
-                        bid = bid.parent
-                    raise
-
-                child_bid.parent = bid
-                assert child_bid.value not in bid.children
-                bid.children[child_bid.value] = child_bid
-                _find_all_children_bids(child_bid, child_xml_bid)
-
-        # The actual function.
-        tree = ET.parse(source, ET.XMLParser(encoding="utf-8"))
-        root = tree.getroot()
-        # Reset self._root to empty dictionary of opening bids.
-        result = {}
-        for xml_bid in root:
-            bid = _define_bid(xml_bid)
-            assert bid.value not in result
-            result[bid.value] = bid
-            _find_all_children_bids(bid, xml_bid)
+    return result

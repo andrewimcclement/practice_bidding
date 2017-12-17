@@ -598,21 +598,43 @@ Law of total tricks.
       <value>2c</value>
       <desc>Relay.</desc>
       
+      <condition type="include"></condition>
+      
       <bid id="0300">
         <value>2d</value>
         <desc>12-14 hcp, not 3334 shape.</desc>
+        
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>11.5</min>
+            </hcp>
+          </evaluation>
+        </condition>
+        
+        <condition type="exclude">
+          <shape type="shape">3334</shape>
+        </condition>
         
         <bid id="03000">
           <value>2h</value>
           <desc>Relay.</desc>
           
+          <condition type="include"></condition>
+          
           <bid id="030000">
             <value>2s</value>
             <desc>4 spades.</desc>
             
+            <condition type="include">
+              <shape type="shape">4xxx</shape>
+            </condition>
+            
             <bid id="0300000">
               <value>2n</value>
               <desc>Relay.</desc>
+              
+              <condition type="include"></condition>
               
                 <bid id="03000000">
                   <value>3c</value>
@@ -753,6 +775,13 @@ Law of total tricks.
         <max>4</max>
       </shape>
     </condition>
+    
+    <bid id="050">
+      <value>2h</value>
+      <desc>Relay</desc>
+      
+      <condition type="include"></condition>
+    </bid>
   </bid>
   
   <bid id="06">
@@ -768,6 +797,13 @@ Law of total tricks.
         </hcp>
       </evaluation>
     </condition>
+    
+    <bid id="060">
+      <value>2s</value>
+      <desc>Relay.</desc>
+      
+      <condition type="include"></condition>
+    </bid>
   </bid>
   
   <bid id="07">
@@ -1319,6 +1355,18 @@ Law of total tricks.
     <value>1s</value>
     <desc>6+ points, 4+ spades. Could have a longer minor (e.g. 4 spades, 5cm).</desc>
     
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>5.5</min>
+        </points>
+      </evaluation>
+      
+      <shape type="spades">
+        <min>4</min>
+      </shape>
+    </condition>
+    
     <bid id="200">
       <value>1n</value>
       <desc>13-15 points, 5+ clubs (longest suit). Could be 1444.</desc>
@@ -1566,7 +1614,7 @@ Law of total tricks.
       
       <shape type="strictly_longer_than">
         <longer_suit>clubs</longer_suit>
-        <longer_suit>diamonds</longer_suit>
+        <shorter_suit>diamonds</shorter_suit>
       </shape>
     </condition>
   </bid>
