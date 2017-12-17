@@ -19,6 +19,7 @@ import re
 
 from random import choice
 from enum import Enum, auto
+
 from redeal import Evaluator, Deal, Shape
 from redeal.global_defs import Strain
 
