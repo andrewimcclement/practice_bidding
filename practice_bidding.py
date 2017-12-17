@@ -21,7 +21,7 @@ def main():
     program = BiddingProgram()
 
     def _parse(input_):
-        return program._parse(input_)
+        return program.parse(input_)
 
     def _play_board():
         print(f"Board: {program.board_number}. Vulnerability: "

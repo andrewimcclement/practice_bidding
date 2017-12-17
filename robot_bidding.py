@@ -21,9 +21,10 @@ from random import choice
 from enum import Enum, auto
 
 try:
-    from redeal.redeal import Evaluator, Deal, Shape
-    from redeal.redeal.global_defs import Strain
+    from .redeal.redeal import Evaluator, Deal, Shape
+    from .redeal.redeal.global_defs import Strain
 except ImportError:
+    print("Redeal package not available. Attempt to find redeal on system...")
     from redeal import Evaluator, Deal, Shape
     from redeal.global_defs import Strain
 
@@ -237,7 +238,7 @@ class BiddingProgram:
         self.generate_new_deal()
         self._hcp = self._chimaera_hcp if chimaera_hcp else self._normal_hcp
 
-        def points(hand):
+        def _points(hand):
             hcp = self._hcp(hand)
             club_length = max(len(hand.clubs) - 4, 0)
             diamond_length = max(len(hand.diamonds) - 4, 0)
@@ -246,7 +247,7 @@ class BiddingProgram:
             return (hcp + club_length + diamond_length + heart_length
                     + spade_length)
 
-        self._points = points
+        self._points = _points
 
         important_regexes = {
             re.compile("^settings$", re.I): self.ParseResults.Settings,
@@ -330,7 +331,8 @@ class BiddingProgram:
             shift = len(self.bidding_sequence)
         return self._dealer_map[(self.board_number + shift) % 4]
 
-    def _parse(self, input_, exclude_settings=False):
+    def parse(self, input_, exclude_settings=False):
+        """ Parse user input. """
         for regex, result in self._regexes["important"].items():
             if re.match(regex, input_):
                 if result == self.ParseResults.Quit:
@@ -461,7 +463,7 @@ class BiddingProgram:
         These will then be written to an xml file.
         """
         print(self._settings)
-        settings_keys = self._settings.keys
+        settings_keys = self._settings.keys()
         for i, key in enumerate(settings_keys):
             print(f"{i}: {key}")
 
