@@ -711,6 +711,7 @@ Law of total tricks.
         </hcp>
       </evaluation>
       
+      <!-- Not getting read correctly -->
       <shape type="clubs">
         <min>5</min>
       </shape>

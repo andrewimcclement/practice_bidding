@@ -259,13 +259,13 @@ def get_bids_from_xml(filepath=None, use_chimaera_hcp=True):
                 except KeyError:
                     # Empty shape definition.
                     break
-                if shape.text:
-                    if type_ == "shape":
-                        shape_conditions.append(
-                            ShapeCondition(type_, shape=shape.text))
-                    elif type_ == "general":
-                        shape_conditions.append(
-                            ShapeCondition(type_, general=shape.text))
+
+                if type_ == "shape":
+                    shape_conditions.append(
+                        ShapeCondition(type_, shape=shape.text))
+                elif type_ == "general":
+                    shape_conditions.append(
+                        ShapeCondition(type_, general=shape.text))
                 elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
                     try:
                         minimum = shape.find("minimum").text

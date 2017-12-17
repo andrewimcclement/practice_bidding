@@ -47,7 +47,7 @@ def main():
                     result = contract
                     break
 
-            contract = result.upper()
+            contract = input_.upper()
 
         if contract != "P":
             dd_result = program.get_double_dummy_result(contract)
