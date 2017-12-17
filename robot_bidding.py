@@ -392,6 +392,8 @@ class BiddingProgram:
         return True
 
     def bid(self):
+        """ Get the next bid, whether from the user or the program. """
+
         # Should have defined bids before trying to bid.
         assert self._root
         if self.is_passed_out(self.bidding_sequence):
