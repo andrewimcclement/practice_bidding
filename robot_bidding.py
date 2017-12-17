@@ -20,8 +20,12 @@ import re
 from random import choice
 from enum import Enum, auto
 
-from redeal import Evaluator, Deal, Shape
-from redeal.global_defs import Strain
+try:
+    from redeal.redeal import Evaluator, Deal, Shape
+    from redeal.redeal.global_defs import Strain
+except ImportError:
+    from redeal import Evaluator, Deal, Shape
+    from redeal.global_defs import Strain
 
 XML_SOURCE = ("C:\\Users\\andre\\Documents\\Python\\bridge\\practice-bidding\\"
               "chimaera.xml")
