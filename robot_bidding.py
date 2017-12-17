@@ -27,8 +27,7 @@ except ImportError:
     from redeal import Evaluator, Deal, Shape
     from redeal.global_defs import Strain
 
-XML_SOURCE = ("C:\\Users\\andre\\Documents\\Python\\bridge\\practice_bidding\\"
-              "chimaera.xml")
+XML_SOURCE = ("You may use your own default bidding system here if desired.")
 
 
 class EvaluationCondition:
@@ -352,9 +351,9 @@ class BiddingProgram:
         return self.ParseResults.Unknown
 
     def _get_user_input(self, message, valid_inputs):
-        result = self._parse(input(message))
+        result = self.parse(input(message))
         while result not in valid_inputs:
-            result = self._parse(input(message))
+            result = self.parse(input(message))
 
         return result
 
@@ -442,7 +441,7 @@ class BiddingProgram:
         while bid is None:
             print(potential_bids.keys())
             selected = input("Your bid: ")
-            result = self._parse(selected)
+            result = self.parse(selected)
             if result == self.ParseResults.BridgeBid:
                 if selected.upper() == self._pass.value:
                     bid = self._pass
@@ -470,7 +469,7 @@ class BiddingProgram:
             input_ = input("Enter a key to edit the value for that key, or "
                            "'back' to exit the settings editor.\n"
                            "'Exit' will end the program.\n")
-            result = self._parse(input_, True)
+            result = self.parse(input_, True)
             if result == self.ParseResults.Back:
                 return
             elif result != self.ParseResults.Integer:
@@ -481,7 +480,7 @@ class BiddingProgram:
             if key == "mode":
                 input_ = input(f"Do you wish to change the mode of the program"
                                f" from {self._mode}? (y/n)")
-                result = self._parse(input_, True)
+                result = self.parse(input_, True)
                 if result == self.ParseResults.Yes:
                     if self._mode == self.ProgramMode.Automatic:
                         self._settings["mode"] = self.ProgramMode.Default
@@ -490,7 +489,7 @@ class BiddingProgram:
             else:
                 input_ = input(f"Do you wish to change {key} from "
                                f"{self._settings[key]}? (y/n))")
-                if self._parse(input_, True) == self.ParseResults.Yes:
+                if self.parse(input_, True) == self.ParseResults.Yes:
                     self._settings[key] = not self._settings[key]
 
     def _first_bidder(self):
@@ -704,7 +703,7 @@ class BiddingProgram:
                 if filepath.lower() == "default":
                     filepath = XML_SOURCE
                 # Check if the user wants to exit/edit settings.
-                if self._parse(filepath) == self.ParseResults.Filepath:
+                if self.parse(filepath) == self.ParseResults.Filepath:
                     try:
                         assert filepath.endswith(".xml")
                         self.__xml_source = filepath
