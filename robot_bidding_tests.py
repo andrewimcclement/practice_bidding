@@ -10,15 +10,19 @@ import robot_bidding as bidding
 
 
 class BiddingProgramTests(unittest.TestCase):
+    """ Tests for BiddingProgram class. """
+
     def setUp(self):
         self._program = bidding.BiddingProgram()
-        self._program._BiddingProgram__xml_source = bidding.XML_SOURCE
+        self._program._BiddingProgram__xml_source = "chimaera.xml"
 
     @property
     def _parse_results(self):
         return self._program.ParseResults
 
     def test_parse_bridge_bid(self):
+        """ Parse bridge bids correctly. """
+
         suits = {"c", "d", "h", "s", "n"}
         levels = set(range(1, 8))
 
@@ -38,9 +42,12 @@ class BiddingProgramTests(unittest.TestCase):
                                     self._program.parse(bid))
 
     def test_parse_yes_no(self):
+        """ Check if the program parses yes/no responses correctly. """
         pass
 
     def test_parse_quit(self):
+        """ Check KeyboardInterrupt is raised when user tries to quit. """
+
         exit_options = {"quit", "EXIT", "Terminate"}
         for option in exit_options:
             with self.subTest(option=option):

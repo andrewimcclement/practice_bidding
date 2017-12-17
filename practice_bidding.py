@@ -49,8 +49,9 @@ def main():
 
             contract = result.upper()
 
-        dd_result = program.get_double_dummy_result(contract)
-        print(f"Double dummy result: {contract} {dd_result}")
+        if contract != "P":
+            dd_result = program.get_double_dummy_result(contract)
+            print(f"Double dummy result: {contract} {dd_result}")
 
         result = None
         while result not in {program.ParseResults.Yes,
