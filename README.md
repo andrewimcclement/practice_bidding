@@ -2,6 +2,13 @@
 A short program to allow practice of new bidding systems in Bridge.
 
 -------------------------------------------------------------------------------
+__Requirements__
+https://www.github.com/anntzer/redeal
+
+Example method of installation:
+ - Run "pip install git+https://github.com/anntzer/redeal"
+
+-------------------------------------------------------------------------------
 Usage:
 From the command line, "python C:\path\to\robot_bidding.py" will use the
 XML_DEFAULT_SOURCE constant to locate the XML file describing the bidding
@@ -13,7 +20,6 @@ will use the XML file located at "C:\path\to\system.xml"
 
 You may wish to edit the XML_DEFAULT_SOURCE constant for your own usage.
 Please do not commit these changes.
-If you refactor it, please create a .bat file for me to use as a replacement.
 
 -------------------------------------------------------------------------------
 Defining the XML bidding system:

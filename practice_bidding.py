@@ -9,6 +9,7 @@ import traceback
 
 from time import sleep
 from robot_bidding import BiddingProgram
+from xml_parser import get_bids_from_xml
 
 
 def main():
@@ -65,7 +66,7 @@ def main():
     play_another = True
 
     try:
-        program.get_bids()
+        program.set_opening_bids(get_bids_from_xml(program._xml_source))
         while play_another:
             play_another = _play_board()
             program.generate_new_deal()
