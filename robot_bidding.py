@@ -16,9 +16,13 @@ import re
 
 from random import choice
 from enum import Enum, auto
-
-from redeal import Evaluator, Deal
 from xml_parser import Bid
+
+try:
+    from .redeal.redeal import Deal
+except ImportError:
+    print("Using local copy of redeal, not submodule.")
+    from redeal import Deal
 
 # You may use your own default bidding system here if desired.
 XML_SOURCE = "chimaera.xml"
