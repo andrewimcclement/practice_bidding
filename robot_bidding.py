@@ -16,11 +16,16 @@ import re
 
 from random import choice
 from enum import Enum, auto
-
-from redeal import Evaluator, Deal
 from xml_parser import Bid
 
-XML_SOURCE = ("You may use your own default bidding system here if desired.")
+try:
+    from .redeal.redeal import Deal
+except ImportError:
+    print("Using local copy of redeal, not submodule.")
+    from redeal import Deal
+
+# You may use your own default bidding system here if desired.
+XML_SOURCE = "chimaera.xml"
 
 
 class BiddingProgram:
@@ -70,11 +75,9 @@ class BiddingProgram:
                    0: Players.West}
     _vulnerability = {1: Vulnerability.None_, 3: Vulnerability.Favourable,
                       0: Vulnerability.All, 2: Vulnerability.Unfavourable}
-    _chimaera_hcp = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
-    _normal_hcp = Evaluator(4, 3, 2, 1)
     _pass = Bid("P", "Pass", [])
 
-    def __init__(self, chimaera_hcp=True):
+    def __init__(self):
         # Board number set to 0 as self.generate_new_deal increments board
         # number by 1.
         self._board_state = {"board_number": 0,
@@ -83,18 +86,6 @@ class BiddingProgram:
                              "bidding_sequence": [],
                              "opening_bids": {}}
         self.generate_new_deal()
-        self._hcp = self._chimaera_hcp if chimaera_hcp else self._normal_hcp
-
-        def _points(hand):
-            hcp = self._hcp(hand)
-            club_length = max(len(hand.clubs) - 4, 0)
-            diamond_length = max(len(hand.diamonds) - 4, 0)
-            heart_length = max(len(hand.hearts) - 4, 0)
-            spade_length = max(len(hand.spades) - 4, 0)
-            return (hcp + club_length + diamond_length + heart_length
-                    + spade_length)
-
-        self._points = _points
 
         important_regexes = {
             re.compile("^settings$", re.I): self.ParseResults.Settings,

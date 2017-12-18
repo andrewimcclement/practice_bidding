@@ -43,7 +43,19 @@ class BiddingProgramTests(unittest.TestCase):
 
     def test_parse_yes_no(self):
         """ Check if the program parses yes/no responses correctly. """
-        pass
+        successes = {"y", "n", "Y", "No", "yES"}
+        fails = {"yo", "ya", "ja", "nein", "Never", "yesss", "noooo"}
+        results = {self._parse_results.Yes, self._parse_results.No}
+
+        self.assertEqual(self._parse_results.Yes, self._program.parse("yes"))
+
+        for input_ in successes:
+            with self.subTest(success=input_):
+                self.assertIn(self._program.parse(input_), results)
+
+        for input_ in fails:
+            with self.subTest(fail=input_):
+                self.assertNotIn(self._program.parse(input_), results)
 
     def test_parse_quit(self):
         """ Check KeyboardInterrupt is raised when user tries to quit. """

@@ -8,8 +8,12 @@ Created on Sun Dec 17 04:44:04 2017
 import math
 import xml.etree.ElementTree as ET
 
-from redeal import Shape, Evaluator
-from redeal.global_defs import Strain
+try:
+    from .redeal.redeal import Shape, Evaluator
+    from .redeal.redeal.global_defs import Strain
+except ImportError:
+    from redeal import Shape, Evaluator
+    from redeal.global_defs import Strain
 
 
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
