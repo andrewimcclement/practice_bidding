@@ -117,8 +117,6 @@ class BiddingProgram:
         # Get lazily.
         self.__xml_source = None
 
-        self._get_settings()
-
     @property
     def _root(self):
         return self._board_state["opening_bids"]
@@ -252,14 +250,17 @@ class BiddingProgram:
         self.bidding_sequence.append((next_bid.value, next_bid))
 
     def _program_bid(self, current_hand):
-        if len(self.bidding_sequence) < 2:
-            # First person to bid.
-            potential_bids = [bid for bid in self._root.values()
-                              if bid.accept(current_hand)]
-        else:
-            # The last bid made by partner (2 bids ago).
+        potential_bids = None
+
+        if len(self.bidding_sequence) >= 2:
             current_bid = self.bidding_sequence[-2][1]
-            potential_bids = [bid for bid in current_bid.children.values()
+            if current_bid != self._pass:
+                # Partner made a non-trivial bid.
+                potential_bids = [bid for bid in current_bid.children.values()
+                                  if bid.accept(current_hand)]
+
+        if potential_bids is None:
+            potential_bids = [bid for bid in self._root.values()
                               if bid.accept(current_hand)]
 
         try:
@@ -376,11 +377,6 @@ class BiddingProgram:
                       self.Players.South: "S", self.Players.West: "W"}
         contract += player_map[bidder]
         return contract
-
-    # Should get the settings from stored xml file if it exists, else
-    # create default settings.
-    def _get_settings(self):
-        pass
 
     def get_double_dummy_result(self, contract):
         """ Get the number of tricks and corresponding score. """
