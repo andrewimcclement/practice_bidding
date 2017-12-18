@@ -1642,6 +1642,18 @@ Law of total tricks.
       <bid id="2000">
         <value>2c</value>
         <desc>To play.</desc>
+        
+        <condition type="include">
+          <evaluation>
+            <points>
+              <max>9.25</max>
+            </points>
+            
+            <shape type="clubs">
+              <min>4</min>
+            </shape>
+          </evaluation>
+        </condition>
       </bid>
 
       <bid id="2001">

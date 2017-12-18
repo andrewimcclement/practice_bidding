@@ -1,0 +1,3 @@
+[submodule "redeal"]
+	path = redeal
+	url = https://github.com/andrewimcclement/redeal
