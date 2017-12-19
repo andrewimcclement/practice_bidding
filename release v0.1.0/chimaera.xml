@@ -1,0 +1,3122 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+Author: Andrew McClement (AIM)
+System: Chimaera (developed by AIM and Sam Brennan (SB))
+Version: 0.1.0
+
+Notes on Chimaera.
+
+We use a slightly modified version of the Zass 1c (only NT ranges are modified).
+We use the 1nt sequences defined by Terrence Quested of Pattaya Bridge Club,
+whenever possible.
+
+Key points of system:
+Strong club with relay continuations.
+4 card 1h, 5 card 1s.
+12-15 1n.
+Precision style 2c.
+2d Multi.
+RKCB is 0314. CRASH (used in 1c sequences) is 1430.
+For minor suits one of 4m/Redwood will be RKCB (usually).
+Principle of fast arrival.
+Law of total tricks.
+ -->
+
+<openingBids>
+<bid id="0">
+  <value>1c</value>
+  <desc>16+ hcp</desc>
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>15.75</min>
+      </hcp>
+    </evaluation>
+  </condition>
+
+  <condition type="exclude">
+    <evaluation>
+      <hcp>
+        <min>18.75</min>
+        <max>20.5</max>
+      </hcp>
+    </evaluation>
+    <shape type="general">balanced</shape>
+  </condition>
+
+  <bid id="00">
+    <value>1d</value>
+    <desc>0-7 hcp. Only 7 hcp with flat hand.</desc>
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>0</min>
+          <max>7.5</max>
+        </hcp>
+      </evaluation>
+    </condition>
+
+    <condition type="exclude">
+      <evaluation>
+        <hcp>
+          <min>6.75</min>
+          <max>7.5</max>
+        </hcp>
+      </evaluation>
+
+      <shape type="general">unbalanced</shape>
+    </condition>
+
+    <bid id="000">
+      <value>1h</value>
+      <desc>16-19(20)hcp. &lt;= 7.5 tricks, 5+c/h OR v. strong NT range (21-22)</desc>
+      <condition type="include">
+        <evaluation>
+          <hcp>
+            <min>20.75</min>
+            <max>22.5</max>
+          </hcp>
+        </evaluation>
+
+        <shape type="general">balanced</shape>
+      </condition>
+
+      <condition type="include">
+        <evaluation>
+          <hcp>
+            <min>15.75</min>
+            <max>20.25</max>
+          </hcp>
+
+          <tricks>
+            <min>0</min>
+            <max>7.5</max>
+          </tricks>
+        </evaluation>
+
+        <shape type="hearts">
+          <min>5</min>
+          <max>13</max>
+        </shape>
+      </condition>
+
+      <condition type="include">
+        <evaluation>
+          <hcp>
+            <min>15.75</min>
+            <max>20.25</max>
+          </hcp>
+
+          <tricks>
+            <min>0</min>
+            <max>7.5</max>
+          </tricks>
+        </evaluation>
+
+        <shape type="general">unbalanced</shape>
+
+        <shape type="clubs">
+          <min>5</min>
+          <max>13</max>
+        </shape>
+      </condition>
+
+      <bid id="0000">
+        <value>1s</value>
+        <desc>Relay (99% of the time)</desc>
+
+        <bid id="00000">
+          <value>1n</value>
+          <desc>21-22 hcp, balanced.</desc>
+
+          <condition type="include">
+            <evaluation>
+              <hcp>
+                <min>20.75</min>
+                <max>22.5</max>
+              </hcp>
+            </evaluation>
+
+            <shape type="general">balanced</shape>
+          </condition>
+        </bid>
+
+        <bid id="00001">
+          <value>2c</value>
+          <desc>16-20(21/22) hcp, 5+ clubs. &lt;= 7.5 tricks.</desc>
+
+          <condition type="exclude">
+            <shape type="general">balanced</shape>
+          </condition>
+
+          <condition type="include">
+            <evaluation>
+              <hcp>
+                <max>22</max>
+              </hcp>
+
+              <tricks>
+                <max>7.5</max>
+              </tricks>
+            </evaluation>
+
+            <shape type="clubs">
+              <min>5</min>
+            </shape>
+          </condition>
+        </bid>
+
+        <bid id="00002">
+          <value>2d</value>
+          <desc>16-20(21/22) hcp, 5 hearts. &lt;= 7.5 tricks.</desc>
+
+          <condition type="include">
+            <shape type="hearts">
+              <min>5</min>
+              <max>5</max>
+            </shape>
+          </condition>
+        </bid>
+
+        <bid id="00003">
+          <value>2h</value>
+          <desc>16-20(21/22) hcp, 6+ hearts. &lt;= 7.5 tricks.</desc>
+        </bid>
+
+        <bid id="00004">
+          <value>2s</value>
+          <desc>16-22(23) hcp, 6+ hearts, 4+ spades. &lt;= 7.5 tricks.</desc>
+        </bid>
+      </bid>
+
+      <bid id="0001">
+        <value>1n</value>
+        <desc>0-4 hcp, 55+ in the majors</desc>
+
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>0</min>
+              <max>4.5</max>
+            </hcp>
+          </evaluation>
+
+          <shape type="hearts">
+            <min>5</min>
+          </shape>
+
+          <shape type="spades">
+            <min>5</min>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="0002">
+        <value>2c</value>
+        <desc>0-4(5) hcp, 5-6 clubs broken suit.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>0</min>
+              <max>4.5</max>
+            </hcp>
+          </evaluation>
+
+          <shape type="clubs">
+            <min>5</min>
+            <max>6</max>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="0003">
+        <value>2d</value>
+        <desc>0-4(5) hcp, 5-6 diamonds broken suit.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>0</min>
+              <max>4.5</max>
+            </hcp>
+          </evaluation>
+
+          <shape type="diamonds">
+            <min>5</min>
+            <max>6</max>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="0004">
+        <value>2h</value>
+        <desc>0-3 hcp, 6+ hearts.</desc>
+      </bid>
+
+      <bid id="0005">
+        <value>2s</value>
+        <desc>0-3 hcp, 6+ hearts.</desc>
+      </bid>
+
+      <bid id="0006">
+        <value>2n</value>
+        <desc>0-4 hcp, 55+ in the minors.</desc>
+      </bid>
+    </bid>
+
+    <bid id="001">
+      <value>1s</value>
+      <desc>16-19(20) hcp, &lt;= 7.5 tricks, 5+ spades. Non-forcing.</desc>
+    </bid>
+
+    <bid id="002">
+      <value>1n</value>
+      <desc>16-18 hcp, balanced, no 5cM.</desc>
+    </bid>
+
+    <bid id="003">
+      <value>2c</value>
+      <desc>Relay, gf. 23+ hcp. If balanced, 27+ hcp.</desc>
+
+      <bid id="0030">
+        <value>2d</value>
+        <desc>0-1 controls.</desc>
+
+        <bid id="00300">
+          <value>2h</value>
+          <desc>Gf, 5+ hearts.</desc>
+        </bid>
+
+        <bid id="00301">
+          <value>2s</value>
+          <desc>Gf, 5+ spades.</desc>
+        </bid>
+
+        <bid id="00302">
+          <value>2n</value>
+          <desc>27+ hcp, balanced. (May be 4441 or 5422).</desc>
+        </bid>
+
+        <bid id="00303">
+          <value>3c</value>
+          <desc>Gf, (5)6+ clubs.</desc>
+        </bid>
+
+        <bid id="00304">
+          <value>3d</value>
+          <desc>Gf, (5)6+ diamonds.</desc>
+        </bid>
+      </bid>
+
+      <bid id="0031">
+        <value>2h</value>
+        <desc>2 controls.</desc>
+      </bid>
+
+      <bid id="0032">
+        <value>2s</value>
+        <desc>3 controls, so flat hand, no other values.</desc>
+      </bid>
+    </bid>
+
+    <bid id="004">
+      <value>2d</value>
+      <desc>16-19(20) hcp, &lt;= 7.5 tricks, (5)6+ diamonds. Non-forcing.</desc>
+    </bid>
+
+    <bid id="005">
+      <value>2h</value>
+      <desc>19-22 hcp, 8-8.5 tricks, semi-forcing, good 5+ hearts.</desc>
+    </bid>
+
+    <bid id="006">
+      <value>2s</value>
+      <desc>19-22 hcp, 8-8.5 tricks, semi-forcing, good 5+ spades.</desc>
+    </bid>
+
+    <bid id="007">
+      <value>2n</value>
+      <desc>25-26 hcp, balanced.</desc>
+    </bid>
+  </bid>
+
+  <bid id="01">
+    <value>1h</value>
+    <desc>8+ hcp, 5+ hearts OR 15+ hcp balanced.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>7.5</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>5</min>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>14.5</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="general">balanced</shape>
+
+      <shape type="spades">
+        <max>4</max>
+      </shape>
+    </condition>
+
+    <bid id="010">
+      <value>1s</value>
+      <desc>Relay. Will determine shape, strength and keycards.</desc>
+
+      <bid id="0100">
+        <value>1n</value>
+        <desc>15+ hcp, balanced, no 5cM</desc>
+
+        <bid id="01000">
+          <value>2c</value>
+          <desc>Relay.</desc>
+
+          <condition type="include"></condition>
+
+          <bid id="010000">
+            <value>2d</value>
+            <desc>17+ hcp, not 3334 shape.</desc>
+
+            <condition type="include">
+              <evaluation>
+                <hcp>
+                  <min>16.5</min>
+               </hcp>
+              </evaluation>
+            </condition>
+
+            <condition type="exclude">
+              <shape type="shape">3334</shape>
+            </condition>
+
+            <bid id="0100000">
+              <value>2h</value>
+              <desc>Relay</desc>
+
+              <condition type="include"></condition>
+            </bid>
+          </bid>
+
+          <bid id="010001">
+            <value>2h</value>
+            <desc>15-16 hcp, 4 hearts.</desc>
+
+            <condition type="include">
+              <shape type="shape">x4xx</shape>
+
+              <evaluation>
+                <hcp>
+                  <max>16.25</max>
+                </hcp>
+              </evaluation>
+            </condition>
+
+            <bid id="0100010">
+              <value>2s</value>
+              <desc>Relay</desc>
+
+              <condition type="include"></condition>
+
+              <bid id="01000100">
+                <value>2n</value>
+                <desc>4 spades.</desc>
+
+                <condition type="include">
+                  <shape type="shape">4xxx</shape>
+                </condition>
+              </bid>
+
+              <bid id="01000101">
+                <value>3c</value>
+                <desc>4 clubs.</desc>
+
+                <condition type="include">
+                  <shape type="shape">xxx4</shape>
+                </condition>
+
+                <bid id="010001010">
+                  <value>3d</value>
+                  <desc>Relay</desc>
+
+                  <condition type="include"></condition>
+                </bid>
+              </bid>
+
+              <bid id="01000102">
+                <value>3d</value>
+                <desc>4 diamonds.</desc>
+
+                <condition type="include">
+                  <shape type="shape">xx4x</shape>
+                </condition>
+              </bid>
+
+              <bid id="01000103">
+                <value>3h</value>
+                <desc>3433</desc>
+
+                <condition type="include">
+                  <shape type="shape">3433</shape>
+                </condition>
+              </bid>
+            </bid>
+          </bid>
+
+          <bid id="010002">
+            <value>2s</value>
+            <desc>15-16 hcp, 4 spades, 3- hearts.</desc>
+
+            <condition type="include">
+              <shape type="shape">4xxx</shape>
+
+              <shape type="hearts">
+                <max>3</max>
+              </shape>
+
+              <evaluation>
+                <hcp>16.25</hcp>
+              </evaluation>
+            </condition>
+          </bid>
+
+          <bid id="010003">
+            <value>2n</value>
+            <desc>15-16 hcp, no 4cM or 5cm.</desc>
+
+            <condition type="include">
+              <shape type="clubs">
+                <max>4</max>
+              </shape>
+
+              <shape type="diamonds">
+                <max>4</max>
+              </shape>
+
+              <shape type="hearts">
+                <max>3</max>
+              </shape>
+
+              <shape type="spades">
+                <max>3</max>
+              </shape>
+
+              <evaluation>
+                <hcp>
+                  <max>16.25</max>
+                </hcp>
+              </evaluation>
+            </condition>
+          </bid>
+
+          <bid id="010008">
+            <value>3n</value>
+            <desc>17+ hcp, 3334 shape. 4c is CRASH.</desc>
+
+            <condition type="include">
+              <shape type="shape">3334</shape>
+
+              <evaluation>
+                <hcp>
+                  <min>16.5</min>
+                </hcp>
+              </evaluation>
+            </condition>
+          </bid>
+        </bid>
+      </bid>
+
+      <bid id="0101">
+        <value>2c</value>
+        <desc>12+ hcp, 5+ hearts. (If 5cm, has 6+ hearts.)</desc>
+      </bid>
+
+      <bid id="0102">
+        <value>2d</value>
+        <desc>8-11(12) hcp, 5 hearts, 4+ cm.</desc>
+      </bid>
+
+      <bid id="0103">
+        <value>2h</value>
+        <desc>8-11(12) hcp, 5+ hearts, 4-5 spades. (5 spades means exactly 5 hearts.)</desc>
+
+        <bid id="01030">
+          <value>2s</value>
+          <desc>Relay.</desc>
+
+          <condition type="include"></condition>
+
+          <bid id="010300">
+            <value>2n</value>
+            <desc>8-11(12) hcp, 5 hearts, 5332 shape.</desc>
+
+            <bid id="0103000">
+              <value>3c</value>
+              <desc>Relay.</desc>
+
+              <bid id="01030000">
+                <value>3d</value>
+                <desc>3532 shape.</desc>
+              </bid>
+
+              <bid id="01030001">
+                <value>3h</value>
+                <desc>3523 shape.</desc>
+              </bid>
+
+              <bid id="01030002">
+                <value>3s</value>
+                <desc>2533 shape.</desc>
+              </bid>
+            </bid>
+          </bid>
+
+          <bid id="010301">
+            <value>3c</value>
+            <desc>8-11(12) hcp, 6+ hearts, 4 spades.</desc>
+          </bid>
+
+          <bid id="010302">
+            <value>3d</value>
+            <desc>8-11(12) hcp, 5 hearts, 5 spades.</desc>
+          </bid>
+
+          <bid id="010303">
+            <value>3h</value>
+            <desc>8-11(12) hcp, 4522 shape.</desc>
+          </bid>
+
+          <bid id="010304">
+            <value>3s</value>
+            <desc>8-11(12) hcp, 4513 shape.</desc>
+          </bid>
+
+          <bid id="010305">
+            <value>3n</value>
+            <desc>8-11(12) hcp, 4531 shape.</desc>
+          </bid>
+
+          <bid id="010306">
+            <value>4c</value>
+            <desc>8-11(12) hcp, 4504 shape.</desc>
+          </bid>
+
+          <bid id="010307">
+            <value>4d</value>
+            <desc>8-11(12) hcp, 4540 shape.</desc>
+          </bid>
+        </bid>
+      </bid>
+
+      <bid id="0104">
+        <value>2s</value>
+        <desc>8-11(12) hcp, 6+ hearts, single suited.</desc>
+
+        <bid id="01040">
+          <value>2n</value>
+          <desc>Relay.</desc>
+
+          <bid id="010400">
+            <value>3c</value>
+            <desc></desc>
+          </bid>
+
+          <bid id="010401">
+            <value>3d</value>
+            <desc></desc>
+          </bid>
+        </bid>
+      </bid>
+
+      <bid id="0105">
+        <value>2n</value>
+        <desc>8-11(12) hcp, 6+ hearts, 4cm.</desc>
+      </bid>
+
+      <bid id="0106">
+        <value>3c</value>
+        <desc>12+ hcp, 5 hearts, 5+ clubs.</desc>
+      </bid>
+
+      <bid id="0107">
+        <value>3d</value>
+        <desc>12+ hcp, 5 hearts, 5+ diamonds</desc>
+      </bid>
+    </bid>
+
+    <bid id="011">
+      <value>1n</value>
+      <desc>6+ spades, requests cue bids with fit.</desc>
+    </bid>
+
+    <bid id="012">
+      <value>2c</value>
+      <desc>6+ clubs, requests cue bids with fit.</desc>
+    </bid>
+
+    <bid id="013">
+      <value>2d</value>
+      <desc>6+ diamonds, requests cue bids with fit.</desc>
+    </bid>
+
+    <bid id="014">
+      <value>2h</value>
+      <desc>6+ hearts, requests cue bids with fit. (Note responder either is balanced or has 5 hearts.)</desc>
+    </bid>
+  </bid>
+
+  <bid id="02">
+    <value>1s</value>
+    <desc>8+ hcp, 5+ spades</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>7.5</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="spades">
+        <min>5</min>
+      </shape>
+    </condition>
+
+    <bid id="020">
+      <value>1n</value>
+      <desc>Relay.</desc>
+
+      <condition type="include"></condition>
+    </bid>
+  </bid>
+
+  <bid id="03">
+    <value>1n</value>
+    <desc>(8)9-14 hcp, balanced, no 5cM.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>7.75</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="general">balanced</shape>
+
+      <shape type="hearts">
+        <max>4</max>
+      </shape>
+
+      <shape type="spades">
+        <max>4</max>
+      </shape>
+    </condition>
+
+    <bid id="030">
+      <value>2c</value>
+      <desc>Relay.</desc>
+
+      <condition type="include"></condition>
+
+      <bid id="0300">
+        <value>2d</value>
+        <desc>12-14 hcp, not 3334 shape.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>11.5</min>
+            </hcp>
+          </evaluation>
+        </condition>
+
+        <condition type="exclude">
+          <shape type="shape">3334</shape>
+        </condition>
+
+        <bid id="03000">
+          <value>2h</value>
+          <desc>Relay.</desc>
+
+          <condition type="include"></condition>
+
+          <bid id="030000">
+            <value>2s</value>
+            <desc>4 spades.</desc>
+
+            <condition type="include">
+              <shape type="shape">4xxx</shape>
+            </condition>
+
+            <bid id="0300000">
+              <value>2n</value>
+              <desc>Relay.</desc>
+
+              <condition type="include"></condition>
+
+                <bid id="03000000">
+                  <value>3c</value>
+                  <desc>4 clubs, so 4324/4234 shape.</desc>
+                </bid>
+
+                <bid id="03000001">
+                  <value>3d</value>
+                  <desc>4 diamonds, so 4342/4243 shape.</desc>
+                </bid>
+
+                <bid id="03000002">
+                  <value>3h</value>
+                  <desc>4333 shape.</desc>
+                </bid>
+
+                <bid id="03000003">
+                  <value>3s</value>
+                  <desc>4423 shape.</desc>
+                </bid>
+
+                <bid id="03000004">
+                  <value>3n</value>
+                  <desc>4432 shape.</desc>
+                </bid>
+            </bid>
+          </bid>
+
+          <bid id="030001">
+            <value>2n</value>
+            <desc>4 hearts, 3- spades.</desc>
+          </bid>
+
+          <bid id="030002">
+            <value>3c</value>
+            <desc>5 clubs, so 5332 shape.</desc>
+          </bid>
+
+          <bid id="030003">
+            <value>3d</value>
+            <desc>5 diamonds, so 5332 shape.</desc>
+          </bid>
+
+          <bid id="030004">
+            <value>3h</value>
+            <desc>3343 shape.</desc>
+          </bid>
+
+          <bid id="030005">
+            <value>3s</value>
+            <desc>2344 shape.</desc>
+          </bid>
+
+          <bid id="030006">
+            <value>3n</value>
+            <desc>3244 shape.</desc>
+          </bid>
+        </bid>
+      </bid>
+
+      <bid id="0301">
+        <value>2h</value>
+        <desc>(8)9-11 hcp, 4 hearts.</desc>
+      </bid>
+
+      <bid id="0302">
+        <value>2s</value>
+        <desc>(8)9-11 hcp, 4 spades, 3- hearts.</desc>
+      </bid>
+
+      <bid id="0303">
+        <value>2n</value>
+        <desc>(8)9-11 hcp, no 4cM or 5cm.</desc>
+      </bid>
+
+      <bid id="0304">
+        <value>3c</value>
+        <desc>(8)9-11 hcp, 5 clubs.</desc>
+      </bid>
+
+      <bid id="0305">
+        <value>3d</value>
+        <desc>(8)9-11 hcp, 5 diamonds.</desc>
+      </bid>
+    </bid>
+  </bid>
+
+  <bid id="04">
+    <value>2c</value>
+    <desc>8+ hcp, 5+ clubs. Unbalanced, not 45 in dc.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>7.5</min>
+        </hcp>
+      </evaluation>
+
+      <!-- Not getting read correctly -->
+      <shape type="clubs">
+        <min>5</min>
+      </shape>
+
+      <shape type="general">unbalanced</shape>
+    </condition>
+
+    <condition type="exclude">
+      <shape type="shape">xx45</shape>
+    </condition>
+  </bid>
+
+  <bid id="05">
+    <value>2d</value>
+    <desc>8+ hcp, 5+ diamonds. Unbalanced, not 54 in dc.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>7.5</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="diamonds">
+        <min>5</min>
+      </shape>
+
+      <shape type="general">unbalanced</shape>
+    </condition>
+
+    <condition type="exclude">
+      <shape type="diamonds">
+        <min>5</min>
+        <max>5</max>
+      </shape>
+
+      <shape type="clubs">
+        <min>4</min>
+        <max>4</max>
+      </shape>
+    </condition>
+
+    <bid id="050">
+      <value>2h</value>
+      <desc>Relay</desc>
+
+      <condition type="include"></condition>
+    </bid>
+  </bid>
+
+  <bid id="06">
+    <value>2h</value>
+    <desc>8+ hcp, exactly 54 in the minors.</desc>
+
+    <condition type="include">
+      <shape type="shape">xx(54)</shape>
+
+      <evaluation>
+        <hcp>
+          <min>7.5</min>
+        </hcp>
+      </evaluation>
+    </condition>
+
+    <bid id="060">
+      <value>2s</value>
+      <desc>Relay.</desc>
+
+      <condition type="include"></condition>
+    </bid>
+  </bid>
+
+  <bid id="07">
+    <value>2s</value>
+    <desc>12+ hcp, 4441 shape with black singleton.</desc>
+  </bid>
+
+  <bid id="08">
+    <value>2n</value>
+    <desc>12+ hcp, 4441 shape with red singleton.</desc>
+  </bid>
+
+  <bid id="09">
+    <value>3c</value>
+    <desc>8-11(12) hcp, 4441 shape with black singleton.</desc>
+  </bid>
+
+  <bid id="09">
+    <value>3d</value>
+    <desc>8-11(12) hcp, 4441 shape with red singleton.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>7.5</min>
+          <max>11.75</max>
+        </hcp>
+      </evaluation>
+
+      <shape type="shape">4(41)4</shape>
+    </condition>
+  </bid>
+
+  <bid id="0a">
+    <value>3h</value>
+    <desc>Solid 7 card suit. AKQJxxx+</desc>
+
+    <!-- TODO: Improve conditions -->
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>7</min>
+        </tricks>
+
+        <hcp>
+          <min>9.75</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="clubs">
+        <min>7</min>
+        <max>7</max>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>7</min>
+        </tricks>
+
+        <hcp>
+          <min>9.75</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="diamonds">
+        <min>7</min>
+        <max>7</max>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>7</min>
+        </tricks>
+
+        <hcp>
+          <min>9.75</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>7</min>
+        <max>7</max>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>7</min>
+        </tricks>
+
+        <hcp>
+          <min>9.75</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="spades">
+        <min>7</min>
+        <max>7</max>
+      </shape>
+    </condition>
+  </bid>
+
+  <bid id="0b">
+    <value>3s</value>
+    <desc>Solid 8 card suit. AKQxxxxx+</desc>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>7</min>
+        </tricks>
+
+        <hcp>
+          <min>9</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="clubs">
+        <min>8</min>
+        <max>8</max>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>8</min>
+        </tricks>
+
+        <hcp>
+          <min>9</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="diamonds">
+        <min>8</min>
+        <max>8</max>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>8</min>
+        </tricks>
+
+        <hcp>
+          <min>9</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>8</min>
+        <max>8</max>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>8</min>
+        </tricks>
+
+        <hcp>
+          <min>9</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="spades">
+        <min>8</min>
+        <max>8</max>
+      </shape>
+    </condition>
+  </bid>
+
+  <bid id="0c">
+    <value>3n</value>
+    <desc>Solid 9+ card suit. AKQxxxxxx+</desc>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>9</min>
+        </tricks>
+
+        <hcp>
+          <min>7</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="clubs">
+        <min>9</min>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>9</min>
+        </tricks>
+
+        <hcp>
+          <min>7</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="diamonds">
+        <min>9</min>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>9</min>
+        </tricks>
+
+        <hcp>
+          <min>7</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>9</min>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <tricks>
+          <min>9</min>
+        </tricks>
+
+        <hcp>
+          <min>7</min>
+        </hcp>
+      </evaluation>
+
+      <shape type="spades">
+        <min>9</min>
+      </shape>
+    </condition>
+  </bid>
+</bid>
+
+<bid id="1">
+  <value>1d</value>
+  <desc>11-15 hcp, 4+ diamonds. Could have longer clubs.</desc>
+
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>10.75</min>
+        <max>15.5</max>
+      </hcp>
+
+      <tricks>
+        <max>8.75</max>
+      </tricks>
+    </evaluation>
+
+    <shape type="diamonds">
+      <min>4</min>
+    </shape>
+
+    <shape type="general">unbalanced</shape>
+
+    <shape type="strictly_longer_than">
+      <longer_suit>diamonds</longer_suit>
+      <shorter_suit>hearts</shorter_suit>
+    </shape>
+
+    <shape type="longer_than">
+      <longer_suit>diamonds</longer_suit>
+      <shorter_suit>spades</shorter_suit>
+    </shape>
+  </condition>
+
+  <condition type="exclude">
+    <shape type="spades">
+      <min>5</min>
+    </shape>
+
+    <shape type="longer_than">
+      <longer_suit>spades</longer_suit>
+      <shorter_suit>diamonds</shorter_suit>
+    </shape>
+  </condition>
+
+  <bid id="10">
+    <value>1h</value>
+    <desc>4+ hearts, 6+ points.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>5.5</min>
+        </points>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>4</min>
+      </shape>
+
+      <shape type="longer_than">
+        <longer_suit>hearts</longer_suit>
+        <shorter_suit>spades</shorter_suit>
+      </shape>
+    </condition>
+
+    <condition type="exclude">
+      <evaluation>
+        <points>
+          <min>15.5</min>
+        </points>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>5</min>
+      </shape>
+    </condition>
+
+    <condition type="exclude">
+      <evaluation>
+        <points>
+          <min>12</min>
+        </points>
+      </evaluation>
+
+      <shape type="spades">
+        <min>5</min>
+      </shape>
+
+      <shape type="longer_than">
+        <longer_suit>spades</longer_suit>
+        <shorter_suit>hearts</shorter_suit>
+      </shape>
+    </condition>
+
+    <bid id="100">
+      <value>1s</value>
+      <desc>13-15 points. 4+ spades (probably exactly 4 spades). By implication 5+ diamonds.</desc>
+    </bid>
+
+    <bid id="101">
+      <value>1n</value>
+      <desc>13-15 points. Longer clubs than diamonds, so 5+ clubs.</desc>
+    </bid>
+
+    <bid id="102">
+      <value>2c</value>
+      <desc>13-15 points, 4+ clubs, (5+ diamonds).</desc>
+    </bid>
+
+    <bid id="103">
+      <value>2d</value>
+      <desc>13-15(16) points. 6+ diamonds.</desc>
+    </bid>
+
+    <bid id="104">
+      <value>2h</value>
+      <desc>13-15 points, 4+ hearts (5+ diamonds).</desc>
+    </bid>
+
+    <bid id="105">
+      <value>2s</value>
+      <desc>16+ points, 4+ spades (5+ diamonds).</desc>
+    </bid>
+
+    <bid id="106">
+      <value>2n</value>
+      <desc>16+ points, longer clubs than diamonds (5+ clubs).</desc>
+    </bid>
+
+    <bid id="107">
+      <value>3c</value>
+      <desc>16+ points, 4+ clubs (5+ diamonds).</desc>
+    </bid>
+
+    <bid id="108">
+      <value>3d</value>
+      <desc>16(17)+ points, 6+ diamonds.</desc>
+
+      <condition type="include">
+        <evaluation>
+          <points>
+            <min>16.25</min>
+          </points>
+        </evaluation>
+
+        <shape type="diamonds">
+          <min>6</min>
+        </shape>
+
+        <shape type="hearts">
+          <max>3</max>
+        </shape>
+
+        <shape type="spades">
+          <max>3</max>
+        </shape>
+
+        <shape type="clubs">
+          <max>4</max>
+        </shape>
+      </condition>
+    </bid>
+
+    <bid id="109">
+      <value>3h</value>
+      <desc>16-17 points. 4+ hearts (5+ diamonds).</desc>
+
+      <condition type="include">
+        <evaluation>
+          <points>
+            <min>14.75</min>
+            <max>16.5</max>
+          </points>
+        </evaluation>
+      </condition>
+    </bid>
+
+    <bid id="10a">
+      <value>3s</value>
+      <desc>18 points, 4+ hearts, 1- spades (5+ diamonds).</desc>
+
+      <condition type="include">
+        <!-- Currently points can't switch to counting dummy points. Hence
+             the requirement is lower. -->
+        <evaluation>
+          <points>
+            <min>16.75</min>
+          </points>
+        </evaluation>
+
+        <shape type="hearts">
+          <min>4</min>
+        </shape>
+
+        <shape type="spades">
+          <max>1</max>
+        </shape>
+      </condition>
+    </bid>
+
+    <bid id="10c">
+      <value>4c</value>
+      <desc>18 points, 4+ hearts, 1- clubs (5+ diamonds).</desc>
+
+      <condition type="include">
+        <evaluation>
+          <points>
+            <min>16.75</min>
+          </points>
+        </evaluation>
+
+        <shape type="hearts">
+          <min>4</min>
+        </shape>
+
+        <shape type="clubs">
+          <max>1</max>
+        </shape>
+      </condition>
+    </bid>
+
+    <bid id="10e">
+      <value>4h</value>
+      <desc>18 points, 4+ hearts. Considers their shortage unimportant.</desc>
+    </bid>
+  </bid>
+
+  <bid id="11">
+    <value>1s</value>
+    <desc>4+ spades, 6+ points.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>5.5</min>
+        </points>
+      </evaluation>
+
+      <shape type="spades">
+        <min>4</min>
+      </shape>
+    </condition>
+  </bid>
+
+  <bid id="12">
+    <value>1n</value>
+    <desc>6-9 hcp, balanced. 3- in shd (so 4+ clubs).</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>5.5</min>
+          <max>9.25</max>
+        </hcp>
+      </evaluation>
+
+      <shape type="spades">
+        <max>3</max>
+      </shape>
+
+      <shape type="hearts">
+        <max>3</max>
+      </shape>
+
+      <shape type="diamonds">
+        <max>3</max>
+      </shape>
+    </condition>
+
+    <bid id="120">
+      <value>2c</value>
+      <desc>4+ clubs, to play.</desc>
+
+      <condition type="include">
+        <evaluation>
+          <points>
+            <max>15.5</max>
+          </points>
+        </evaluation>
+
+        <shape type="clubs">
+          <min>4</min>
+        </shape>
+      </condition>
+    </bid>
+
+    <bid id="121">
+      <value>2d</value>
+      <desc>6+ diamonds, to play. With 3 card diamonds and 9-10 points, responder may bid on.</desc>
+    </bid>
+
+    <bid id="122">
+      <value>2h</value>
+      <desc>17+ points, 4+ hearts (5+ diamonds).</desc>
+    </bid>
+
+    <bid id="123">
+      <value>2s</value>
+      <desc>17+ points, 4+ spades (5+ diamonds).</desc>
+    </bid>
+
+    <bid id="124">
+      <value>2n</value>
+      <desc>16+ points, longer clubs than diamonds (5+ clubs). Since there is a known fit, we do not require 17 points, despite responder being bounded.</desc>
+    </bid>
+
+    <bid id="125">
+      <value>3c</value>
+      <desc>17+ points, 4+ clubs (5+ diamonds).</desc>
+    </bid>
+
+    <bid id="126">
+      <value>3d</value>
+      <desc>17+ points, 6+ diamonds.</desc>
+    </bid>
+  </bid>
+
+  <bid id="13">
+    <value>2c</value>
+    <desc>8+ points, (4)5+ clubs.</desc>
+  </bid>
+
+  <bid id="14">
+    <value>2d</value>
+    <desc>6-9 points, 4+ diamonds.</desc>
+  </bid>
+
+  <bid id="15">
+    <value>2h</value>
+    <desc>16+ points, 5+ hearts.</desc>
+  </bid>
+
+  <bid id="16">
+    <value>2s</value>
+    <desc>16+ points, 5+ spades.</desc>
+  </bid>
+
+  <bid id="17">
+    <value>2n</value>
+    <desc>10-12 hcp, balanced, no 4cM. Values in non-diamond suits if 4 diamonds.</desc>
+  </bid>
+
+  <bid id="18">
+    <value>3c</value>
+    <desc>16+ points, 5+ clubs.</desc>
+  </bid>
+
+  <bid id="19">
+    <value>3d</value>
+    <desc>10-12 points, 4+ diamonds. Not ideal for play in NT.</desc>
+  </bid>
+
+  <bid id="1a">
+    <value>3h</value>
+    <desc>12+ hcp, 4+ diamonds, 1- hearts. Gf.</desc>
+  </bid>
+
+  <bid id="1b">
+    <value>3s</value>
+    <desc>12+ hcp, 4+ diamonds, 1- spades. Gf.</desc>
+  </bid>
+
+  <bid id="1c">
+    <value>3n</value>
+    <desc>13-15 hcp, balanced. No 4cM. Stops in at least 2 outside suits.</desc>
+  </bid>
+
+  <bid id="1e">
+    <value>4d</value>
+    <desc>4+ diamonds, gf, slam seeking. Agrees diamonds. Cuebids follow.</desc>
+  </bid>
+
+  <bid id="1f">
+    <value>4h</value>
+    <desc>Kickback.</desc>
+  </bid>
+</bid>
+
+<bid id="2">
+  <value>1h</value>
+  <desc>11-15 hcp, 4+ hearts. Could have longer clubs.</desc>
+
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>10.75</min>
+        <max>15.5</max>
+      </hcp>
+
+      <tricks>
+        <max>8.75</max>
+      </tricks>
+    </evaluation>
+
+    <shape type="hearts">
+      <min>4</min>
+    </shape>
+
+    <shape type="strictly_longer_than">
+      <longer_suit>hearts</longer_suit>
+      <shorter_suit>spades</shorter_suit>
+    </shape>
+
+    <shape type="longer_than">
+      <longer_suit>hearts</longer_suit>
+      <shorter_suit>diamonds</shorter_suit>
+    </shape>
+  </condition>
+
+  <bid id="20">
+    <value>1s</value>
+    <desc>6+ points, 4+ spades. Could have a longer minor (e.g. 4 spades, 5cm).</desc>
+
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>5.5</min>
+        </points>
+      </evaluation>
+
+      <shape type="spades">
+        <min>4</min>
+      </shape>
+    </condition>
+
+    <bid id="200">
+      <value>1n</value>
+      <desc>13-15 points, 5+ clubs (longest suit). Could be 1444.</desc>
+
+      <condition type="include">
+        <evaluation>
+          <points>
+            <max>15.5</max>
+          </points>
+        </evaluation>
+
+        <shape type="strictly_longer_than">
+          <longer_suit>clubs</longer_suit>
+          <shorter_suit>hearts</shorter_suit>
+        </shape>
+
+        <shape type="spades">
+          <max>3</max>
+        </shape>
+      </condition>
+
+      <condition type="include">
+        <evaluation>
+          <points>
+            <max>15.5</max>
+          </points>
+        </evaluation>
+
+        <shape type="shape">1444</shape>
+      </condition>
+
+      <bid id="2000">
+        <value>2c</value>
+        <desc>To play.</desc>
+        
+        <condition type="include">
+          <evaluation>
+            <points>
+              <max>9.25</max>
+            </points>
+          </evaluation>
+
+          <shape type="clubs">
+            <min>4</min>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="2001">
+        <value>2d</value>
+        <desc>Fourth suit forcing.</desc>
+      </bid>
+
+      <bid id="2002">
+        <value>2h</value>
+        <desc>To play.</desc>
+      </bid>
+
+      <bid id="2003">
+        <value>2s</value>
+        <desc>6+ spades. To play.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <max>10.25</max>
+            </points>
+          </evaluation>
+
+          <shape type="spades">
+            <min>6</min>
+          </shape>
+        </condition>
+      </bid>
+    </bid>
+
+    <bid id="201">
+      <value>2c</value>
+      <desc>13-15 points, 4+ clubs (by implication 5+ hearts). Could be 1444.</desc>
+
+      <bid id="2010">
+        <value>2d</value>
+        <desc>Fourth suit forcing.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>11.5</min>
+            </points>
+          </evaluation>
+        </condition>
+      </bid>
+
+      <bid id="2011">
+        <value>2h</value>
+        <desc>To play.</desc>
+      </bid>
+
+      <bid id="2012">
+        <value>2s</value>
+        <desc>6+ spades. To play.</desc>
+      </bid>
+    </bid>
+
+    <bid id="202">
+      <value>2d</value>
+      <desc>13-15 points, 4+ diamonds (by implication 5+ hearts).</desc>
+    </bid>
+
+    <bid id="203">
+      <value>2h</value>
+      <desc>13-15(16) points, 6+ hearts.</desc>
+    </bid>
+
+    <bid id="204">
+      <value>2s</value>
+      <desc>13-15 points, 4+ spades.</desc>
+    </bid>
+
+    <bid id="205">
+      <value>2n</value>
+      <desc>16+ points, 5+ clubs (longest suit).</desc>
+    </bid>
+
+    <bid id="206">
+      <value>3c</value>
+      <desc>16+ points, 4+ clubs (by implication 5+ hearts).</desc>
+    </bid>
+
+    <bid id="207">
+      <value>3d</value>
+      <desc>16+ points, 4+ diamonds (by implication 5+ hearts).</desc>
+    </bid>
+
+    <bid id="208">
+      <value>3h</value>
+      <desc>(16)17+ points, 6+ hearts.</desc>
+    </bid>
+
+    <bid id="209">
+      <value>3s</value>
+      <desc>16-17 points, 4+ spades.</desc>
+    </bid>
+
+    <bid id="20b">
+      <value>4c</value>
+      <desc>18 points, 4+ spades, 1- clubs.</desc>
+    </bid>
+
+    <bid id="20c">
+      <value>4d</value>
+      <desc>18 points, 4+ spades, 1- diamonds.</desc>
+    </bid>
+
+    <bid id="20d">
+      <value>4h</value>
+      <desc>8+ hearts. To play.</desc>
+
+      <condition type="include">
+        <shape type="hearts">
+          <min>8</min>
+        </shape>
+      </condition>
+    </bid>
+
+    <bid id="20e">
+      <value>4s</value>
+      <desc>18 points, 4+ spades.</desc>
+    </bid>
+  </bid>
+
+  <bid id="21">
+    <value>1n</value>
+    <desc>6-9 hcp, balanced. 3- in the majors. 3+ clubs. (Not 3352 - 2d/2h).</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>5.5</min>
+          <max>9.25</max>
+        </hcp>
+      </evaluation>
+
+      <shape type="general">balanced</shape>
+
+      <shape type="hearts">
+        <max>3</max>
+      </shape>
+
+      <shape type="spades">
+        <max>3</max>
+      </shape>
+
+      <shape type="clubs">
+        <min>3</min>
+      </shape>
+    </condition>
+  </bid>
+
+  <bid id="22">
+    <value>2c</value>
+    <desc>8+ points, (4)5+ clubs.</desc>
+  </bid>
+
+  <bid id="23">
+    <value>2d</value>
+    <desc></desc>
+  </bid>
+
+  <bid id="24">
+    <value>2h</value>
+    <desc>6-9 points, 3+ hearts. To play.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>5.5</min>
+          <max>9.25</max>
+        </points>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>3</min>
+      </shape>
+    </condition>
+  </bid>
+
+  <bid id="25">
+    <value>2s</value>
+    <desc>16+ points, 5+ spades.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>15</min>
+        </points>
+      </evaluation>
+
+      <shape type="spades">
+        <min>5</min>
+      </shape>
+    </condition>
+  </bid>
+
+  <bid id="26">
+    <value>2n</value>
+    <desc>10-12 hcp, balanced, no 5cm or 4cM</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>9.5</min>
+          <max>12.25</max>
+        </hcp>
+      </evaluation>
+
+      <shape type="general">balanced</shape>
+
+      <shape type="hearts">
+        <max>3</max>
+      </shape>
+
+      <shape type="spades">
+        <max>3</max>
+      </shape>
+
+      <shape type="clubs">
+        <max>4</max>
+      </shape>
+
+      <shape type="diamonds">
+        <max>4</max>
+      </shape>
+    </condition>
+  </bid>
+
+  <bid id="27">
+    <value>3c</value>
+    <desc>16+ points, 5+ clubs.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>15.5</min>
+        </points>
+      </evaluation>
+
+      <shape type="clubs">
+        <min>5</min>
+      </shape>
+
+      <shape type="strictly_longer_than">
+        <longer_suit>clubs</longer_suit>
+        <shorter_suit>spades</shorter_suit>
+      </shape>
+
+      <shape type="strictly_longer_than">
+        <longer_suit>clubs</longer_suit>
+        <shorter_suit>diamonds</shorter_suit>
+      </shape>
+    </condition>
+  </bid>
+
+  <bid id="28">
+    <value>3d</value>
+    <desc>16+ points, 5+ diamonds.</desc>
+  </bid>
+
+  <bid id="29">
+    <value>3h</value>
+    <desc>10-12 points, 4+ hearts.</desc>
+  </bid>
+
+  <bid id="2a">
+    <value>3s</value>
+    <desc>12+ hcp, 4+ hearts, 1- spades.</desc>
+  </bid>
+
+  <bid id="2b">
+    <value>3n</value>
+    <desc>13-15 hcp. Balanced. 3- in the majors. May be more restrictive than this. (This bid is not preferred).</desc>
+    <!-- Most likely 3244 shape. -->
+  </bid>
+
+  <bid id="2c">
+    <value>4c</value>
+    <desc>12+ hcp, 4+ hearts, 1- clubs.</desc>
+  </bid>
+
+  <bid id="2d">
+    <value>4d</value>
+    <desc>12+ hcp, 4+ hearts, 1- diamonds</desc>
+  </bid>
+
+  <bid id="2e">
+    <value>4h</value>
+    <desc>13-15 points. 4+ hearts.</desc>
+  </bid>
+
+  <bid id="2g">
+    <value>4n</value>
+    <desc>RKCB</desc>
+  </bid>
+</bid>
+
+<bid id="3">
+  <value>1s</value>
+  <desc>11-15 hcp, 5+ spades.</desc>
+
+  <bid id="30">
+    <value>1n</value>
+    <desc>Forcing NT.</desc>
+
+    <bid id="301">
+      <value>2c</value>
+      <desc>13-15 points, 4+ clubs.</desc>
+    </bid>
+
+    <bid id="302">
+      <value>2d</value>
+      <desc>13-15 points, 4+ diamonds.</desc>
+    </bid>
+
+    <bid id="303">
+      <value>2h</value>
+      <desc>13-15 points, 4+ hearts.</desc>
+    </bid>
+
+    <bid id="304">
+      <value>2s</value>
+      <desc>13-15(16) points, 6+ spades.</desc>
+    </bid>
+
+    <bid id="305">
+      <value>2n</value>
+      <desc>6+ clubs (longest suit).</desc>
+    </bid>
+
+    <bid id="306">
+      <value>3c</value>
+      <desc>16+ points, 4+ clubs.</desc>
+    </bid>
+
+    <bid id="307">
+      <value>3d</value>
+      <desc>16+ points, 4+ diamonds.</desc>
+    </bid>
+
+    <bid id="308">
+      <value>3h</value>
+      <desc>16+ points, 4+ hearts.</desc>
+    </bid>
+
+    <bid id="309">
+      <value>3s</value>
+      <desc>(16)17+ points, 6+ spades.</desc>
+    </bid>
+  </bid>
+
+  <bid id="31">
+    <value>2c</value>
+    <desc>2/1 gf.</desc>
+  </bid>
+
+  <bid id="32">
+    <value>2d</value>
+    <desc>2/1 gf.</desc>
+  </bid>
+
+  <bid id="33">
+    <value>2h</value>
+    <desc>2/1 gf.</desc>
+  </bid>
+
+  <bid id="34">
+    <value>2s</value>
+    <desc>6-9 points, 3+ spades.</desc>
+  </bid>
+
+  <bid id="35">
+    <value>2n</value>
+    <desc>Jacoby 2NT.</desc>
+
+    <bid id="350">
+      <value>3c</value>
+      <desc>1- clubs.</desc>
+    </bid>
+
+    <bid id="351">
+      <value>3d</value>
+      <desc>1- diamonds.</desc>
+    </bid>
+
+    <bid id="352">
+      <value>3h</value>
+      <desc>1- hearts.</desc>
+    </bid>
+
+    <bid id="353">
+      <value>3s</value>
+      <desc>16+ points, 6+ spades. </desc>
+    </bid>
+
+    <bid id="354">
+      <value>3n</value>
+      <desc>14-15 hcp, 5 spades, so 5422 shape.</desc>
+    </bid>
+
+    <bid id="355">
+      <value>4c</value>
+      <desc>5+ clubs.</desc>
+    </bid>
+
+    <bid id="356">
+      <value>4d</value>
+      <desc>5+ diamonds.</desc>
+    </bid>
+
+    <bid id="357">
+      <value>4h</value>
+      <desc>5+ hearts.</desc>
+    </bid>
+
+    <bid id="358">
+      <value>4s</value>
+      <desc>11-13 hcp, no shortage.</desc>
+    </bid>
+  </bid>
+
+  <bid id="36">
+    <value>3c</value>
+    <desc>Invitational, 6+ clubs.</desc>
+  </bid>
+
+  <bid id="37">
+    <value>3d</value>
+    <desc>Invitational, 6+ diamonds.</desc>
+  </bid>
+
+  <bid id="38">
+    <value>3h</value>
+    <desc>Invitational, 6+ hearts.</desc>
+  </bid>
+
+  <bid id="39">
+    <value>3s</value>
+    <desc>10-12 points, 4+ spades.</desc>
+  </bid>
+
+  <bid id="3a">
+    <value>3n</value>
+    <desc>Swiss raise. 12-15 hcp, no shortage, 4+ spades.</desc>
+  </bid>
+
+  <bid id="3b">
+    <value>4c</value>
+    <desc>12-15 hcp, 4+ spades, 1- clubs.</desc>
+  </bid>
+
+  <bid id="3c">
+    <value>4d</value>
+    <desc>12-15 hcp, 4+ spades, 1- diamonds.</desc>
+  </bid>
+
+  <bid id="3d">
+    <value>4h</value>
+    <desc>12-15 hcp, 4+ spades, 1- hearts.</desc>
+  </bid>
+
+  <bid id="3e">
+    <value>4s</value>
+    <desc>To play. 4+ spades. Could be pre-emptive.</desc>
+  </bid>
+</bid>
+
+<bid id="4">
+  <value>1n</value>
+  <desc>12-15 hcp, balanced. May include 5cM</desc>
+
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>11.75</min>
+        <max>15.5</max>
+      </hcp>
+    </evaluation>
+
+    <shape type="general">balanced</shape>
+  </condition>
+
+  <bid id="40">
+    <value>2c</value>
+    <desc>Stayman. This includes invitational balanced hands with no interest in the majors.</desc>
+
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>10.5</min>
+        </hcp>
+      </evaluation>
+    </condition>
+
+    <condition type="include">
+      <shape type="hearts">
+        <min>4</min>
+        <max>4</max>
+      </shape>
+
+      <shape type="spades">
+        <min>5</min>
+      </shape>
+    </condition>
+
+    <condition type="include">
+      <shape type="spades">
+        <min>4</min>
+        <max>4</max>
+      </shape>
+
+      <shape type="hearts">
+        <min>5</min>
+      </shape>
+    </condition>
+
+    <bid id="400">
+      <value>2d</value>
+      <desc>No 4cM.</desc>
+
+      <condition type="include">
+        <shape type="hearts">
+          <max>3</max>
+        </shape>
+
+        <shape type="spades">
+          <max>3</max>
+        </shape>
+      </condition>
+
+      <bid id="4000">
+        <value>2h</value>
+        <desc>To play. (Usually 45 or better in sh with better hearts.)</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <max>10.5</max>
+            </points>
+          </evaluation>
+
+          <shape type="hearts">
+            <min>5</min>
+          </shape>
+
+          <shape type="spades">
+            <min>4</min>
+          </shape>
+
+          <shape type="longer_than">
+            <longer_suit>hearts</longer_suit>
+            <shorter_suit>spades</shorter_suit>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4001">
+        <value>2s</value>
+        <desc>To play. (Usually 54 or better in sh with better spades.)</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <max>10.5</max>
+            </points>
+          </evaluation>
+
+          <shape type="hearts">
+            <min>4</min>
+          </shape>
+
+          <shape type="spades">
+            <min>5</min>
+          </shape>
+
+          <shape type="longer_than">
+            <longer_suit>spades</longer_suit>
+            <shorter_suit>hearts</shorter_suit>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4002">
+        <value>2n</value>
+        <desc>Invitational</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>10.5</min>
+            </points>
+          </evaluation>
+
+          <shape type="hearts">
+            <max>4</max>
+          </shape>
+
+          <shape type="spades">
+            <max>4</max>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4003">
+        <value>3c</value>
+        <desc>SARS (Shape Asking Relay after Stayman).</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>12.5</min>
+            </points>
+          </evaluation>
+
+          <shape type="clubs">
+            <min>5</min>
+          </shape>
+
+          <shape type="diamonds">
+            <min>4</min>
+          </shape>
+        </condition>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>12.5</min>
+            </points>
+          </evaluation>
+
+          <shape type="clubs">
+            <min>4</min>
+          </shape>
+
+          <shape type="diamonds">
+            <min>5</min>
+          </shape>
+        </condition>
+
+
+      </bid>
+
+      <bid id="4004">
+        <value>3d</value>
+        <desc>Quest transfer to hearts. (Invitational+)</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>10.5</min>
+            </points>
+          </evaluation>
+
+          <shape type="hearts">
+            <min>5</min>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4005">
+        <value>3h</value>
+        <desc>Quest transfer to spades. (Invitational+)</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>10.5</min>
+            </points>
+          </evaluation>
+
+          <shape type="spades">
+            <min>5</min>
+          </shape>
+        </condition>
+      </bid>
+    </bid>
+
+    <bid id="401">
+      <value>2h</value>
+      <desc>4+ hearts.</desc>
+
+      <condition type="include">
+        <shape type="hearts">
+          <min>4</min>
+        </shape>
+      </condition>
+
+      <bid id="4010">
+        <value>2s</value>
+        <desc>Invitational, 4 spades.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>10.5</min>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+
+          <shape type="spades">
+            <min>4</min>
+            <max>4</max>
+          </shape>
+
+          <shape type="hearts">
+            <max>3</max>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4011">
+        <value>2n</value>
+        <desc>Invitational, no 4cM.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>10.5</min>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+
+          <shape type="hearts">
+            <max>3</max>
+          </shape>
+
+          <shape type="spades">
+            <max>3</max>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4012">
+        <value>3c</value>
+        <desc>SARS (Shape Asking Relay after Stayman).</desc>
+
+        <bid id="40120">
+          <value>3d</value>
+          <desc>4cm.</desc>
+
+          <bid id="401200">
+            <value>3h</value>
+            <desc>Which 4cm?</desc>
+
+            <bid id="4012000">
+              <value>3s</value>
+              <desc>4 clubs, so 3424/2434 shape.</desc>
+            </bid>
+
+            <bid id="4012001">
+              <value>3n</value>
+              <desc>4 diamonds, so 3442/2443 shape.</desc>
+            </bid>
+          </bid>
+        </bid>
+
+        <bid id="40121">
+          <value>3h</value>
+          <desc>5 hearts.</desc>
+        </bid>
+
+        <bid id="40122">
+          <value>3s</value>
+          <desc>4 spades, so 4432/4423 shape.</desc>
+        </bid>
+
+        <bid id="40123">
+          <value>3n</value>
+          <desc>3433 shape.</desc>
+        </bid>
+      </bid>
+
+      <bid id="4013">
+        <value>3d</value>
+        <desc>ASID (Advanced Stayman in Distress).</desc>
+      </bid>
+
+      <bid id="4014">
+        <value>3h</value>
+        <desc>Invitational, 4+ hearts.</desc>
+      </bid>
+
+      <bid id="4016">
+        <value>3n</value>
+        <desc>Game only, 4 spades. Choice of 3n and 4s.</desc>
+      </bid>
+
+      <bid id="4017">
+        <value>4c</value>
+        <desc>RKCB for hearts.</desc>
+      </bid>
+
+      <bid id="4019">
+        <value>4h</value>
+        <desc>4+ hearts, to play.</desc>
+      </bid>
+    </bid>
+
+    <bid id="402">
+      <value>2s</value>
+      <desc>4+ spades, 3- hearts.</desc>
+
+      <condition type="include">
+        <shape type="spades">
+          <min>4</min>
+        </shape>
+
+        <shape type="hearts">
+          <max>3</max>
+        </shape>
+      </condition>
+
+      <bid id="4020">
+        <value>2n</value>
+        <desc>Invitational.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>10.5</min>
+            </hcp>
+          </evaluation>
+
+          <shape type="spades">
+            <max>3</max>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4021">
+        <value>3c</value>
+        <desc>SARS (Shape Asking Relay after Stayman).</desc>
+
+        <bid id="40210">
+          <value>3d</value>
+          <desc>4 clubs, so 4324/4234 shape.</desc>
+        </bid>
+
+        <bid id="40211">
+          <value>3h</value>
+          <desc>4 diamonds, so 4342/4243 shape.</desc>
+        </bid>
+
+        <bid id="40212">
+          <value>3s</value>
+          <desc>5 spades (5332 shape).</desc>
+        </bid>
+
+        <bid id="40213">
+          <value>3n</value>
+          <desc>4333 shape.</desc>
+        </bid>
+      </bid>
+
+      <bid id="4022">
+        <value>3d</value>
+        <desc>ASID</desc>
+      </bid>
+
+      <bid id="4024">
+        <value>3s</value>
+        <desc>4+ spades, invitational.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>10.5</min>
+              <max>11.25</max>
+            </points>
+          </evaluation>
+
+          <shape type="spades">
+            <min>4</min>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4029">
+        <value>4s</value>
+        <desc>To play</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>11.5</min>
+              <max>17.25</max>
+            </points>
+          </evaluation>
+
+          <shape type="spades">
+            <min>4</min>
+          </shape>
+        </condition>
+      </bid>
+    </bid>
+  </bid>
+
+  <bid id="41">
+    <value>2d</value>
+    <desc>Transfer to hearts.</desc>
+
+    <condition type="include">
+      <shape type="hearts">
+        <min>5</min>
+      </shape>
+
+      <shape type="longer_than">
+        <longer_suit>hearts</longer_suit>
+        <shorter_suit>spades</shorter_suit>
+      </shape>
+    </condition>
+
+    <bid id="410">
+      <value>2h</value>
+      <desc>Completing the transfer.</desc>
+
+      <condition type="include"></condition>
+
+      <bid id="4100">
+        <value>2s</value>
+        <desc>Invitational+, 5+ spades.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>10.5</min>
+            </points>
+          </evaluation>
+
+          <shape type="spades">
+            <min>5</min>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4101">
+        <value>2n</value>
+        <desc>Invitational, exactly 5 hearts.</desc>
+
+        <condition type="include">
+          <evaluation>
+            <points>
+              <min>10.5</min>
+              <max>11.25</max>
+            </points>
+          </evaluation>
+
+          <shape type="hearts">
+            <min>5</min>
+            <max>5</max>
+          </shape>
+        </condition>
+
+        <bid id="41012">
+          <value>3h</value>
+          <desc>3 hearts, to play.</desc>
+
+          <condition type="include">
+            <evaluation>
+              <hcp>
+                <max>13.5</max>
+              </hcp>
+            </evaluation>
+
+            <shape type="hearts">
+              <min>3</min>
+              <max>4</max>
+            </shape>
+          </condition>
+        </bid>
+
+        <bid id="41014">
+          <value>3n</value>
+          <desc>2 hearts, to play.</desc>
+
+          <condition type="include">
+            <shape type="hearts">
+              <min>2</min>
+              <max>2</max>
+            </shape>
+
+            <evaluation>
+              <hcp>
+                <min>13.75</min>
+              </hcp>
+            </evaluation>
+          </condition>
+        </bid>
+
+        <bid id="41017">
+          <value>4h</value>
+          <desc>3 hearts, to play.</desc>
+
+          <condition type="include">
+            <shape type="hearts">
+              <min>3</min>
+              <max>3</max>
+            </shape>
+
+            <evaluation>
+              <hcp>
+                <min>13.75</min>
+              </hcp>
+            </evaluation>
+          </condition>
+        </bid>
+      </bid>
+
+      <bid id="4104">
+        <value>3h</value>
+        <desc>Invitational, 6+ hearts.</desc>
+
+        <condition type="include">
+          <shape type="hearts">
+            <min>6</min>
+          </shape>
+
+          <evaluation>
+            <points>
+              <min>10.5</min>
+              <max>11.25</max>
+            </points>
+          </evaluation>
+        </condition>
+      </bid>
+
+      <bid id="4106">
+        <value>3n</value>
+        <desc>Exactly 5 hearts. Pass or correct.</desc>
+
+        <condition type="include">
+          <shape type="hearts">
+            <min>5</min>
+            <max>5</max>
+          </shape>
+        </condition>
+      </bid>
+
+      <bid id="4109">
+        <value>4h</value>
+        <desc>Mild slam try, 6+ hearts.</desc>
+      </bid>
+    </bid>
+
+    <bid id="415">
+      <value>3h</value>
+      <desc>Super-accept. 4+ hearts.</desc>
+
+      <condition type="include">
+        <shape type="hearts">
+          <min>4</min>
+        </shape>
+      </condition>
+    </bid>
+  </bid>
+
+  <bid id="42">
+    <value>2h</value>
+    <desc>Transfer to spades.</desc>
+
+    <condition type="include">
+      <shape type="spades">
+        <min>5</min>
+      </shape>
+
+      <shape type="strictly_longer_than">
+        <longer_suit>spades</longer_suit>
+        <shorter_suit>hearts</shorter_suit>
+      </shape>
+    </condition>
+
+    <bid id="420">
+      <value>2s</value>
+      <desc>Completing the transfer.</desc>
+
+      <condition type="include"></condition>
+    </bid>
+  </bid>
+
+  <bid id="43">
+    <value>2s</value>
+    <desc>Transfer to clubs.</desc>
+
+    <condition type="include">
+      <shape type="clubs">
+        <min>6</min>
+      </shape>
+
+      <evaluation>
+        <points>
+          <max>10.25</max>
+        </points>
+      </evaluation>
+    </condition>
+
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>11.5</min>
+        </points>
+      </evaluation>
+
+      <shape type="general">unbalanced</shape>
+
+      <shape type="clubs">
+        <min>5</min>
+      </shape>
+
+      <shape type="strictly_longer_than">
+        <longer_suit>clubs</longer_suit>
+        <shorter_suit>hearts</shorter_suit>
+      </shape>
+
+      <shape type="strictly_longer_than">
+        <longer_suit>clubs</longer_suit>
+        <shorter_suit>spades</shorter_suit>
+      </shape>
+
+      <shape type="longer_than">
+        <longer_suit>clubs</longer_suit>
+        <shorter_suit>diamonds</shorter_suit>
+      </shape>
+    </condition>
+
+    <bid id="430">
+      <value>2n</value>
+      <desc>Super-accept with Qxx+ in clubs.</desc>
+
+      <condition type="include">
+        <shape type="clubs">
+          <min>4</min>
+        </shape>
+      </condition>
+    </bid>
+
+    <bid id="431">
+      <value>3c</value>
+      <desc>Completing the transfer.</desc>
+
+      <condition type="include"></condition>
+    </bid>
+  </bid>
+
+  <bid id="44">
+    <value>2n</value>
+    <desc>Transfer to diamonds.</desc>
+
+    <bid id="440">
+      <value>3c</value>
+      <desc>Super-accept with Qxx+ in diamonds.</desc>
+    </bid>
+
+    <bid id="441">
+      <value>3d</value>
+      <desc>Completing the transfer.</desc>
+    </bid>
+  </bid>
+
+  <bid id="45">
+    <value>3c</value>
+    <desc>Gf, ambiguous splinter (s/d/c). Usually 4441 shape.</desc>
+
+    <bid id="450">
+      <value>3d</value>
+      <desc>Which suit is the splinter?</desc>
+
+      <bid id="451">
+        <value>3h</value>
+        <desc>Short spades.</desc>
+      </bid>
+
+      <bid id="452">
+        <value>3s</value>
+        <desc>Short clubs.</desc>
+      </bid>
+
+      <bid id="453">
+        <value>3n</value>
+        <desc>Short diamonds.</desc>
+
+        <bid id="4530">
+          <value>4c</value>
+          <desc>Slam interest in a major.</desc>
+        </bid>
+      </bid>
+    </bid>
+  </bid>
+
+  <bid id="46">
+    <value>3d</value>
+    <desc>Broken suit transfer (hearts).</desc>
+  </bid>
+
+  <bid id="47">
+    <value>3h</value>
+    <desc>Broken suit transfer (spades).</desc>
+  </bid>
+
+  <bid id="48">
+    <value>3s</value>
+    <desc>Splinter in hearts. Usually 4144 shape.</desc>
+
+    <bid id="480">
+      <value>3n</value>
+      <desc>To play.</desc>
+    </bid>
+  </bid>
+</bid>
+
+<bid id="5">
+  <value>2c</value>
+  <desc>11-15 hcp, 5+ clubs. If precisely 5 clubs, must have 4 spades.</desc>
+
+  <bid id="50">
+    <value>2d</value>
+    <desc>Relay. Invitational+.</desc>
+  </bid>
+</bid>
+
+<bid id="6">
+  <value>2d</value>
+  <desc>Multi, weak 2 in a major or 23-24 balanced.</desc>
+
+  <bid id="60">
+    <value>2h</value>
+    <desc>Pass or correct.</desc>
+  </bid>
+
+  <bid id="61">
+    <value>2s</value>
+    <desc>Pass or correct, some interest in hearts.</desc>
+  </bid>
+
+  <bid id="62">
+    <value>2n</value>
+    <desc>16+ points, relay bid.</desc>
+
+    <bid id="620">
+      <value>3c</value>
+      <desc>Weak 2 in hearts, either strong (8-10 hcp) or good suit (2 of top 3 honours).</desc>
+
+      <bid id="6200">
+        <value>3d</value>
+        <desc>Relay.</desc>
+
+        <bid id="62000">
+          <value>3h</value>
+          <desc>Weak (5-7 hcp) but good suit (2 of top 3 honours).</desc>
+        </bid>
+      </bid>
+    </bid>
+
+    <bid id="621">
+      <value>3d</value>
+      <desc>Weak 2 in spades, either strong (8-10 hcp) or good suit (2 of top 3 honours).</desc>
+
+      <bid id="6210">
+        <value>3h</value>
+        <desc>Relay.</desc>
+
+        <bid id="62100">
+          <value>3s</value>
+          <desc>Weak (5-7 hcp) but good suit (2 of top 3 honours).</desc>
+        </bid>
+      </bid>
+    </bid>
+
+    <bid id="622">
+      <value>3h</value>
+      <desc>Weak 2 in hearts, weak (5-7 hcp) and bad suit (1- of top 3 honours).</desc>
+    </bid>
+
+    <bid id="623">
+      <value>3s</value>
+      <desc>Weak 2 in hearts, weak (5-7 hcp) and bad suit (1- of top 3 honours).</desc>
+    </bid>
+
+    <bid id="624">
+      <value>3n</value>
+      <desc>23-24 balanced. Forcing to 6c.</desc>
+    </bid>
+  </bid>
+</bid>
+
+<bid id="7">
+  <value>2h</value>
+  <desc>5-10 hcp, 55 in hearts and another.</desc>
+
+  <bid id="71">
+    <value>2n</value>
+    <desc>What is your other suit?</desc>
+
+    <bid id="710">
+      <value>3c</value>
+      <desc>5 clubs.</desc>
+    </bid>
+
+    <bid id="711">
+      <value>3d</value>
+      <desc>5 diamonds.</desc>
+    </bid>
+
+    <bid id="712">
+      <value>3h</value>
+      <desc>5 spades.</desc>
+    </bid>
+  </bid>
+</bid>
+
+<bid id="8">
+  <value>2s</value>
+  <desc>5-10 hcp, 55 in spades and a minor.</desc>
+
+  <bid id="80">
+    <value>2n</value>
+    <desc>What is your other suit?</desc>
+
+    <bid id="800">
+      <value>3c</value>
+      <desc>5 clubs.</desc>
+    </bid>
+
+    <bid id="801">
+      <value>3d</value>
+      <desc>5 diamonds.</desc>
+    </bid>
+  </bid>
+</bid>
+
+<bid id="9">
+  <value>2n</value>
+  <desc>19-20 balanced. May include 5cM.</desc>
+
+  <bid id="90">
+    <value>3c</value>
+    <desc>Muppet Stayman.</desc>
+  </bid>
+
+  <bid id="91">
+    <value>3d</value>
+    <desc>Transfer to hearts. Is not aiming for immediate RKCB.</desc>
+  </bid>
+
+  <bid id="92">
+    <value>3h</value>
+    <desc>Transfer to spades. Is not aiming for immediate RKCB.</desc>
+  </bid>
+
+  <bid id="93">
+    <value>3s</value>
+    <desc>Puppet to 3n. Long minor, slam seeking.</desc>
+  </bid>
+
+  <bid id="94">
+    <value>3n</value>
+    <desc>45+ dc. Clubs at least as long as diamonds.</desc>
+  </bid>
+
+  <bid id="95">
+    <value>4c</value>
+    <desc>64+ dc. Longer diamonds than clubs.</desc>
+  </bid>
+
+  <bid id="96">
+    <value>4d</value>
+    <desc>Transfer to hearts. RKCB available.</desc>
+  </bid>
+
+  <bid id="97">
+    <value>4h</value>
+    <desc>Transfer to spades. RKCB available.</desc>
+  </bid>
+</bid>
+
+<bid id="a">
+  <value>3c</value>
+  <desc>Pre-empt.</desc>
+</bid>
+
+<bid id="b">
+  <value>3d</value>
+  <desc>Pre-empt.</desc>
+</bid>
+
+<bid id="c">
+  <value>3h</value>
+  <desc>Pre-empt.</desc>
+</bid>
+
+<bid id="d">
+  <value>3s</value>
+  <desc>Pre-empt.</desc>
+</bid>
+
+<bid id="e">
+  <value>3n</value>
+  <desc>Gambling 3NT. Solid 7cm. No outside A.</desc>
+</bid>
+
+<bid id="f">
+  <value>4c</value>
+  <desc></desc>
+</bid>
+
+<bid id="g">
+  <value>4d</value>
+  <desc></desc>
+</bid>
+
+<bid id="h">
+  <value>4h</value>
+  <desc></desc>
+</bid>
+
+<bid id="i">
+  <value>4s</value>
+  <desc></desc>
+</bid>
+
+<bid id="j">
+  <value>4n</value>
+  <desc>Specific ace ask.</desc>
+
+  <bid id="j0">
+    <value>5c</value>
+    <desc>0 aces. Any further bid is to play.</desc>
+  </bid>
+
+  <bid id="j1">
+    <value>5d</value>
+    <desc>Minor suit ace.</desc>
+
+    <bid id="j10">
+      <value>5h</value>
+      <desc>Which minor suit ace?</desc>
+
+      <bid id="j100">
+        <value>5s</value>
+        <desc>Ac</desc>
+      </bid>
+
+      <bid id="j101">
+        <value>5n</value>
+        <desc>Ad</desc>
+      </bid>
+    </bid>
+  </bid>
+
+  <bid id="j2">
+    <value>5h</value>
+    <desc>Ah</desc>
+  </bid>
+
+  <bid id="j3">
+    <value>5s</value>
+    <desc>As</desc>
+  </bid>
+
+  <bid id="j4">
+    <value>5n</value>
+    <desc>Two aces.</desc>
+  </bid>
+</bid>
+
+</openingBids>
