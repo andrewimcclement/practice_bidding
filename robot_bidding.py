@@ -10,41 +10,20 @@ Notes:
     - Further define settings manipulation.
 """
 
-import sys
-import os
-import re
-
 from random import choice
 from enum import Enum, auto
 from xml_parser import Bid
+from bridge_parser import parse, ParseResults
 
 try:
-    from .redeal.redeal import Deal
+    from redeal.redeal import Deal
 except ImportError:
     print("Using local copy of redeal, not submodule.")
     from redeal import Deal
 
-# You may use your own default bidding system here if desired.
-XML_SOURCE = "chimaera.xml"
-
 
 class BiddingProgram:
     """ The player is assumed to always sit South. """
-
-    class ParseResults(Enum):
-        """ Enum for results of parsing user input. """
-        Quit = auto()
-        Back = auto()
-        Help = auto()
-        Describe = auto()
-        Settings = auto()
-        Filepath = auto()
-        Yes = auto()
-        No = auto()
-        BridgeBid = auto()
-        BridgeContract = auto()
-        Integer = auto()
-        Unknown = auto()
 
     class Players(Enum):
         """
@@ -86,29 +65,6 @@ class BiddingProgram:
                              "bidding_sequence": [],
                              "opening_bids": {}}
         self.generate_new_deal()
-
-        important_regexes = {
-            re.compile("^settings$", re.I): self.ParseResults.Settings,
-            re.compile("^(quit|exit|terminate)$", re.I): self.ParseResults.Quit
-            }
-        standard_regexes = {
-            re.compile("^h(elp|ow ?to)?$", re.I): self.ParseResults.Help,
-            re.compile("^b(ack)?$", re.I): self.ParseResults.Back,
-            re.compile("^true$", re.I): True,
-            re.compile("^false$", re.I): False,
-            re.compile("^desc(ribe|ription)?$", re.I):
-                self.ParseResults.Describe,
-            re.compile("^y(es)?$", re.I): self.ParseResults.Yes,
-            re.compile("^no?$", re.I): self.ParseResults.No,
-            re.compile("^([1-7][cdhsn]|p(ass)?)$", re.I):
-                self.ParseResults.BridgeBid,
-            re.compile("^[0-9]+$"): self.ParseResults.Integer,
-            re.compile("^([1-7][cdhsn][ensw]|p(ass)?)$", re.I):
-                self.ParseResults.BridgeContract
-            }
-
-        self._regexes = {"important": important_regexes,
-                         "standard": standard_regexes}
 
         self._settings = {"mode": self.ProgramMode.Default,
                           "display_meaning_of_bids": False,
@@ -169,24 +125,13 @@ class BiddingProgram:
 
     def parse(self, input_, exclude_settings=False):
         """ Parse user input. """
-        for regex, result in self._regexes["important"].items():
-            if re.match(regex, input_):
-                if result == self.ParseResults.Quit:
-                    raise KeyboardInterrupt
-                elif result == self.ParseResults.Settings:
-                    if not exclude_settings:
-                        self.edit_settings()
+        result = parse(input_)
+        if result == ParseResults.Quit:
+            raise KeyboardInterrupt
+        elif result == ParseResults.Settings and not exclude_settings:
+            self.edit_settings()
 
-                    return result
-
-        for regex, result in self._regexes["standard"].items():
-            if re.match(regex, input_):
-                return result
-
-        if os.path.isfile(input_):
-            return self.ParseResults.Filepath
-
-        return self.ParseResults.Unknown
+        return result
 
     def _get_user_input(self, message, valid_inputs):
         result = self.parse(input(message))
@@ -289,7 +234,7 @@ class BiddingProgram:
             print(potential_bids.keys())
             selected = input("Your bid: ")
             result = self.parse(selected)
-            if result == self.ParseResults.BridgeBid:
+            if result == ParseResults.BridgeBid:
                 if selected.upper() == self._pass.value:
                     bid = self._pass
                     break
@@ -299,6 +244,9 @@ class BiddingProgram:
                     bid = potential_bids[selected]
                 except KeyError:
                     print("That was not an expected response.")
+            elif result == ParseResults.Help:
+                print("Enter a bid from one of the potential bids listed."
+                      " You must use a single character to define the suit.")
 
         return bid
 
@@ -317,9 +265,9 @@ class BiddingProgram:
                            "'back' to exit the settings editor.\n"
                            "'Exit' will end the program.\n")
             result = self.parse(input_, True)
-            if result == self.ParseResults.Back:
+            if result == ParseResults.Back:
                 return
-            elif result != self.ParseResults.Integer:
+            elif result != ParseResults.Integer:
                 continue
 
             key = settings_keys[int(input_)]
@@ -328,7 +276,7 @@ class BiddingProgram:
                 input_ = input(f"Do you wish to change the mode of the program"
                                f" from {self._mode}? (y/n)")
                 result = self.parse(input_, True)
-                if result == self.ParseResults.Yes:
+                if result == ParseResults.Yes:
                     if self._mode == self.ProgramMode.Automatic:
                         self._settings["mode"] = self.ProgramMode.Default
                     elif self._mode == self.ProgramMode.Default:
@@ -336,7 +284,7 @@ class BiddingProgram:
             else:
                 input_ = input(f"Do you wish to change {key} from "
                                f"{self._settings[key]}? (y/n))")
-                if self.parse(input_, True) == self.ParseResults.Yes:
+                if self.parse(input_, True) == ParseResults.Yes:
                     self._settings[key] = not self._settings[key]
 
     def _first_bidder(self):
@@ -384,34 +332,3 @@ class BiddingProgram:
                                                self.Vulnerability.Unfavourable}
         return (self.deal.dd_tricks(contract),
                 self.deal.dd_score(contract, vulnerability))
-
-    @property
-    def _xml_source(self):
-        if not self.__xml_source:
-            self.set_xml_source()
-        return self.__xml_source
-
-    def set_xml_source(self):
-        """ Edit the xml source file path defining bids for this program. """
-        try:
-            self.__xml_source = sys.argv[1]
-        except IndexError:
-            while True:
-                print("Please enter the path to the xml source file to be used"
-                      " for this program.")
-                filepath = input("Path to file: ")
-                if filepath.lower() == "default":
-                    filepath = XML_SOURCE
-                # Check if the user wants to exit/edit settings.
-                if self.parse(filepath) == self.ParseResults.Filepath:
-                    try:
-                        assert filepath.endswith(".xml")
-                        self.__xml_source = filepath
-                        return
-                    except AssertionError:
-                        print(f"{filepath} is not a valid file path"
-                              ".\nPlease try again.")
-
-    def get_bids(self):
-        """ Get bids from predefined xml source """
-        self._parse_xml(self._xml_source)

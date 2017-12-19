@@ -6,16 +6,11 @@ Created on Sat Dec 16 17:27:28 2017
 """
 
 import unittest
-import robot_bidding as bidding
+from bridge_parser import parse, ParseResults
 
 
-class BiddingProgramTests(unittest.TestCase):
-    """ Tests for BiddingProgram class. """
-
-    def setUp(self):
-        self._program = bidding.BiddingProgram()
-        self._program._BiddingProgram__xml_source = "chimaera.xml"
-
+class ParserTests(unittest.TestCase):
+    """ Tests for parse method. """
     @property
     def _parse_results(self):
         return self._program.ParseResults
@@ -30,41 +25,38 @@ class BiddingProgramTests(unittest.TestCase):
             for level in levels:
                 bid = f"{level}{suit}"
                 with self.subTest(bid=bid):
-                    self.assertEqual(self._parse_results.BridgeBid,
-                                     self._program.parse(bid))
-                    self.assertEqual(self._parse_results.BridgeBid,
-                                     self._program.parse(bid.upper()))
+                    self.assertEqual(ParseResults.BridgeBid, parse(bid))
+                    self.assertEqual(ParseResults.BridgeBid,
+                                     parse(bid.upper()))
 
         fails = {"0s", "1e", "h", "8c", "12d", "2HS"}
         for bid in fails:
             with self.subTest(bid=bid):
-                self.assertNotEqual(self._parse_results.BridgeBid,
-                                    self._program.parse(bid))
+                self.assertNotEqual(ParseResults.BridgeBid, parse(bid))
 
     def test_parse_yes_no(self):
         """ Check if the program parses yes/no responses correctly. """
         successes = {"y", "n", "Y", "No", "yES"}
         fails = {"yo", "ya", "ja", "nein", "Never", "yesss", "noooo"}
-        results = {self._parse_results.Yes, self._parse_results.No}
+        results = {ParseResults.Yes, ParseResults.No}
 
-        self.assertEqual(self._parse_results.Yes, self._program.parse("yes"))
+        self.assertEqual(ParseResults.Yes, parse("yes"))
 
         for input_ in successes:
             with self.subTest(success=input_):
-                self.assertIn(self._program.parse(input_), results)
+                self.assertIn(parse(input_), results)
 
         for input_ in fails:
             with self.subTest(fail=input_):
-                self.assertNotIn(self._program.parse(input_), results)
+                self.assertNotIn(parse(input_), results)
 
     def test_parse_quit(self):
-        """ Check KeyboardInterrupt is raised when user tries to quit. """
+        """ Check that attempts to quit are parsed correctly. """
 
         exit_options = {"quit", "EXIT", "Terminate"}
         for option in exit_options:
             with self.subTest(option=option):
-                with self.assertRaises(KeyboardInterrupt):
-                    self._program.parse(option)
+                self.assertEqual(ParseResults.Quit, parse(option))
 
 
 if __name__ == "__main__":
