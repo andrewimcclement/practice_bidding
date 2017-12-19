@@ -5,11 +5,44 @@ Created on Sat Dec 16 20:49:14 2017
 @author: Lynskyder
 """
 
+import sys
 import traceback
 
 from time import sleep
 from robot_bidding import BiddingProgram
 from xml_parser import get_bids_from_xml
+
+
+DEFAULT_XML_SOURCE = "chimaera.xml"
+
+
+
+def get_xml_source():
+    """ Edit the xml source file path defining bids for this program. """
+    try:
+        return sys.argv[1]
+    except IndexError:
+        while True:
+            print("Please enter the path to the xml source file to be used"
+                  " for this program.")
+            filepath = input("Path to file: ")
+            if filepath.lower() == "default":
+                filepath = DEFAULT_XML_SOURCE
+            # Check if the user wants to exit/edit settings.
+            result = program.parse(filepath)
+            if result == program.ParseResults.Help:
+                print("Do not escape backslashes. The input is expected "
+                      "to be raw.\n\nIf the filename you are trying "
+                      "to enter conflicts with a regex used by this "
+                      "program, please rename the file to something more "
+                      "appropriate.")
+            elif result == program.ParseResults.Filepath:
+                try:
+                    assert filepath.endswith(".xml")
+                    return filepath
+                except AssertionError:
+                    print(f"{filepath} is not a valid file path"
+                          ".\nPlease try again.")
 
 
 def main():

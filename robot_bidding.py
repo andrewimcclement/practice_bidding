@@ -299,6 +299,9 @@ class BiddingProgram:
                     bid = potential_bids[selected]
                 except KeyError:
                     print("That was not an expected response.")
+            elif result == self.ParseResults.Help:
+                print("Enter a bid from one of the potential bids listed."
+                      " You must use a single character to define the suit.")
 
         return bid
 
@@ -403,7 +406,14 @@ class BiddingProgram:
                 if filepath.lower() == "default":
                     filepath = XML_SOURCE
                 # Check if the user wants to exit/edit settings.
-                if self.parse(filepath) == self.ParseResults.Filepath:
+                result = self.parse(filepath)
+                if result == self.ParseResults.Help:
+                    print("Do not escape backslashes. The input is expected "
+                          "to be raw.\n\nIf the filename you are trying "
+                          "to enter conflicts with a regex used by this "
+                          "program, please rename the file to something more "
+                          "appropriate.")
+                elif result == self.ParseResults.Filepath:
                     try:
                         assert filepath.endswith(".xml")
                         self.__xml_source = filepath
