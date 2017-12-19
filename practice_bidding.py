@@ -11,38 +11,41 @@ import traceback
 from time import sleep
 from robot_bidding import BiddingProgram
 from xml_parser import get_bids_from_xml
+from bridge_parser import parse, ParseResults
 
 
+# You may use your own default bidding system here if desired.
 DEFAULT_XML_SOURCE = "chimaera.xml"
 
 
-
 def get_xml_source():
-    """ Edit the xml source file path defining bids for this program. """
+    """ Get the xml source file path defining bids for this program. """
     try:
         return sys.argv[1]
     except IndexError:
-        while True:
-            print("Please enter the path to the xml source file to be used"
-                  " for this program.")
-            filepath = input("Path to file: ")
-            if filepath.lower() == "default":
-                filepath = DEFAULT_XML_SOURCE
-            # Check if the user wants to exit/edit settings.
-            result = program.parse(filepath)
-            if result == program.ParseResults.Help:
-                print("Do not escape backslashes. The input is expected "
-                      "to be raw.\n\nIf the filename you are trying "
-                      "to enter conflicts with a regex used by this "
-                      "program, please rename the file to something more "
-                      "appropriate.")
-            elif result == program.ParseResults.Filepath:
-                try:
-                    assert filepath.endswith(".xml")
-                    return filepath
-                except AssertionError:
-                    print(f"{filepath} is not a valid file path"
-                          ".\nPlease try again.")
+        pass
+
+    while True:
+        print("Please enter the path to the xml source file to be used"
+              " for this program.")
+        filepath = input("Path to file: ")
+        if filepath.lower() == "default":
+            filepath = DEFAULT_XML_SOURCE
+
+        result = parse(filepath)
+        if result == ParseResults.Help:
+            print("Do not escape backslashes. The input is expected "
+                  "to be raw.\n\nIf the filename you are trying "
+                  "to enter conflicts with a regex used by this "
+                  "program, please rename the file to something more "
+                  "appropriate.")
+        elif result == ParseResults.Filepath:
+            try:
+                assert filepath.endswith(".xml")
+                return filepath
+            except AssertionError:
+                print(f"{filepath} is not a valid file path"
+                      ".\nPlease try again.")
 
 
 def main():
@@ -53,9 +56,6 @@ def main():
     """
 
     program = BiddingProgram()
-
-    def _parse(input_):
-        return program.parse(input_)
 
     def _play_board():
         print(f"Board: {program.board_number}. Vulnerability: "
@@ -72,12 +72,12 @@ def main():
             print(seat, program.get_hand(seat))
 
         input_ = input("Is this the correct final contract? (y/n) ")
-        if _parse(input_) == program.ParseResults.No:
+        if parse(input_) == ParseResults.No:
             result = None
-            while result != program.ParseResults.BridgeContract:
+            while result != ParseResults.BridgeContract:
                 input_ = input("Please enter the final contract: ")
-                result = _parse(input_)
-                if result == program.ParseResults.No:
+                result = parse(input_)
+                if result == ParseResults.No:
                     result = contract
                     break
 
@@ -88,24 +88,23 @@ def main():
             print(f"Double dummy result: {contract} {dd_result}")
 
         result = None
-        while result not in {program.ParseResults.Yes,
-                             program.ParseResults.No}:
+        while result not in {ParseResults.Yes,
+                             ParseResults.No}:
             input_ = input("Play another hand? (y/n) ")
-            result = _parse(input_)
+            result = parse(input_)
 
-        return result == program.ParseResults.Yes
+        return result == ParseResults.Yes
 
     # Here is the main program.
     play_another = True
 
     try:
-        program.set_opening_bids(get_bids_from_xml(program._xml_source))
+        source = get_xml_source()
+        bids = get_bids_from_xml(source)
+        program.set_opening_bids(bids)
         while play_another:
             play_another = _play_board()
             program.generate_new_deal()
-    except KeyboardInterrupt:
-        print("Thank you for playing!")
-        sleep(1)
     except Exception as ex:
         print("Sorry! We've hit an error:")
         print(ex)
@@ -114,6 +113,9 @@ def main():
               "the results to help fix your problem.")
         sleep(20)
         raise
+    finally:
+        print("Thank you for playing!")
+        sleep(1)
 
 
 if __name__ == "__main__":

@@ -9,9 +9,10 @@ import math
 import xml.etree.ElementTree as ET
 
 try:
-    from .redeal.redeal import Shape, Evaluator
-    from .redeal.redeal.global_defs import Strain
+    from redeal.redeal import Shape, Evaluator
+    from redeal.redeal.global_defs import Strain
 except ImportError:
+    print("Using local copy of redeal.")
     from redeal import Shape, Evaluator
     from redeal.global_defs import Strain
 
@@ -128,8 +129,8 @@ class ShapeCondition:
             self._accept = _accept
 
         elif type_ == "shape":
-            self.info = {"shape": Shape(kwargs["shape"])}
-            self._accept = self.info["shape"]
+            self.info = {"shape": kwargs["shape"]}
+            self._accept = Shape(self.info["shape"])
 
     def accept(self, hand):
         """If the hand satisfies the given shape constraint."""

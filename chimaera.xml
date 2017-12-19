@@ -1648,11 +1648,11 @@ Law of total tricks.
             <points>
               <max>9.25</max>
             </points>
-            
-            <shape type="clubs">
-              <min>4</min>
-            </shape>
           </evaluation>
+
+          <shape type="clubs">
+            <min>4</min>
+          </shape>
         </condition>
       </bid>
 

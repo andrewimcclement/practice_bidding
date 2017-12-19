@@ -55,8 +55,7 @@ def parse(input_):
         if regex.match(input_):
             return result
 
-    if os.isfile(input_):
+    if os.path.isfile(input_):
         return ParseResults.Filepath
 
     return ParseResults.Unknown
-
