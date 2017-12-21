@@ -166,9 +166,18 @@ class Condition:
                 f"\n{self.shape_conditions}")
 
 
-def get_bids_from_xml(filepath=None, use_chimaera_hcp=True):
+def get_bids_from_xml(filepath=None):
     """ Returns a dictionary of opening bids. """
-    hcp = CHIMAERA_HCP if use_chimaera_hcp else HCP
+    tree = ET.parse(filepath, ET.XMLParser(encoding="utf-8"))
+    root = tree.getroot()
+
+    hcp_style = root.attrib["hcp"]
+    if hcp_style == "standard":
+        hcp = HCP
+    elif hcp_style == "chimaera":
+        hcp = CHIMAERA_HCP
+    else:
+        raise NotImplementedError
 
     def _points(hand):
         club_length = max(len(hand.clubs) - 4, 0)
@@ -177,8 +186,6 @@ def get_bids_from_xml(filepath=None, use_chimaera_hcp=True):
         spade_length = max(len(hand.spades) - 4, 0)
         return (hcp(hand) + club_length + diamond_length + heart_length
                 + spade_length)
-
-    source = filepath
 
     def _define_bid(xml_bid):
         value, desc = xml_bid.find("value"), xml_bid.find("desc")
@@ -322,8 +329,6 @@ def get_bids_from_xml(filepath=None, use_chimaera_hcp=True):
             _find_all_children_bids(child_bid, child_xml_bid)
 
     # The actual function.
-    tree = ET.parse(source, ET.XMLParser(encoding="utf-8"))
-    root = tree.getroot()
     # Reset self._root to empty dictionary of opening bids.
     result = {}
     for xml_bid in root:

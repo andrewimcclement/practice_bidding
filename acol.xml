@@ -165,4 +165,96 @@ Key points of system.
     </shape>
   </condition>
 </bid>
+
+<bid id="3">
+  <value>1s</value>
+  <desc>Opening bid, spades longest suit.</desc>
+</bid>
+
+<bid id="4">
+  <value>1n</value>
+  <desc>12-14 balanced</desc>
+</bid>
+
+<bid id="5">
+  <value>2c</value>
+  <desc>22+ points, near game force.</desc>
+</bid>
+
+<bid id="6">
+  <value>2d</value>
+  <desc>5-10 hcp, 6 diamonds</desc>
+</bid>
+
+<bid id="7">
+  <value>2h</value>
+  <desc>5-10 hcp, 6 hearts.</desc>
+</bid>
+
+<bid id="8">
+  <value>2s</value>
+  <desc>5-10 hcp, 6 spades.</desc>
+</bid>
+
+<bid id="9">
+  <value>2n</value>
+  <desc>20-22 balanced.</desc>
+  
+  <condition type="include">
+    <shape type="general">balanced</shape>
+    
+    <evaluation>
+      <hcp>
+        <min>20</min>
+        <max>22</max>
+      </hcp>
+    </evaluation>
+  </condition>
+  
+  <bid id="90">
+    <value>3c</value>
+    <desc>Puppet Stayman.</desc>
+    
+    <bid id="900">
+      <value>3d</value>
+      <desc>At least one 4cM.</desc>
+    </bid>
+    
+    <bid id="901">
+      <value>3h</value>
+      <desc>5 hearts.</desc>
+    </bid>
+    
+    <bid id="902">
+      <value>3s</value>
+      <desc>5 spades.</desc>
+      
+      <bid id="9020">
+        <value>3n</value>
+        <desc>To play.</desc>
+        
+        <condition type="include">
+          <shape type="spades">
+            <max>2</max>
+          </shape>
+        </condition>
+      </bid>
+    </bid>
+    
+    <bid id="903">
+      <value>3n</value>
+      <desc>No 4cM.</desc>
+    </bid>
+  </bid>
+</bid>
+
+<bid id="a">
+  <value>3c</value>
+  <desc>Weak, 7+ clubs.</desc>
+</bid>
+
+<bid id="b">
+  <value>3d</value>
+  <desc>Weak, 7+ diamonds.</desc>
+</bid>
 </openingBids>

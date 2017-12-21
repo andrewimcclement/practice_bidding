@@ -59,3 +59,9 @@ def parse(input_):
         return ParseResults.Filepath
 
     return ParseResults.Unknown
+
+
+def parse_with_quit(input_):
+    result = parse(input_)
+    if result == ParseResults.Quit:
+        raise KeyboardInterrupt
