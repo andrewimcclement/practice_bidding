@@ -2007,8 +2007,8 @@ Law of total tricks.
     <condition type="include">
       <evaluation>
         <points>
-          <min>9.5</min>
-          <max>12.25</max>
+          <min>8.5</min>
+          <max>11.25</max>
         </points>
       </evaluation>
 
