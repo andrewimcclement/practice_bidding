@@ -1914,6 +1914,18 @@ Law of total tricks.
   <bid id="28">
     <value>3d</value>
     <desc>16+ points, 5+ diamonds.</desc>
+	
+	<condition type="include">
+      <evaluation>
+        <points>
+          <min>15.75</min>
+        </points>
+      </evaluation>
+
+      <shape type="diamonds">
+        <min>5</min>
+      </shape>
+    </condition>
   </bid>
 
   <bid id="29">
