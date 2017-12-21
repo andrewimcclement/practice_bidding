@@ -1990,7 +1990,7 @@ Law of total tricks.
     <condition type="include">
       <evaluation>
         <points>
-          <min>15.75</min>
+          <min>15.5</min>
         </points>
       </evaluation>
 
