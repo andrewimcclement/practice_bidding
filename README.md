@@ -3,10 +3,16 @@ A short program to allow practice of new bidding systems in Bridge.
 
 -------------------------------------------------------------------------------
 __Requirements__
+Python v3.6+ (f-strings are used ubiquitously).
+
 https://www.github.com/anntzer/redeal
 
 Example method of installation:
  - Run "pip install git+https://github.com/anntzer/redeal"
+
+A fork of this GitHub project is now included as a submodule of this
+repository. See https://git-scm.com/book/en/v2/Git-Tools-Submodules for how to
+ensure you get the redeal library installed as well.
 
 -------------------------------------------------------------------------------
 Usage:
@@ -20,6 +26,11 @@ will use the XML file located at "C:\path\to\system.xml"
 
 You may wish to edit the XML_DEFAULT_SOURCE constant for your own usage.
 Please do not commit these changes.
+
+-------------------------------------------------------------------------------
+Tests:
+Please run tests.py before making any pull requests. This helps ensure master
+stays in a usable state.
 
 -------------------------------------------------------------------------------
 Defining the XML bidding system:
