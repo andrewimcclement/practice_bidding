@@ -2003,6 +2003,19 @@ Law of total tricks.
   <bid id="29">
     <value>3h</value>
     <desc>10-12 points, 4+ hearts.</desc>
+    
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>9.5</min>
+          <max>12.25</max>
+        </points>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>4</min>
+      </shape>
+    </condition>
   </bid>
 
   <bid id="2a">
