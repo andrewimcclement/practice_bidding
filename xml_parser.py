@@ -270,11 +270,11 @@ def get_bids_from_xml(filepath=None, use_chimaera_hcp=True):
                     ShapeCondition(type_, general=shape.text))
             elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
                 try:
-                    minimum = shape.find("min").text
+                    minimum = int(shape.find("min").text)
                 except AttributeError:
                     minimum = 0
                 try:
-                    maximum = shape.find("max").text
+                    maximum = int(shape.find("max").text)
                 except AttributeError:
                     maximum = 13
 
