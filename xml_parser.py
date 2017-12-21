@@ -270,15 +270,16 @@ def get_bids_from_xml(filepath=None, use_chimaera_hcp=True):
                     ShapeCondition(type_, general=shape.text))
             elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
                 try:
-                    minimum = shape.find("minimum").text
+                    minimum = shape.find("min").text
                 except AttributeError:
                     minimum = 0
                 try:
-                    maximum = shape.find("maximum").text
+                    maximum = shape.find("max").text
                 except AttributeError:
                     maximum = 13
 
                 assert minimum <= maximum, f"{type_}: {minimum}->{maximum}"
+                assert (minimum, maximum) != (0, 13), "Min/max not defined."
 
                 shape_conditions.append(
                     ShapeCondition(type_, minimum=minimum,

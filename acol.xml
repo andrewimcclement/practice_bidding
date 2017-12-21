@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+Author: Andrew McClement (AIM)
+System: Basic Acol.
+State: Just begun.
+
+Notes on Acol.
+This version of Acol assumes majors are bid in preference to minors if 44.
+
+Key points of system.
+4 card majors.
+12-14 1n
+20-22 2n
+-->
+<openingBids hcp="standard">
+<bid id="0">
+  <value>1c</value>
+  <desc></desc>
+  
+  <condition type="include">
+    <evaluation>
+      <points>
+        <min>13</min>
+        <max>21</max>
+      </points>
+    </evaluation>
+    
+    <shape type="strictly_longer_than">
+      <longer_suit>clubs</longer_suit>
+      <shorter_suit>diamonds</shorter_suit>
+    </shape>
+    
+    <shape type="strictly_longer_than">
+      <longer_suit>clubs</longer_suit>
+      <shorter_suit>hearts</shorter_suit>
+    </shape>
+    
+    <shape type="strictly_longer_than">
+      <longer_suit>clubs</longer_suit>
+      <shorter_suit>spades</shorter_suit>
+    </shape>
+    
+    <shape type="general">unbalanced</shape>
+  </condition>
+  
+  <condition type="include">
+    <shape type="shape">3334</shape>
+    
+    <evaluation>
+      <hcp>
+        <min>15</min>
+        <max>19</max>
+      </hcp>
+    </evaluation>
+  </condition>
+  
+  <condition type="include">
+    <shape type="shape">(332)5</shape>
+    
+    <evaluation>
+      <hcp>
+        <min>15</min>
+        <max>19</max>
+      </hcp>
+    </evaluation>
+  </condition>
+  
+  <condition type="include">
+    <evaluation>
+      <points>
+        <min>13</min>
+        <max>21</max>
+      </points>
+    </evaluation>
+    
+    <shape type="shape">4414</shape>
+  </condition>
+</bid>
+
+<bid id="1">
+  <value>1d</value>
+  <desc></desc>
+  
+  <condition type="include">
+    <evaluation>
+      <points>
+        <min>13</min>
+        <max>21</max>
+      </points>
+    </evaluation>
+    
+    <shape type="general">unbalanced</shape>
+    
+    <shape type="strictly_longer_than">
+      <longer_suit>diamonds</longer_suit>
+      <shorter_suit>hearts</shorter_suit>
+    </shape>
+    
+    <shape type="strictly_longer_than">
+      <longer_suit>diamonds</longer_suit>
+      <shorter_suit>spades</shorter_suit>
+    </shape>
+    
+    <shape type="longer_than">
+      <longer_suit>diamonds</longer_suit>
+      <shorter_suit>clubs</shorter_suit>
+    </shape>
+  </condition>
+  
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>15</min>
+        <max>19</max>
+      </hcp>
+    </evaluation>
+    
+    <shape type="general">balanced</shape>
+    
+    <shape type="strictly_longer_than">
+      <longer_suit>diamonds</longer_suit>
+      <shorter_suit>hearts</shorter_suit>
+    </shape>
+    
+    <shape type="strictly_longer_than">
+      <longer_suit>diamonds</longer_suit>
+      <shorter_suit>spades</shorter_suit>
+    </shape>
+    
+    <shape type="longer_than">
+      <longer_suit>diamonds</longer_suit>
+      <shorter_suit>clubs</shorter_suit>
+    </shape>
+  </condition>
+  
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>13</min>
+        <max>21</max>
+      </hcp>
+    </evaluation>
+    
+    <shape type="shape">4144</shape>
+  </condition>
+</bid>
+
+<bid id="2">
+  <value>1h</value>
+  <desc></desc>
+  
+  <condition type="include">
+    <evaluation>
+      <points>
+        <min>13</min>
+        <max>21</max>
+      </points>
+    </evaluation>
+    
+    <shape type="shape">unbalanced</shape>
+    
+    <shape type="strictly_longer_than">
+      <longer_suit>hearts</longer_suit>
+      <shorter_suit>spades</shorter_suit>
+    </shape>
+  </condition>
+</bid>
+</openingBids>

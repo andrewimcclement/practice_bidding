@@ -33,7 +33,9 @@ def get_xml_source():
             filepath = DEFAULT_XML_SOURCE
 
         result = parse(filepath)
-        if result == ParseResults.Help:
+        if result == ParseResults.Quit:
+            raise KeyboardInterrupt
+        elif result == ParseResults.Help:
             print("Do not escape backslashes. The input is expected "
                   "to be raw.\n\nIf the filename you are trying "
                   "to enter conflicts with a regex used by this "
@@ -71,6 +73,10 @@ def main():
         for seat in program.Players:
             print(seat, program.get_hand(seat))
 
+        if contract != "P":
+            dd_result = program.get_double_dummy_result(contract)
+            print(f"Double dummy result: {contract} {dd_result}")
+
         input_ = input("Is this the correct final contract? (y/n) ")
         if parse(input_) == ParseResults.No:
             result = None
@@ -83,9 +89,11 @@ def main():
 
             contract = input_.upper()
 
-        if contract != "P":
-            dd_result = program.get_double_dummy_result(contract)
-            print(f"Double dummy result: {contract} {dd_result}")
+            if contract != "P":
+                dd_result = program.get_double_dummy_result(contract)
+                print(f"Double dummy result: {contract} {dd_result}")
+
+        # TODO: Add optimal contract (dd_solve).
 
         result = None
         while result not in {ParseResults.Yes,
