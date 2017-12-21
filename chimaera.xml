@@ -97,7 +97,6 @@ Law of total tricks.
 
         <shape type="hearts">
           <min>5</min>
-          <max>13</max>
         </shape>
       </condition>
 
