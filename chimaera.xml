@@ -1990,7 +1990,7 @@ Law of total tricks.
     <condition type="include">
       <evaluation>
         <points>
-          <min>15.75</min>
+          <min>15.5</min>
         </points>
       </evaluation>
 
@@ -2003,6 +2003,19 @@ Law of total tricks.
   <bid id="29">
     <value>3h</value>
     <desc>10-12 points, 4+ hearts.</desc>
+    
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>8.5</min>
+          <max>11.25</max>
+        </points>
+      </evaluation>
+
+      <shape type="hearts">
+        <min>4</min>
+      </shape>
+    </condition>
   </bid>
 
   <bid id="2a">
