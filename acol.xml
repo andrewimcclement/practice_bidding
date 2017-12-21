@@ -157,7 +157,7 @@ Key points of system.
       </points>
     </evaluation>
     
-    <shape type="shape">unbalanced</shape>
+    <shape type="general">unbalanced</shape>
     
     <shape type="strictly_longer_than">
       <longer_suit>hearts</longer_suit>
