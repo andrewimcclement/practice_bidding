@@ -1915,7 +1915,7 @@ Law of total tricks.
     <value>3d</value>
     <desc>16+ points, 5+ diamonds.</desc>
 	
-	<condition type="include">
+		<condition type="include">
       <evaluation>
         <points>
           <min>15.75</min>
