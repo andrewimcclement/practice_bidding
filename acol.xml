@@ -257,4 +257,8 @@ Key points of system.
   <value>3d</value>
   <desc>Weak, 7+ diamonds.</desc>
 </bid>
+
+<bid id="c">
+  <value>3h</value>
+</bid>
 </openingBids>
