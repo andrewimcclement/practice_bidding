@@ -16,7 +16,7 @@ Key points of system.
 <bid id="0">
   <value>1c</value>
   <desc></desc>
-  
+
   <condition type="include">
     <evaluation>
       <points>
@@ -24,28 +24,28 @@ Key points of system.
         <max>21</max>
       </points>
     </evaluation>
-    
+
     <shape type="strictly_longer_than">
       <longer_suit>clubs</longer_suit>
       <shorter_suit>diamonds</shorter_suit>
     </shape>
-    
+
     <shape type="strictly_longer_than">
       <longer_suit>clubs</longer_suit>
       <shorter_suit>hearts</shorter_suit>
     </shape>
-    
+
     <shape type="strictly_longer_than">
       <longer_suit>clubs</longer_suit>
       <shorter_suit>spades</shorter_suit>
     </shape>
-    
+
     <shape type="general">unbalanced</shape>
   </condition>
-  
+
   <condition type="include">
     <shape type="shape">3334</shape>
-    
+
     <evaluation>
       <hcp>
         <min>15</min>
@@ -53,10 +53,10 @@ Key points of system.
       </hcp>
     </evaluation>
   </condition>
-  
+
   <condition type="include">
     <shape type="shape">(332)5</shape>
-    
+
     <evaluation>
       <hcp>
         <min>15</min>
@@ -64,7 +64,7 @@ Key points of system.
       </hcp>
     </evaluation>
   </condition>
-  
+
   <condition type="include">
     <evaluation>
       <points>
@@ -72,7 +72,7 @@ Key points of system.
         <max>21</max>
       </points>
     </evaluation>
-    
+
     <shape type="shape">4414</shape>
   </condition>
 </bid>
@@ -80,7 +80,7 @@ Key points of system.
 <bid id="1">
   <value>1d</value>
   <desc></desc>
-  
+
   <condition type="include">
     <evaluation>
       <points>
@@ -88,25 +88,25 @@ Key points of system.
         <max>21</max>
       </points>
     </evaluation>
-    
+
     <shape type="general">unbalanced</shape>
-    
+
     <shape type="strictly_longer_than">
       <longer_suit>diamonds</longer_suit>
       <shorter_suit>hearts</shorter_suit>
     </shape>
-    
+
     <shape type="strictly_longer_than">
       <longer_suit>diamonds</longer_suit>
       <shorter_suit>spades</shorter_suit>
     </shape>
-    
+
     <shape type="longer_than">
       <longer_suit>diamonds</longer_suit>
       <shorter_suit>clubs</shorter_suit>
     </shape>
   </condition>
-  
+
   <condition type="include">
     <evaluation>
       <hcp>
@@ -114,25 +114,25 @@ Key points of system.
         <max>19</max>
       </hcp>
     </evaluation>
-    
+
     <shape type="general">balanced</shape>
-    
+
     <shape type="strictly_longer_than">
       <longer_suit>diamonds</longer_suit>
       <shorter_suit>hearts</shorter_suit>
     </shape>
-    
+
     <shape type="strictly_longer_than">
       <longer_suit>diamonds</longer_suit>
       <shorter_suit>spades</shorter_suit>
     </shape>
-    
+
     <shape type="longer_than">
       <longer_suit>diamonds</longer_suit>
       <shorter_suit>clubs</shorter_suit>
     </shape>
   </condition>
-  
+
   <condition type="include">
     <evaluation>
       <hcp>
@@ -140,7 +140,7 @@ Key points of system.
         <max>21</max>
       </hcp>
     </evaluation>
-    
+
     <shape type="shape">4144</shape>
   </condition>
 </bid>
@@ -148,7 +148,7 @@ Key points of system.
 <bid id="2">
   <value>1h</value>
   <desc></desc>
-  
+
   <condition type="include">
     <evaluation>
       <points>
@@ -156,9 +156,9 @@ Key points of system.
         <max>21</max>
       </points>
     </evaluation>
-    
+
     <shape type="general">unbalanced</shape>
-    
+
     <shape type="strictly_longer_than">
       <longer_suit>hearts</longer_suit>
       <shorter_suit>spades</shorter_suit>
@@ -199,10 +199,10 @@ Key points of system.
 <bid id="9">
   <value>2n</value>
   <desc>20-22 balanced.</desc>
-  
+
   <condition type="include">
     <shape type="general">balanced</shape>
-    
+
     <evaluation>
       <hcp>
         <min>20</min>
@@ -210,29 +210,29 @@ Key points of system.
       </hcp>
     </evaluation>
   </condition>
-  
+
   <bid id="90">
     <value>3c</value>
     <desc>Puppet Stayman.</desc>
-    
+
     <bid id="900">
       <value>3d</value>
       <desc>At least one 4cM.</desc>
     </bid>
-    
+
     <bid id="901">
       <value>3h</value>
       <desc>5 hearts.</desc>
     </bid>
-    
+
     <bid id="902">
       <value>3s</value>
       <desc>5 spades.</desc>
-      
+
       <bid id="9020">
         <value>3n</value>
         <desc>To play.</desc>
-        
+
         <condition type="include">
           <shape type="spades">
             <max>2</max>
@@ -240,7 +240,7 @@ Key points of system.
         </condition>
       </bid>
     </bid>
-    
+
     <bid id="903">
       <value>3n</value>
       <desc>No 4cM.</desc>

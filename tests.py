@@ -1,10 +1,14 @@
+""" Test suite for practice_bidding. """
+
 import sys
 import unittest
 
 import parser_tests
 import xml_parser_tests
 
-if __name__ == "__main__":
+
+def main():
+    """ Run all unit tests in practice_bidding. """
     try:
         verbosity = int(sys.argv[1])
     except (ValueError, IndexError):
@@ -19,3 +23,7 @@ if __name__ == "__main__":
     result = runner.run(suite)
 
     sys.exit(not result.wasSuccessful())
+
+
+if __name__ == "__main__":
+    main()
