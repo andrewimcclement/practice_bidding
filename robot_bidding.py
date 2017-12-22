@@ -13,7 +13,7 @@ Notes:
 from random import choice
 from enum import Enum, auto
 from xml_parser import Bid
-from bridge_parser import parse, ParseResults
+from bridge_parser import parse_with_quit, ParseResults
 
 try:
     from redeal.redeal import Deal
@@ -125,10 +125,8 @@ class BiddingProgram:
 
     def parse(self, input_, exclude_settings=False):
         """ Parse user input. """
-        result = parse(input_)
-        if result == ParseResults.Quit:
-            raise KeyboardInterrupt
-        elif result == ParseResults.Settings and not exclude_settings:
+        result = parse_with_quit(input_)
+        if result == ParseResults.Settings and not exclude_settings:
             self.edit_settings()
 
         return result

@@ -6,7 +6,7 @@ Created on Sat Dec 16 17:27:28 2017
 """
 
 import unittest
-from bridge_parser import parse, ParseResults
+from bridge_parser import parse, parse_with_quit, ParseResults
 
 
 class ParserTests(unittest.TestCase):
@@ -28,6 +28,8 @@ class ParserTests(unittest.TestCase):
                     self.assertEqual(ParseResults.BridgeBid, parse(bid))
                     self.assertEqual(ParseResults.BridgeBid,
                                      parse(bid.upper()))
+                    self.assertEqual(ParseResults.BridgeBid,
+                                     parse_with_quit(bid))
 
         fails = {"0s", "1e", "h", "8c", "12d", "2HS"}
         for bid in fails:
