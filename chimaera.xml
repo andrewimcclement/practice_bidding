@@ -2983,7 +2983,7 @@ Law of total tricks.
       </hcp>
     </evaluation>
     
-    <shape type="balanced"></shape>
+    <shape type="general">balanced</shape>
   </condition>
   
   <condition type="include">
