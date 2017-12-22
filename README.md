@@ -1,4 +1,4 @@
-# practice-bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master)
+# practice_bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master)
 A short program to allow practice of new bidding systems in Bridge.
 
 -------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ XML_DEFAULT_SOURCE constant to locate the XML file describing the bidding
 system you wish to use, if you enter "default" when asked for the XML file
 location. Otherwise you may enter the file location at that point.
 
-Alternatively, "python C:\path\to\robot_bidding.py C:\path\to\system.xml"
+Alternatively, "python C:\path\to\practice_bidding.py C:\path\to\system.xml"
 will use the XML file located at "C:\path\to\system.xml"
 
 You may wish to edit the XML_DEFAULT_SOURCE constant for your own usage.
@@ -37,10 +37,10 @@ Defining the XML bidding system:
 See chimaera.xml as an example.
 
 &lt;bid&gt; element must always have a &lt;value&gt; element and a &lt;desc&gt;
-element. For a bid to be recognised by the program, it must have a &lt;condition&gt;
-element. A &lt;condition&gt; element must have a "type" tag as either "include"
-or "exclude" depending on whether the hand type should be included as a valid
-hand type or excluded as an invalid hand type for that bid.
+element. For a bid to be recognised by the program, it must have a
+&lt;condition&gt; element. A &lt;condition&gt; element must have a "type" tag
+as either "include" or "exclude" depending on whether the hand type should be
+included as a valid hand type or excluded as an invalid hand type for that bid.
 
 An &lt;evaluation&gt; element can be added inside a &lt;condition&gt; element.
 This can have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and
