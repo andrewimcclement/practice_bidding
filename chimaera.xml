@@ -2974,20 +2974,205 @@ Law of total tricks.
 <bid id="6">
   <value>2d</value>
   <desc>Multi, weak 2 in a major or 23-24 balanced.</desc>
+  
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>22.75</min>
+        <max>24.5</max>
+      </hcp>
+    </evaluation>
+    
+    <shape type="balanced"></shape>
+  </condition>
+  
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>4.75</min>
+        <max>10.5</max>
+      </hcp>
+    </evaluation>
+    
+    <shape type="shape">6xxx</shape>
+    
+    <shape type="hearts">
+      <max>4</max>
+    </shape>
+    
+    <shape type="clubs">
+      <max>4</max>
+    </shape>
+    
+    <shape type="diamonds">
+      <max>4</max>
+    </shape>
+  </condition>
+  
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>4.75</min>
+        <max>10.5</max>
+      </hcp>
+    </evaluation>
+    
+    <shape type="shape">x6xx</shape>
+    
+    <shape type="spades">
+      <max>4</max>
+    </shape>
+    
+    <shape type="clubs">
+      <max>4</max>
+    </shape>
+    
+    <shape type="diamonds">
+      <max>4</max>
+    </shape>
+  </condition>
 
   <bid id="60">
     <value>2h</value>
     <desc>Pass or correct.</desc>
+    
+    <condition type="include">
+      <evaluation>
+        <points>
+          <max>13.25</max>
+        </points>
+      </evaluation>
+    </condition>
+    
+    <condition type="include">
+      <evaluation>
+        <points>
+          <max>14.25</max>
+        </points>
+      </evaluation>
+      
+      <shape type="hearts">
+        <max>1</max>
+      </shape>
+    </condition>
+    
+    <condition type="exclude">
+      <shape type="hearts">
+        <min>4</min>
+      </shape>
+      
+      <shape type="spades">
+        <min>4</min>
+      </shape>
+    </condition>
+    
+    <bid id="600">
+      <value>2s</value>
+      <desc>Weak 2 in spades.</desc>
+      
+      <condition type="include">
+        <shape type="shape">6xxx</shape>
+      </condition>
+    </bid>
+    
+    <bid id="601">
+      <value>2n</value>
+      <desc>23-24 balanced.</desc>
+      
+      <condition type="include">
+        <shape type="general">balanced</shape>
+        
+        <evaluation>
+          <hcp>
+            <min>22.75</min>
+            <max>24.5</max>
+          </hcp>
+        </evaluation>
+      </condition>
+    </bid>
   </bid>
 
   <bid id="61">
     <value>2s</value>
     <desc>Pass or correct, some interest in hearts.</desc>
+    
+    <condition type="include">
+      <shape type="hearts">
+        <min>4</min>
+      </shape>
+      
+      <shape type="spades">
+        <max>3</max>
+      </shape>
+      
+      <shape type="general">unbalanced</shape>
+      
+      <evaluation>
+        <points>
+          <min>11.5</min>
+          <max>14.25</max>
+        </points>
+      </evaluation>
+    </condition>
+    
+    <bid id="610">
+      <value>2n</value>
+      <desc>23-24 balanced.</desc>
+      
+      <condition type="include">
+        <shape type="general">balanced</shape>
+        
+        <evaluation>
+          <hcp>
+            <min>22.75</min>
+            <max>24.5</max>
+          </hcp>
+        </evaluation>
+      </condition>
+    </bid>
+    
+    <bid id="613">
+      <value>3h</value>
+      <desc>5-8 hcp, 6 hearts.</desc>
+      
+      <condition type="include">
+        <evaluation>
+          <hcp>
+            <max>8.5</max>
+          </hcp>
+        </evaluation>
+        
+        <shape type="shape">x6xx</shape>
+      </condition>
+    </bid>
+    
+    <bid id="618">
+      <value>4h</value>
+      <desc>9-10 hcp, 6 hearts.</desc>
+      
+      <condition type="include">
+        <evaluation>
+          <hcp>
+            <min>8.75</min>
+          </hcp>
+        </evaluation>
+        
+        <shape type="shape">x6xx</shape>
+      </condition>
+    </bid>
   </bid>
 
   <bid id="62">
     <value>2n</value>
-    <desc>16+ points, relay bid.</desc>
+    <desc>15+ points, relay bid.</desc>
+    
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>14.5</min>
+        </points>
+      </evaluation>
+    </condition>
 
     <bid id="620">
       <value>3c</value>
@@ -3039,6 +3224,75 @@ Law of total tricks.
 <bid id="7">
   <value>2h</value>
   <desc>5-10 hcp, 55 in hearts and another.</desc>
+  
+  <condition type="include">
+    <shape type="hearts">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <shape type="spades">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <evaluation>
+      <hcp>
+        <min>4.75</min>
+        <max>10.5</max>
+      </hcp>
+      
+      <points>
+        <max>13.5</max>
+      </points>
+    </evaluation>
+  </condition>
+  
+  <condition type="include">
+    <shape type="hearts">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <shape type="clubs">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <evaluation>
+      <hcp>
+        <min>4.75</min>
+        <max>10.5</max>
+      </hcp>
+      
+      <points>
+        <max>13.5</max>
+      </points>
+    </evaluation>
+  </condition>
+  
+  <condition type="include">
+    <shape type="hearts">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <shape type="diamonds">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <evaluation>
+      <hcp>
+        <min>4.75</min>
+        <max>10.5</max>
+      </hcp>
+      
+      <points>
+        <max>13.5</max>
+      </points>
+    </evaluation>
+  </condition>
 
   <bid id="71">
     <value>2n</value>
@@ -3064,6 +3318,52 @@ Law of total tricks.
 <bid id="8">
   <value>2s</value>
   <desc>5-10 hcp, 55 in spades and a minor.</desc>
+  
+  <condition type="include">
+    <shape type="spades">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <shape type="clubs">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <evaluation>
+      <hcp>
+        <min>4.75</min>
+        <max>10.5</max>
+      </hcp>
+      
+      <points>
+        <max>13.5</max>
+      </points>
+    </evaluation>
+  </condition>
+  
+  <condition type="include">
+    <shape type="spades">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <shape type="diamonds">
+      <min>5</min>
+      <max>7</max>
+    </shape>
+    
+    <evaluation>
+      <hcp>
+        <min>4.75</min>
+        <max>10.5</max>
+      </hcp>
+      
+      <points>
+        <max>13.5</max>
+      </points>
+    </evaluation>
+  </condition>
 
   <bid id="80">
     <value>2n</value>
@@ -3084,20 +3384,127 @@ Law of total tricks.
 <bid id="9">
   <value>2n</value>
   <desc>19-20 balanced. May include 5cM.</desc>
+  
+  <condition type="include">
+    <shape type="general">balanced</shape>
+    
+    <evaluation>
+      <hcp>
+        <min>18.75</min>
+        <max>20.5</max>
+      </hcp>
+    </evaluation>
+  </condition>
 
   <bid id="90">
     <value>3c</value>
     <desc>Muppet Stayman.</desc>
+    
+    <condition type="include">
+      <shape type="general">balanced</shape>
+      
+      <evaluation>
+        <points>
+          <min>5.5</min>
+        </points>
+      </evaluation>
+    </condition>
+    
+    <condition type="include">
+      <shape type="hearts">
+        <min>4</min>
+      </shape>
+      
+      <shape type="shape">4xxx</shape>
+      
+      <evaluation>
+        <points>
+          <min>5.5</min>
+        </points>
+      </evaluation>
+    </condition>
+    
+    <condition type="include">
+      <shape type="spades">
+        <min>4</min>
+      </shape>
+      
+      <shape type="shape">x4xx</shape>
+      
+      <evaluation>
+        <points>
+          <min>5.5</min>
+        </points>
+      </evaluation>
+    </condition>
+    
+    <condition type="exclude">
+      <shape type="shape">(53)xx</shape>
+    </condition>
+    
+    <bid id="900">
+      <value>3d</value>
+      <desc>At least one 4cM.</desc>
+    </bid>
+    
+    <bid id="901">
+      <value>3h</value>
+      <desc>No 4cM.</desc>
+      
+      <condition type="include">
+        <shape type="hearts">
+          <max>3</max>
+        </shape>
+        
+        <shape type="spades">
+          <max>3</max>
+        </shape>
+      </condition>
+    </bid>
+    
+    <bid id="902">
+      <value>3s</value>
+      <desc>5 spades.</desc>
+      
+      <condition type="include">
+        <shape type="shape">5xxx</shape>
+      </condition>
+    </bid>
+    
+    <bid id="903">
+      <value>3n</value>
+      <desc>5 hearts</desc>
+      
+      <condition type="include">
+        <shape type="shape">x5xx</shape>
+      </condition>
+    </bid>
   </bid>
 
   <bid id="91">
     <value>3d</value>
     <desc>Transfer to hearts. Is not aiming for immediate RKCB.</desc>
+    
+    <condition type="include">
+      <shape type="shape">x5xx</shape>
+      
+      <shape type="spades">
+        <max>3</max>
+      </shape>
+    </condition>
   </bid>
 
   <bid id="92">
     <value>3h</value>
     <desc>Transfer to spades. Is not aiming for immediate RKCB.</desc>
+    
+    <condition type="include">
+      <shape type="shape">5xxx</shape>
+      
+      <shape type="hearts">
+        <max>3</max>
+      </shape>
+    </condition>
   </bid>
 
   <bid id="93">
@@ -3153,22 +3560,22 @@ Law of total tricks.
 
 <bid id="f">
   <value>4c</value>
-  <desc></desc>
+  <desc>Pre-emptive.</desc>
 </bid>
 
 <bid id="g">
   <value>4d</value>
-  <desc></desc>
+  <desc>Pre-emptive.</desc>
 </bid>
 
 <bid id="h">
   <value>4h</value>
-  <desc></desc>
+  <desc>Pre-emptive.</desc>
 </bid>
 
 <bid id="i">
   <value>4s</value>
-  <desc></desc>
+  <desc>Pre-emptive.</desc>
 </bid>
 
 <bid id="j">
