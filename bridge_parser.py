@@ -65,3 +65,5 @@ def parse_with_quit(input_):
     result = parse(input_)
     if result == ParseResults.Quit:
         raise KeyboardInterrupt
+
+    return result
