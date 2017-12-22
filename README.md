@@ -28,11 +28,6 @@ You may wish to edit the XML_DEFAULT_SOURCE constant for your own usage.
 Please do not commit these changes.
 
 -------------------------------------------------------------------------------
-Tests:
-Please run tests.py before making any pull requests. This helps ensure master
-stays in a usable state.
-
--------------------------------------------------------------------------------
 Defining the XML bidding system:
 See chimaera.xml as an example.
 
