@@ -16,4 +16,6 @@ if __name__ == "__main__":
     suite.addTests(loader.loadTestsFromModule(xml_parser_tests))
 
     runner = unittest.TextTestRunner(verbosity=verbosity)
-    runner.run(suite)
+    result = runner.run(suite)
+
+    sys.exit(not result.wasSuccessful())
