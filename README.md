@@ -1,4 +1,4 @@
-# practice-bidding https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master
+# practice-bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master)
 A short program to allow practice of new bidding systems in Bridge.
 
 -------------------------------------------------------------------------------
