@@ -11,7 +11,7 @@ import traceback
 from time import sleep
 from robot_bidding import BiddingProgram
 from xml_parser import get_bids_from_xml
-from bridge_parser import parse, ParseResults
+from bridge_parser import parse, parse_with_quit, ParseResults
 
 
 # You may use your own default bidding system here if desired.
@@ -80,18 +80,16 @@ def main():
         input_ = input("Is this the correct final contract? (y/n) ")
         if parse(input_) == ParseResults.No:
             result = None
-            while result != ParseResults.BridgeContract:
+            while result not in {ParseResults.Back, ParseResults.No}:
                 input_ = input("Please enter the final contract: ")
-                result = parse(input_)
-                if result == ParseResults.No:
-                    result = contract
+                result = parse_with_quit(input_)
+                if result == ParseResults.BridgeBid:
+                    contract = input_.upper()
+
+                    if contract != "P":
+                        dd_result = program.get_double_dummy_result(contract)
+                        print(f"Double dummy result: {contract} {dd_result}")
                     break
-
-            contract = input_.upper()
-
-            if contract != "P":
-                dd_result = program.get_double_dummy_result(contract)
-                print(f"Double dummy result: {contract} {dd_result}")
 
         # TODO: Add optimal contract (dd_solve).
 

@@ -23,7 +23,7 @@ Principle of fast arrival.
 Law of total tricks.
  -->
 
-<openingBids>
+<openingBids hcp="chimaera">
 <bid id="0">
   <value>1c</value>
   <desc>16+ hcp</desc>
@@ -1507,7 +1507,7 @@ Law of total tricks.
   <bid id="14">
     <value>2d</value>
     <desc>6-9 points, 4+ diamonds.</desc>
-    
+
     <condition type="include">
       <evaluation>
         <points>
@@ -1515,15 +1515,15 @@ Law of total tricks.
           <max>9.25</max>
         </points>
       </evaluation>
-      
+
       <shape type="diamonds">
         <min>4</min>
       </shape>
-      
+
       <shape type="hearts">
         <max>3</max>
       </shape>
-      
+
       <shape type="spades">
         <max>3</max>
       </shape>
@@ -1533,18 +1533,18 @@ Law of total tricks.
   <bid id="15">
     <value>2h</value>
     <desc>16+ points, 5+ hearts.</desc>
-    
+
     <condition type="include">
       <evaluation>
         <points>
           <min>15.5</min>
         </points>
       </evaluation>
-      
+
       <shape type="hearts">
         <min>5</min>
       </shape>
-      
+
       <shape type="strictly_longer_than">
         <longer_suit>hearts</longer_suit>
         <shorter_suit>spades</shorter_suit>
@@ -1555,14 +1555,14 @@ Law of total tricks.
   <bid id="16">
     <value>2s</value>
     <desc>16+ points, 5+ spades.</desc>
-    
+
     <condition type="include">
       <evaluation>
         <points>
           <min>15.5</min>
         </points>
       </evaluation>
-      
+
       <shape type="spades">
         <min>5</min>
       </shape>
@@ -1607,22 +1607,22 @@ Law of total tricks.
   <bid id="1f">
     <value>4h</value>
     <desc>Kickback.</desc>
-    
+
     <condition type="include">
       <shape type="diamonds">
         <min>5</min>
       </shape>
-      
+
       <shape type="spades">
         <min>2</min>
         <max>4</max>
       </shape>
-      
+
       <shape type="hearts">
         <min>2</min>
         <max>4</max>
       </shape>
-      
+
       <evaluation>
         <points>
           <min>19.5</min>
@@ -1713,7 +1713,7 @@ Law of total tricks.
       <bid id="2000">
         <value>2c</value>
         <desc>To play.</desc>
-        
+
         <condition type="include">
           <evaluation>
             <points>
@@ -1985,7 +1985,7 @@ Law of total tricks.
   <bid id="28">
     <value>3d</value>
     <desc>16+ points, 5+ diamonds.</desc>
-	
+
     <condition type="include">
       <evaluation>
         <points>
@@ -2002,7 +2002,7 @@ Law of total tricks.
   <bid id="29">
     <value>3h</value>
     <desc>10-12 points, 4+ hearts.</desc>
-    
+
     <condition type="include">
       <evaluation>
         <points>
