@@ -166,6 +166,36 @@ class Condition:
                 f"\n{self.shape_conditions}")
 
 
+# Not yet in use.
+def parse_formula_for_condition(formula):
+    """ Parse a formula involving suit lengths. """
+
+    formula = formula.lower()
+    formula = "".join(formula.split())
+
+    assert ("clubs" in formula
+            or "diamonds" in formula
+            or "hearts" in formula
+            or "spades" in formula)
+
+    operators = ["==", ">", "<", ">=", "<="]
+    assert sum((formula.count(operator) for operator in operators)) == 1
+
+    result = [formula]
+    i = 0
+    while len(result) == 1:
+        to_parse = result[0]
+        operator = operators[i]
+        result = to_parse.split(operator)
+        i += 1
+
+    assert len(result) == 2
+
+    def _accept(hand):
+        # TODO Define the accept function.
+        pass
+
+
 def get_bids_from_xml(filepath=None):
     """ Returns a dictionary of opening bids. """
     tree = ET.parse(filepath, ET.XMLParser(encoding="utf-8"))

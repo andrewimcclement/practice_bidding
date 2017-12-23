@@ -3177,6 +3177,17 @@ Law of total tricks.
     <bid id="620">
       <value>3c</value>
       <desc>Weak 2 in hearts, either strong (8-10 hcp) or good suit (2 of top 3 honours).</desc>
+      
+      <condition type="include">
+        <shape type="shape">x6xx</shape>
+        
+        <evaluation>
+          <hcp>
+            <min>7.75</min>
+            <max>10.5</max>
+          </hcp>
+        </evaluation>
+      </condition>
 
       <bid id="6200">
         <value>3d</value>
@@ -3192,10 +3203,27 @@ Law of total tricks.
     <bid id="621">
       <value>3d</value>
       <desc>Weak 2 in spades, either strong (8-10 hcp) or good suit (2 of top 3 honours).</desc>
+      
+      <condition type="include">
+        <shape type="shape">6xxx</shape>
+        
+        <evaluation>
+          <hcp>
+            <min>7.75</min>
+            <max>10.5</max>
+          </hcp>
+        </evaluation>
+      </condition>
 
       <bid id="6210">
         <value>3h</value>
         <desc>Relay.</desc>
+        
+        <condition type="include">
+          <shape type="spades">
+            <min>2</min>
+          </shape>
+        </condition>
 
         <bid id="62100">
           <value>3s</value>
@@ -3217,6 +3245,17 @@ Law of total tricks.
     <bid id="624">
       <value>3n</value>
       <desc>23-24 balanced. Forcing to 6c.</desc>
+      
+      <condition type="include">
+        <shape type="general">balanced</shape>
+        
+        <evaluation>
+          <hcp>
+            <min>22.75</min>
+            <max>24.5</max>
+          </hcp>
+        </evaluation>
+      </condition>
     </bid>
   </bid>
 </bid>
@@ -3297,6 +3336,25 @@ Law of total tricks.
   <bid id="71">
     <value>2n</value>
     <desc>What is your other suit?</desc>
+    
+    <!-- This condition needs work. -->
+    <condition type="include">
+      <shape type="hearts">
+        <max>2</max>
+      </shape>
+      
+      <shape type="spades">
+        <min>3</min>
+      </shape>
+      
+      <shape type="clubs">
+        <min>3</min>
+      </shape>
+      
+      <shape type="diamonds">
+        <min>3</min>
+      </shape>
+    </condition>
 
     <bid id="710">
       <value>3c</value>

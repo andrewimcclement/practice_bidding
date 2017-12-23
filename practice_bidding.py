@@ -83,13 +83,16 @@ def main():
             while result not in {ParseResults.Back, ParseResults.No}:
                 input_ = input("Please enter the final contract: ")
                 result = parse_with_quit(input_)
-                if result == ParseResults.BridgeBid:
+                if result == ParseResults.BridgeContract:
                     contract = input_.upper()
 
                     if contract != "P":
                         dd_result = program.get_double_dummy_result(contract)
                         print(f"Double dummy result: {contract} {dd_result}")
                     break
+                elif result == ParseResults.Help:
+                    # TODO: Add Help message.
+                    pass
 
         # TODO: Add optimal contract (dd_solve).
 
@@ -97,7 +100,10 @@ def main():
         while result not in {ParseResults.Yes,
                              ParseResults.No}:
             input_ = input("Play another hand? (y/n) ")
-            result = parse(input_)
+            result = parse_with_quit(input_)
+            if result == ParseResults.Help:
+                # TODO: Add help message about back and no being options to
+                #       cancel this option.
 
         return result == ParseResults.Yes
 
