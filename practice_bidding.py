@@ -104,6 +104,7 @@ def main():
             if result == ParseResults.Help:
                 # TODO: Add help message about back and no being options to
                 #       cancel this option.
+                pass
 
         return result == ParseResults.Yes
 

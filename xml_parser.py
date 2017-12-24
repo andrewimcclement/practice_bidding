@@ -7,6 +7,7 @@ Created on Sun Dec 17 04:44:04 2017
 
 import math
 import xml.etree.ElementTree as ET
+import re
 
 try:
     from redeal.redeal import Shape, Evaluator
@@ -19,6 +20,8 @@ except ImportError:
 
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
 HCP = Evaluator(4, 3, 2, 1)
+OPERATOR = re.compile("<[^=]|>[^=]|[<>=]=")
+VALID_EXPRESSION = re.compile("^[cdhs0-9]([-+*][cdhs0-9])*$", re.I)
 
 
 class Bid:
@@ -90,47 +93,12 @@ class ShapeCondition:
     _balanced = Shape("(4333)") + Shape("(4432)") + Shape("(5332)")
     _any = Shape("xxxx")
     _unbalanced = _any - _balanced
-    _general_types = {"balanced": _balanced, "any": _any,
-                      "unbalanced": _unbalanced}
+    general_types = {"balanced": _balanced, "any": _any,
+                     "unbalanced": _unbalanced}
 
-    def __init__(self, type_, **kwargs):
-        if type_ in {"clubs", "diamonds", "hearts", "spades"}:
-            minimum = kwargs["minimum"]
-            maximum = kwargs["maximum"]
-
-            self.info = {"suit": type_, "min": minimum, "max": maximum}
-
-            def _accept(hand):
-                return minimum <= len(getattr(hand, type_)) <= maximum
-
-            self._accept = _accept
-
-        elif type_ in {"longer_than", "strictly_longer_than"}:
-            longer_suit = kwargs["longer_suit"]
-            shorter_suit = kwargs["shorter_suit"]
-
-            self.info = {"longer_suit": longer_suit,
-                         "shorter_suit": shorter_suit,
-                         "operator": ">=" if type_ == "longer_than" else ">"}
-
-            def _accept(hand):
-                long_suit = getattr(hand, longer_suit)
-                short_suit = getattr(hand, shorter_suit)
-                return len(long_suit) > len(short_suit)
-
-            self._accept = _accept
-
-        elif type_ == "general":
-            self.info = {"general": kwargs["general"]}
-
-            def _accept(hand):
-                return self._general_types[self.info["general"]](hand)
-
-            self._accept = _accept
-
-        elif type_ == "shape":
-            self.info = {"shape": kwargs["shape"]}
-            self._accept = Shape(self.info["shape"])
+    def __init__(self, info, accept):
+        self._accept = accept
+        self.info = info
 
     def accept(self, hand):
         """If the hand satisfies the given shape constraint."""
@@ -166,9 +134,12 @@ class Condition:
                 f"\n{self.shape_conditions}")
 
 
-# Not yet in use.
-def parse_formula_for_condition(formula):
-    """ Parse a formula involving suit lengths. """
+# Does NOT accept brackets in formula!
+def _parse_formula_for_condition(formula):
+    """ Parse a formula involving suit lengths.
+
+    Returns a function to accept or reject a hand.
+    """
 
     formula = formula.lower()
     formula = "".join(formula.split())
@@ -178,11 +149,18 @@ def parse_formula_for_condition(formula):
             or "hearts" in formula
             or "spades" in formula)
 
-    operators = ["==", ">", "<", ">=", "<="]
-    assert sum((formula.count(operator) for operator in operators)) == 1
+    # Order matters - must check for >=/<= before >/<.
+    operators = ["==", ">=", "<=", ">", "<"]
+    assert len(OPERATOR.findall(formula)) == 1
 
-    result = [formula]
+    simplified_formula = formula.replace("spades", "s")
+    simplified_formula = simplified_formula.replace("hearts", "h")
+    simplified_formula = simplified_formula.replace("diamonds", "d")
+    simplified_formula = simplified_formula.replace("clubs", "c")
+
+    result = [simplified_formula]
     i = 0
+    operator = None
     while len(result) == 1:
         to_parse = result[0]
         operator = operators[i]
@@ -191,9 +169,15 @@ def parse_formula_for_condition(formula):
 
     assert len(result) == 2
 
+    # Not a foolproof guarantee, but better than nothing.
+    for expression in result:
+        assert VALID_EXPRESSION.match(expression), expression
+
     def _accept(hand):
-        # TODO Define the accept function.
-        pass
+        s, h, d, c = hand.shape
+        return eval(f"{simplified_formula}")
+
+    return _accept
 
 
 def get_bids_from_xml(filepath=None):
@@ -297,14 +281,20 @@ def get_bids_from_xml(filepath=None):
             except KeyError:
                 # Empty shape definition.
                 print("Warning: empty shape definition.")
-                break
+                continue
 
             if type_ == "shape":
-                shape_conditions.append(
-                    ShapeCondition(type_, shape=shape.text))
+                info = {type_: shape.text}
+                shape_condition = ShapeCondition(info, Shape(shape.text))
             elif type_ == "general":
-                shape_conditions.append(
-                    ShapeCondition(type_, general=shape.text))
+                info = {type_: shape.text}
+                accept = ShapeCondition.general_types[shape.text]
+                shape_condition = ShapeCondition(info, accept)
+            elif type_ == "formula":
+                formula = shape.text
+                accept = _parse_formula_for_condition(formula)
+                info = {type_: formula}
+                shape_condition = ShapeCondition(info, accept)
             elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
                 try:
                     minimum = max(int(shape.find("min").text), 0)
@@ -318,17 +308,23 @@ def get_bids_from_xml(filepath=None):
                 assert minimum <= maximum, f"{type_}: {minimum}->{maximum}"
                 assert (minimum, maximum) != (0, 13), "Min/max not defined."
 
-                shape_conditions.append(
-                    ShapeCondition(type_, minimum=minimum,
-                                   maximum=maximum))
+                info = {"formula": f"{minimum} <= {type_} <= {maximum}"}
+
+                def _accept(hand):
+                    return minimum <= len(getattr(hand, type_)) <= maximum
+
+                shape_condition = ShapeCondition(info, _accept)
             elif type_ in {"longer_than", "strictly_longer_than"}:
                 longer_suit = shape.find("longer_suit").text
                 shorter_suit = shape.find("shorter_suit").text
-                shape_conditions.append(
-                    ShapeCondition(type_, longer_suit=longer_suit,
-                                   shorter_suit=shorter_suit))
+                operator = "<=" if type_ == "longer_than" else "<"
+                info = {"formula": f"{shorter_suit} {operator} {longer_suit}"}
+                accept = _parse_formula_for_condition(info["formula"])
+                shape_condition = ShapeCondition(info, accept)
             else:
                 raise NotImplementedError(type_)
+
+            shape_conditions.append(shape_condition)
 
         return shape_conditions
 
