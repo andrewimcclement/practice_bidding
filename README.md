@@ -73,4 +73,5 @@ element. These must have a "type" tag, which must be one of "general", "shape",
   - "formula" &lt;shape&gt; elements allows the input of a equation in the
     lengths of the suits, e.g. "hearts + spades > diamonds + clubs".
     +, *, - are all allowed (but not brackets). Exactly one operator of "==",
-    "!=", "<=", ">=", "<", ">" must be used.
+    "!=", "<=", ">=", "<", ">" must be used (replacing "<"/">" with "&[l/g]t;"
+    where required).
