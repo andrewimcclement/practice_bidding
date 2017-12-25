@@ -11,8 +11,6 @@ from redeal.redeal import Hand
 
 
 class XmlParserTests(unittest.TestCase):
-    def setUp(self):
-        self._hand1 = Hand.from_str("KQJ3 AK32 T5 J32")
 
     def test_parse_chimaera_bids(self):
         get_bids_from_xml("chimaera.xml")
