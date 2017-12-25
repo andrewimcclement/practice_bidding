@@ -75,6 +75,56 @@ Key points of system.
 
     <shape type="shape">4414</shape>
   </condition>
+  
+  <bid id="00">
+    <value>1d</value>
+    <desc>6-15 points, 4+ diamonds</desc>
+  </bid>
+  
+  <bid id="01">
+    <value>1h</value>
+    <desc>6-15 points, 4+ hearts</desc>
+  </bid>
+  
+  <bid id="02">
+    <value>1s</value>
+    <desc>6-15 points, 6+ points</desc>
+  </bid>
+  
+  <bid id="03">
+    <value>1n</value>
+    <desc>6-9 hcp, 3343</desc>
+    
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>6</min>
+          <max>9</max>
+        </hcp>
+      </evaluation>
+      
+      <shape type="shape">3343</shape>
+    </condition>
+  </bid>
+  
+  <bid id="04">
+    <value>2c</value>
+    <desc>6-9 points, 4+ clubs.</desc>
+    
+    <condition type="include">
+      <shape type="formula">clubs &gt;= 4</shape>
+      <shape type="formula">hearts &lt; 4</shape>
+      <shape type="formula">spades &lt; 4</shape>
+      <shape type="formula">clubs &gt;= diamonds</shape>
+      
+      <evaluation>
+        <points>
+          <min>5</min>
+          <max>8</max>
+        </points>
+      </evaluation>
+    </condition>
+  </bid>
 </bid>
 
 <bid id="1">

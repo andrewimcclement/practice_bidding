@@ -31,8 +31,8 @@ IMPORTANT_REGEXES = {
     re.compile("^(quit|exit|terminate)$", re.I): ParseResults.Quit
     }
 STANDARD_REGEXES = {
-    re.compile("^h(elp|ow ?to)?$", re.I): ParseResults.Help,
-    re.compile("^b(ack)?$", re.I): ParseResults.Back,
+    re.compile("^h(elp|ow ?to)$", re.I): ParseResults.Help,
+    re.compile("^(back|cancel)$", re.I): ParseResults.Back,
     re.compile("^true$", re.I): True,
     re.compile("^false$", re.I): False,
     re.compile("^desc(ribe|ription)?$", re.I): ParseResults.Describe,

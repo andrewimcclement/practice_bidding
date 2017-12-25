@@ -1,4 +1,4 @@
-# practice-bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master)
+# practice_bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master)
 A short program to allow practice of new bidding systems in Bridge.
 
 -------------------------------------------------------------------------------
@@ -21,26 +21,21 @@ XML_DEFAULT_SOURCE constant to locate the XML file describing the bidding
 system you wish to use, if you enter "default" when asked for the XML file
 location. Otherwise you may enter the file location at that point.
 
-Alternatively, "python C:\path\to\robot_bidding.py C:\path\to\system.xml"
+Alternatively, "python C:\path\to\practice_bidding.py C:\path\to\system.xml"
 will use the XML file located at "C:\path\to\system.xml"
 
 You may wish to edit the XML_DEFAULT_SOURCE constant for your own usage.
 Please do not commit these changes.
 
 -------------------------------------------------------------------------------
-Tests:
-Please run tests.py before making any pull requests. This helps ensure master
-stays in a usable state.
-
--------------------------------------------------------------------------------
 Defining the XML bidding system:
 See chimaera.xml as an example.
 
 &lt;bid&gt; element must always have a &lt;value&gt; element and a &lt;desc&gt;
-element. For a bid to be recognised by the program, it must have a &lt;condition&gt;
-element. A &lt;condition&gt; element must have a "type" tag as either "include"
-or "exclude" depending on whether the hand type should be included as a valid
-hand type or excluded as an invalid hand type for that bid.
+element. For a bid to be recognised by the program, it must have a
+&lt;condition&gt; element. A &lt;condition&gt; element must have a "type" tag
+as either "include" or "exclude" depending on whether the hand type should be
+included as a valid hand type or excluded as an invalid hand type for that bid.
 
 An &lt;evaluation&gt; element can be added inside a &lt;condition&gt; element.
 This can have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and
@@ -58,7 +53,8 @@ With these elements, you can define &lt;min&gt; and &lt;max&gt; elements.
 Multiple &lt;shape&gt; elements can be defined inside a &lt;condition&gt;
 element. These must have a "type" tag, which must be one of "general", "shape",
 "clubs", "diamonds", "hearts", "spades", "longer_than" or
-"strictly_longer_than".
+"strictly_longer_than". A new "formula" type now supersedes "longer_than" and
+"strictly_longer_than" while allowing more elaborate constructions.
 
   - "general" allows you to use predefined general shape constraints such as
     "balanced", "unbalanced" etc.
@@ -67,8 +63,14 @@ element. These must have a "type" tag, which must be one of "general", "shape",
     3 diamonds and 1 club, or (54)xx for 54 in the majors.
 
   - A suit allows you define &lt;min&gt; and &lt;max&gt; lengths for that suit
-    (inclusive).
+    (inclusive). Note if min > max the program will throw when parsing the
+    XML file.
 
   - "longer_than" and "strictly_longer_than" &lt;shape&gt; elements require
     &lt;longer_suit&gt; and &lt;shorter_suit&gt; elements inside and allow you
     to define conditions such as len(hearts) > len(spades) for a hand.
+
+  - "formula" &lt;shape&gt; elements allows the input of a equation in the
+    lengths of the suits, e.g. "hearts + spades > diamonds + clubs".
+    +, *, - are all allowed (but not brackets). Exactly one operator of "==",
+    "!=", "<=", ">=", "<", ">" must be used.

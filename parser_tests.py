@@ -11,9 +11,6 @@ from bridge_parser import parse, parse_with_quit, ParseResults
 
 class ParserTests(unittest.TestCase):
     """ Tests for parse method. """
-    @property
-    def _parse_results(self):
-        return self._program.ParseResults
 
     def test_parse_bridge_bid(self):
         """ Parse bridge bids correctly. """
