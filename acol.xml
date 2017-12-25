@@ -372,7 +372,9 @@ Key points of system.
       <value>3h</value>
       <desc>5 hearts.</desc>
       
-      <condition type="shape">x5xx</condition>
+      <condition type="include">
+        <shape type="shape">x5xx</shape>
+      </condition>
       
       <bid id="9011">
         <value>3n</value>
@@ -389,7 +391,9 @@ Key points of system.
       <value>3s</value>
       <desc>5 spades.</desc>
       
-      <condition type="shape">5xxx</condition>
+      <condition type="include">
+        <shape type="shape">5xxx</shape>
+      </condition>
 
       <bid id="9020">
         <value>3n</value>
