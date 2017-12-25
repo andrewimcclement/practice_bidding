@@ -44,6 +44,17 @@ Law of total tricks.
     </evaluation>
     <shape type="general">balanced</shape>
   </condition>
+  
+  <condition type="exclude">
+    <evaluation>
+      <hcp>
+        <min>22.75</min>
+        <max>24.5</max>
+      </hcp>
+    </evaluation>
+    
+    <shape type="general">balanced</shape>
+  </condition>
 
   <bid id="00">
     <value>1d</value>
@@ -117,7 +128,6 @@ Law of total tricks.
 
         <shape type="clubs">
           <min>5</min>
-          <max>13</max>
         </shape>
       </condition>
 
@@ -139,6 +149,47 @@ Law of total tricks.
 
             <shape type="general">balanced</shape>
           </condition>
+          
+          <bid id="000000">
+            <value>2c</value>
+            <desc>Stayman</desc>
+
+            <condition type="include">
+              <evaluation>
+                <hcp>
+                  <min>2.5</min>
+                </hcp>
+              </evaluation>
+            </condition>
+
+            <condition type="include">
+              <shape type="hearts">
+                <min>4</min>
+                <max>4</max>
+              </shape>
+
+              <shape type="spades">
+                <min>5</min>
+              </shape>
+            </condition>
+
+            <condition type="include">
+              <shape type="shape">4xxx</shape>
+
+              <shape type="formula">hearts &gt;= 5</shape>
+            </condition>
+            
+            <condition type="include">
+              <shape type="formula">hearts &gt;= 5</shape>
+              <shape type="formula">spades &gt;= 5</shape>
+              
+              <evaluation>
+                <hcp>
+                  <max>.75</max>
+                </hcp>
+              </evaluation>
+            </condition>
+          </bid>
         </bid>
 
         <bid id="00001">

@@ -234,16 +234,106 @@ Key points of system.
 <bid id="6">
   <value>2d</value>
   <desc>5-10 hcp, 6 diamonds</desc>
+  
+  <bid id="62">
+    <value>2n</value>
+    <desc>Ogust (strength and quality ask).</desc>
+    
+    <bid id="620">
+      <value>3c</value>
+      <desc>5-7 hcp, 1- of top 3 in suit. (weak hand, bad suit)</desc>
+    </bid>
+    
+    <bid id="621">
+      <value>3d</value>
+      <desc>5-7 hcp, 2 of top 3 in suit. (weak hand, good suit)</desc>
+    </bid>
+    
+    <bid id="622">
+      <value>3h</value>
+      <desc>8-10 hcp, 1- of top 3 in suit. (strong hand, bad suit)</desc>
+    </bid>
+    
+    <bid id="623">
+      <value>3s</value>
+      <desc>8-10 hcp, 2 of top 3 in suit. (strong hand, good suit)</desc>
+    </bid>
+    
+    <bid id="624">
+      <value>3n</value>
+      <desc>9-10 hcp, AKQ in suit. (strong hand, excellent suit)</desc>
+    </bid>
+  </bid>
 </bid>
 
 <bid id="7">
   <value>2h</value>
   <desc>5-10 hcp, 6 hearts.</desc>
+  
+  <bid id="62">
+    <value>2n</value>
+    <desc>Ogust (strength and quality ask).</desc>
+    
+    <bid id="620">
+      <value>3c</value>
+      <desc>5-7 hcp, 1- of top 3 in suit. (weak hand, bad suit)</desc>
+    </bid>
+    
+    <bid id="621">
+      <value>3d</value>
+      <desc>5-7 hcp, 2 of top 3 in suit. (weak hand, good suit)</desc>
+    </bid>
+    
+    <bid id="622">
+      <value>3h</value>
+      <desc>8-10 hcp, 1- of top 3 in suit. (strong hand, bad suit)</desc>
+    </bid>
+    
+    <bid id="623">
+      <value>3s</value>
+      <desc>8-10 hcp, 2 of top 3 in suit. (strong hand, good suit)</desc>
+    </bid>
+    
+    <bid id="624">
+      <value>3n</value>
+      <desc>9-10 hcp, AKQ in suit. (strong hand, excellent suit)</desc>
+    </bid>
+  </bid>
 </bid>
 
 <bid id="8">
   <value>2s</value>
   <desc>5-10 hcp, 6 spades.</desc>
+  
+  <bid id="62">
+    <value>2n</value>
+    <desc>Ogust (strength and quality ask).</desc>
+    
+    <bid id="620">
+      <value>3c</value>
+      <desc>5-7 hcp, 1- of top 3 in suit. (weak hand, bad suit)</desc>
+    </bid>
+    
+    <bid id="621">
+      <value>3d</value>
+      <desc>5-7 hcp, 2 of top 3 in suit. (weak hand, good suit)</desc>
+    </bid>
+    
+    <bid id="622">
+      <value>3h</value>
+      <desc>8-10 hcp, 1- of top 3 in suit. (strong hand, bad suit)</desc>
+    </bid>
+    
+    <bid id="623">
+      <value>3s</value>
+      <desc>8-10 hcp, 2 of top 3 in suit. (strong hand, good suit)</desc>
+    </bid>
+    
+    <bid id="624">
+      <value>3n</value>
+      <desc>9-10 hcp, AKQ in suit. (strong hand, excellent suit)</desc>
+    </bid>
+  </bid>
 </bid>
 
 <bid id="9">
@@ -268,21 +358,48 @@ Key points of system.
     <bid id="900">
       <value>3d</value>
       <desc>At least one 4cM.</desc>
+      
+      <condition type="include">
+        <shape type="shape">x4xx</shape>
+      </condition>
+      
+      <condition type="include">
+        <shape type="shape">4xxx</shape>
+      </condition>
     </bid>
 
     <bid id="901">
       <value>3h</value>
       <desc>5 hearts.</desc>
+      
+      <condition type="include">
+        <shape type="shape">x5xx</shape>
+      </condition>
+      
+      <bid id="9011">
+        <value>3n</value>
+        <desc>To play.</desc>
+      </bid>
+      
+      <bid id="9014">
+        <value>4h</value>
+        <desc>To play.</desc>
+      </bid>
     </bid>
 
     <bid id="902">
       <value>3s</value>
       <desc>5 spades.</desc>
+      
+      <condition type="include">
+        <shape type="shape">5xxx</shape>
+      </condition>
 
       <bid id="9020">
         <value>3n</value>
         <desc>To play.</desc>
 
+        <!-- Update strength requirement here. -->
         <condition type="include">
           <shape type="spades">
             <max>2</max>
@@ -294,6 +411,11 @@ Key points of system.
     <bid id="903">
       <value>3n</value>
       <desc>No 4cM.</desc>
+      
+      <condition type="include">
+        <shape type="formula">hearts &lt; 4</shape>
+        <shape type="formula">spades &lt; 4</shape>
+      </condition>
     </bid>
   </bid>
 </bid>
