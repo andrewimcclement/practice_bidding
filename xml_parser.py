@@ -20,7 +20,7 @@ except ImportError:
 
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
 HCP = Evaluator(4, 3, 2, 1)
-OPERATOR = re.compile("<[^=]|>[^=]|[<>=]=")
+OPERATOR = re.compile("<[^=]|>[^=]|[!<>=]=")
 VALID_EXPRESSION = re.compile("^[cdhs0-9]([-+*][cdhs0-9])*$", re.I)
 
 
@@ -150,7 +150,7 @@ def _parse_formula_for_condition(formula):
             or "spades" in formula)
 
     # Order matters - must check for >=/<= before >/<.
-    operators = ["==", ">=", "<=", ">", "<"]
+    operators = ["==", "!=", ">=", "<=", ">", "<"]
     assert len(OPERATOR.findall(formula)) == 1
 
     simplified_formula = formula.replace("spades", "s")
@@ -310,10 +310,15 @@ def get_bids_from_xml(filepath=None):
 
                 info = {"formula": f"{minimum} <= {type_} <= {maximum}"}
 
-                def _accept(hand):
-                    return minimum <= len(getattr(hand, type_)) <= maximum
+                def get_accept():
+                    suit = type_
 
-                shape_condition = ShapeCondition(info, _accept)
+                    def accept(hand):
+                        return minimum <= len(getattr(hand, suit)) <= maximum
+
+                    return accept
+
+                shape_condition = ShapeCondition(info, get_accept())
             elif type_ in {"longer_than", "strictly_longer_than"}:
                 longer_suit = shape.find("longer_suit").text
                 shorter_suit = shape.find("shorter_suit").text

@@ -53,7 +53,8 @@ With these elements, you can define &lt;min&gt; and &lt;max&gt; elements.
 Multiple &lt;shape&gt; elements can be defined inside a &lt;condition&gt;
 element. These must have a "type" tag, which must be one of "general", "shape",
 "clubs", "diamonds", "hearts", "spades", "longer_than" or
-"strictly_longer_than".
+"strictly_longer_than". A new "formula" type now supersedes "longer_than" and
+"strictly_longer_than" while allowing more elaborate constructions.
 
   - "general" allows you to use predefined general shape constraints such as
     "balanced", "unbalanced" etc.
@@ -62,8 +63,14 @@ element. These must have a "type" tag, which must be one of "general", "shape",
     3 diamonds and 1 club, or (54)xx for 54 in the majors.
 
   - A suit allows you define &lt;min&gt; and &lt;max&gt; lengths for that suit
-    (inclusive).
+    (inclusive). Note if min > max the program will throw when parsing the
+    XML file.
 
   - "longer_than" and "strictly_longer_than" &lt;shape&gt; elements require
     &lt;longer_suit&gt; and &lt;shorter_suit&gt; elements inside and allow you
     to define conditions such as len(hearts) > len(spades) for a hand.
+
+  - "formula" &lt;shape&gt; elements allows the input of a equation in the
+    lengths of the suits, e.g. "hearts + spades > diamonds + clubs".
+    +, *, - are all allowed (but not brackets). Exactly one operator of "==",
+    "!=", "<=", ">=", "<", ">" must be used.
