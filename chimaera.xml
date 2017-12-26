@@ -154,6 +154,7 @@ Law of total tricks.
             <value>2c</value>
             <desc>Stayman</desc>
 
+            <!-- Improve this condition later. -->
             <condition type="include">
               <evaluation>
                 <hcp>
@@ -189,6 +190,50 @@ Law of total tricks.
                 </hcp>
               </evaluation>
             </condition>
+          </bid>
+          
+          <bid id="000001">
+            <value>2d</value>
+            <desc>Transfer to hearts (5+ hearts).</desc>
+          </bid>
+          
+          <bid id="000002">
+            <value>2h</value>
+            <desc>Transfer to spades (5+ spades).</desc>
+          </bid>
+          
+          <bid id="000003">
+            <value>2s</value>
+            <desc>Transfer to clubs (5+ clubs, 6+ if weak).</desc>
+          </bid>
+          
+          <bid id="000004">
+            <value>2n</value>
+            <desc>Transfer to diamonds (5+ diamonds, 6+ if weak).</desc>
+          </bid>
+          
+          <bid id="00000b">
+            <value>4d</value>
+            <desc>Transfer to hearts, no interest in slam.</desc>
+            
+            <bid id="00000b0">
+              <value>4h</value>
+              <desc>Completing the transfer.</desc>
+              
+              <condition type="include"></condition>
+            </bid>
+          </bid>
+          
+          <bid id="00000c">
+            <value>4h</value>
+            <desc>Transfer to spades, no interest in slam.</desc>
+            
+            <bid id="00000c0">
+              <value>4s</value>
+              <desc>Completing the transfer.</desc>
+              
+              <condition type="include"></condition>
+            </bid>
           </bid>
         </bid>
 
@@ -3019,6 +3064,69 @@ Law of total tricks.
   <bid id="50">
     <value>2d</value>
     <desc>Relay. Invitational+.</desc>
+    
+    <condition type="include">
+      <evaluation>
+        <points>
+          <min>9.5</min>
+        </points>
+      </evaluation>
+    </condition>
+    
+    <bid id="500">
+      <value>2h</value>
+      <desc>14-15 hcp, no void</desc>
+      
+      <condition type="include">
+        <evaluation>
+          <hcp>
+            <min>13.75</min>
+            <max>15.5</max>
+          </hcp>
+        </evaluation>
+        
+        <shape type="formula">spades &gt; 0</shape>
+        <shape type="formula">hearts &gt; 0</shape>
+        <shape type="formula">diamonds &gt; 0</shape>
+      </condition>
+      
+      <bid id="5000">
+        <value>2s</value>
+        <desc>4-5 spades.</desc>
+        
+        <condition type="include">
+          <shape type="formula">spades &gt;= 4</shape>
+          <shape type="formula">spades &lt;= 5</shape>
+        </condition>
+        
+        <bid id="50000">
+          <value>2n</value>
+          <desc>3 spades (so 6+ clubs).</desc>
+          
+          <condition type="include">
+            <shape type="formula">spades == 3</shape>
+          </condition>
+        </bid>
+        
+        <bid id="50001">
+          <value>3c</value>
+          <desc>2- spades (so 6+ clubs).</desc>
+        
+          <condition type="include">
+            <shape type="formula">spades &lt; 3</shape>
+          </condition>
+        </bid>
+        
+        <bid id="50004">
+          <value>3s</value>
+          <desc>4 spades.</desc>
+          
+          <condition type="include">
+            <shape type="formula">spades == 4</shape>
+          </condition>
+        </bid>
+      </bid>
+    </bid>
   </bid>
 </bid>
 
