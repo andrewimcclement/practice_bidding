@@ -373,11 +373,76 @@ Law of total tricks.
     <bid id="002">
       <value>1n</value>
       <desc>16-18 hcp, balanced, no 5cM.</desc>
+      
+      <condition type="include">
+        <shape type="general">balanced</shape>
+        <shape type="formula">spades &lt; 5</shape>
+        <shape type="formula">hearts &lt; 5</shape>
+        
+        <evaluation>
+          <hcp>
+            <min>15.75</min>
+            <max>18.5</max>
+          </hcp>
+        </evaluation>
+      </condition>
+      
+      <bid id="0020">
+        <value>2c</value>
+        <desc>Stayman.</desc>
+        
+        <bid id="00200">
+          <value>2d</value>
+          <desc>No 4cM.</desc>
+          
+          <condition type="include">
+            <shape type="formula">hearts &lt; 4</shape>
+            <shape type="formula">spades &lt; 4</shape>
+          </condition>
+        </bid>
+        
+        <bid id="00201">
+          <value>2h</value>
+          <desc>4 hearts.</desc>
+          
+          <condition type="include">
+            <shape type="formula">hearts &gt;= 4</shape>
+          </condition>
+        </bid>
+        
+        <bid id="00202">
+          <value>2s</value>
+          <desc>4 spades, 3- hearts.</desc>
+          
+          <condition type="include">
+            <shape type="formula">spades &gt;= 4</shape>
+            <shape type="formula">hearts &lt; 4</shape>
+          </condition>
+        </bid>
+      </bid>
     </bid>
 
     <bid id="003">
       <value>2c</value>
       <desc>Relay, gf. 23+ hcp. If balanced, 27+ hcp.</desc>
+      
+      <condition type="include">
+        <evaluation>
+          <hcp>
+            <min>22.75</min>
+          </hcp>
+        </evaluation>
+        
+        <shape type="general">unbalanced</shape>
+      </condition>
+      
+      <condition type="include">
+        <evaluation>
+          <hcp>
+            <min>26.75</min>
+          </hcp>
+        </evaluation>
+      </condition>
 
       <bid id="0030">
         <value>2d</value>
@@ -941,21 +1006,70 @@ Law of total tricks.
       <bid id="0302">
         <value>2s</value>
         <desc>(8)9-11 hcp, 4 spades, 3- hearts.</desc>
+        
+        <condition type="include">
+          <shape type="formula">spades == 4</shape>
+          <shape type="formula">hearts &lt; 4</shape>
+          
+          <evaluation>
+            <hcp>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+        </condition>
       </bid>
 
       <bid id="0303">
         <value>2n</value>
         <desc>(8)9-11 hcp, no 4cM or 5cm.</desc>
+        
+        <condition type="include">
+          <shape type="formula">hearts &lt; 4</shape>
+          <shape type="formula">spades &lt; 4</shape>
+          <shape type="formula">clubs &lt; 5</shape>
+          <shape type="formula">diamonds &lt; 5</shape>
+          
+          <evaluation>
+            <hcp>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+        </condition>
+        
+        <bid id="03030">
+          <value>3c</value>
+          <desc>Relay.</desc>
+        </bid>
       </bid>
 
       <bid id="0304">
         <value>3c</value>
         <desc>(8)9-11 hcp, 5 clubs.</desc>
+        
+        <condition type="include">
+          <shape type="formula">clubs == 5</shape>
+          
+          <evaluation>
+            <hcp>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+        </condition>
       </bid>
 
       <bid id="0305">
         <value>3d</value>
         <desc>(8)9-11 hcp, 5 diamonds.</desc>
+        
+        <condition type="include">
+          <shape type="formula">diamonds == 5</shape>
+          
+          <evaluation>
+            <hcp>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+        </condition>
       </bid>
     </bid>
   </bid>
@@ -1047,6 +1161,26 @@ Law of total tricks.
   <bid id="07">
     <value>2s</value>
     <desc>12+ hcp, 4441 shape with black singleton.</desc>
+    
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>11.5</min>
+        </hcp>
+      </evaluation>
+      
+      <shape type="shape">4441</shape>
+    </condition>
+    
+    <condition type="include">
+      <evaluation>
+        <hcp>
+          <min>11.5</min>
+        </hcp>
+      </evaluation>
+      
+      <shape type="shape">1444</shape>
+    </condition>
   </bid>
 
   <bid id="08">
@@ -2162,6 +2296,21 @@ Law of total tricks.
 <bid id="3">
   <value>1s</value>
   <desc>11-15 hcp, 5+ spades.</desc>
+  
+  <condition type="include">
+    <shape type="formula">spades &gt;= 5</shape>
+    <shape type="general">unbalanced</shape>
+    
+    <evaluation>
+      <hcp>
+        <max>15.5</max>
+      </hcp>
+      
+      <points>
+        <min>12.75</min>
+      </points>
+    </evaluation>
+  </condition>
 
   <bid id="30">
     <value>1n</value>
@@ -3839,6 +3988,24 @@ Law of total tricks.
         <max>3</max>
       </shape>
     </condition>
+    
+    <bid id="920">
+      <value>3s</value>
+      <desc>Completing the transfer to spades.</desc>
+      
+      <condition type="include">
+        <shape type="formula">spades &lt; 4</shape>
+      </condition>
+    </bid>
+    
+    <bid id="925">
+      <value>4s</value>
+      <desc>Super-accept (4+ spades).</desc>
+      
+      <condition type="include">
+        <shape type="formula">spades &gt;= 4</shape>
+      </condition>
+    </bid>
   </bid>
 
   <bid id="93">

@@ -190,6 +190,10 @@ class BiddingProgram:
             # Program must make a bid.
             next_bid = self._program_bid(self.get_hand(current_bidder))
 
+        # TODO: Move this logic to practice_bidding.
+        if ((next_bid != self._pass)
+                and self._settings["display_meaning_of_bids"]):
+            print(f"{next_bid.value}: {next_bid.description}")
         self.bidding_sequence.append((next_bid.value, next_bid))
 
     def _program_bid(self, current_hand):
@@ -233,7 +237,7 @@ class BiddingProgram:
             selected = input("Your bid: ")
             result = self.parse(selected)
             if result == ParseResults.BridgeBid:
-                if selected.upper() in {self._pass.value, "pass"}:
+                if selected.upper() in {self._pass.value, "PASS"}:
                     bid = self._pass
                     break
 
@@ -328,7 +332,7 @@ class BiddingProgram:
         """ Get the number of tricks and corresponding score. """
 
         assert len(contract) == 3
-        assert contract[0] in range(10)
+        assert int(contract[0]) in range(10)
         assert contract[1] in {"C", "D", "H", "S", "N"}
         assert contract[2] in {"N", "E", "S", "W"}
 

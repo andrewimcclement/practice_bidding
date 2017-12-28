@@ -62,7 +62,7 @@ def main():
     def _play_board():
         print(f"\nBoard: {program.board_number}. Vulnerability: "
               f"{program.vulnerability}")
-        print(program.get_hand())
+        print(f"{program.Players.South}: {program.get_hand()}")
         while not program.is_passed_out(program.bidding_sequence):
             program.bid()
             print([value for value, bid in program.bidding_sequence])
@@ -86,13 +86,16 @@ def main():
                 if result == ParseResults.BridgeContract:
                     contract = input_.upper()
 
-                    if contract != "P":
+                    if contract not in {"P", "PASS"}:
                         dd_result = program.get_double_dummy_result(contract)
                         print(f"Double dummy result: {contract} {dd_result}")
                     break
                 elif result == ParseResults.Help:
                     # TODO: Add Help message.
                     pass
+                else:
+                    print("Sorry, that wasn't a valid contract. Example: "
+                          "4HS for 4 hearts by South.")
 
         # TODO: Add optimal contract (dd_solve).
 
@@ -118,6 +121,10 @@ def main():
         while play_another:
             play_another = _play_board()
             program.generate_new_deal()
+
+    except KeyboardInterrupt:
+        # Exit gracefully.
+        return
     except Exception as ex:
         print("Sorry! We've hit an error:")
         print(ex)
