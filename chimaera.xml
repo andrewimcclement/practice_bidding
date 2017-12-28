@@ -82,6 +82,7 @@ Law of total tricks.
     <bid id="000">
       <value>1h</value>
       <desc>16-19(20)hcp. &lt;= 7.5 tricks, 5+c/h OR v. strong NT range (21-22)</desc>
+      
       <condition type="include">
         <evaluation>
           <hcp>
@@ -134,6 +135,9 @@ Law of total tricks.
       <bid id="0000">
         <value>1s</value>
         <desc>Relay (99% of the time)</desc>
+        
+        <!-- Remove alternative bids from this condition. -->
+        <condition type="include"></condition>
 
         <bid id="00000">
           <value>1n</value>
@@ -922,6 +926,16 @@ Law of total tricks.
       <bid id="0301">
         <value>2h</value>
         <desc>(8)9-11 hcp, 4 hearts.</desc>
+        
+        <condition type="include">
+          <shape type="formula">hearts == 4</shape>
+          
+          <evaluation>
+            <hcp>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+        </condition>
       </bid>
 
       <bid id="0302">
@@ -2924,6 +2938,30 @@ Law of total tricks.
       <desc>Completing the transfer.</desc>
 
       <condition type="include"></condition>
+      
+      <bid id="4200">
+        <value>2n</value>
+        <desc>Invitational, 5 spades.</desc>
+      </bid>
+      
+      <bid id="4204">
+        <value>3s</value>
+        <desc>Invitational, 6+ spades.</desc>
+      </bid>
+      
+      <bid id="4205">
+        <value>3n</value>
+        <desc>Pass or correct. 5 spades.</desc>
+        
+        <bid id="42053">
+          <value>4s</value>
+          <desc>3 spades.</desc>
+          
+          <condition type="include">
+            <shape type="formula">spades &gt;= 3</shape>
+          </condition>
+        </bid>
+      </bid>
     </bid>
   </bid>
 
@@ -3662,6 +3700,85 @@ Law of total tricks.
     <bid id="900">
       <value>3d</value>
       <desc>At least one 4cM.</desc>
+      
+      <condition type="include">
+        <shape type="formula">hearts == 4</shape>
+      </condition>
+      
+      <condition type="include">
+        <shape type="formula">spades == 4</shape>
+      </condition>
+      
+      <bid id="9000">
+        <value>3h</value>
+        <desc>4 spades, 3- hearts.</desc>
+        
+        <condition type="include">
+          <shape type="formula">spades == 4</shape>
+          <shape type="formula">hearts &lt; 4</shape>
+        </condition>
+        
+        <bid id="90005">
+          <value>4s</value>
+          <desc>Bidding to game in 44 spade fit.</desc>
+          
+          <condition type="include"></condition>
+        </bid>
+      </bid>
+      
+      <bid id="9001">
+        <value>3s</value>
+        <desc>4 hearts, 3- spades.</desc>
+        
+        <condition type="include">
+          <shape type="formula">hearts == 4</shape>
+          <shape type="formula">spades &lt; 4</shape>
+        </condition>
+      </bid>
+      
+      <bid id="9002">
+        <value>3n</value>
+        <desc>No 4cM (was looking for 5cM).</desc>
+        
+        <condition type="include">
+          <shape type="formula">hearts &lt; 4</shape>
+          <shape type="formula">spades &lt; 4</shape>
+          
+          <evaluation>
+            <points>
+              <max>10.5</max>
+            </points>
+          </evaluation>
+        </condition>
+      </bid>
+      
+      <bid id="9004">
+        <value>4d</value>
+        <desc>44 in the majors.</desc>
+        
+        <condition type="include">
+          <shape type="shape">44xx</shape>
+        </condition>
+        
+        <bid id="90040">
+          <value>4h</value>
+          <desc>4 hearts.</desc>
+          
+          <condition type="include">
+            <shape type="formula">hearts == 4</shape>
+          </condition>
+        </bid>
+        
+        <bid id="90041">
+          <value>4s</value>
+          <desc>4 spades, 3- hearts.</desc>
+          
+          <condition type="include">
+            <shape type="formula">spades == 4</shape>
+            <shape type="formula">hearts &lt; 4</shape>
+          </condition>
+        </bid>
+      </bid>
     </bid>
     
     <bid id="901">

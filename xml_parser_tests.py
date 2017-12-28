@@ -21,7 +21,7 @@ class XmlParserTests(unittest.TestCase):
         get_bids_from_xml("acol.xml")
 
     def test_valid_expressions(self):
-        passes = ["h+s-d*2", "h*s-d*c"]
+        passes = ["h+s-d*2", "h*s-d*c", "12"]
         fails = ["x*h*s", "1.0+d", "d/c"]
         for expression in passes:
             with self.subTest(expression=expression):

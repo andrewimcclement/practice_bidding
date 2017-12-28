@@ -60,7 +60,7 @@ def main():
     program = BiddingProgram()
 
     def _play_board():
-        print(f"Board: {program.board_number}. Vulnerability: "
+        print(f"\nBoard: {program.board_number}. Vulnerability: "
               f"{program.vulnerability}")
         print(program.get_hand())
         while not program.is_passed_out(program.bidding_sequence):

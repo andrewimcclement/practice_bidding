@@ -233,7 +233,7 @@ class BiddingProgram:
             selected = input("Your bid: ")
             result = self.parse(selected)
             if result == ParseResults.BridgeBid:
-                if selected.upper() == self._pass.value:
+                if selected.upper() in {self._pass.value, "pass"}:
                     bid = self._pass
                     break
 
@@ -326,7 +326,20 @@ class BiddingProgram:
 
     def get_double_dummy_result(self, contract):
         """ Get the number of tricks and corresponding score. """
-        vulnerability = self.vulnerability in {self.Vulnerability.All,
-                                               self.Vulnerability.Unfavourable}
+
+        assert len(contract) == 3
+        assert contract[0] in range(10)
+        assert contract[1] in {"C", "D", "H", "S", "N"}
+        assert contract[2] in {"N", "E", "S", "W"}
+
+        if contract[2] in {"N", "S"}:
+            vulnerability = self.vulnerability in {
+                self.Vulnerability.All,
+                self.Vulnerability.Unfavourable}
+        else:
+            vulnerability = self.vulnerability in {
+                self.Vulnerability.All,
+                self.Vulnerability.Favourable}
+
         return (self.deal.dd_tricks(contract),
                 self.deal.dd_score(contract, vulnerability))
