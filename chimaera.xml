@@ -2387,7 +2387,9 @@ Law of total tricks.
         <shape type="formula">clubs &gt;= 4</shape>
         
         <evaluation>
-          <max>15.5</max>
+          <points>
+            <max>15.5</max>
+          </points>
         </evaluation>
       </condition>
     </bid>
@@ -2400,7 +2402,9 @@ Law of total tricks.
         <shape type="formula">diamonds &gt;= 4</shape>
         
         <evaluation>
-          <max>15.5</max>
+          <points>
+            <max>15.5</max>
+          </points>
         </evaluation>
       </condition>
     </bid>
