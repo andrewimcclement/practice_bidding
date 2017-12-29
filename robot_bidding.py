@@ -233,6 +233,12 @@ class BiddingProgram:
 
         bid = None
         while bid is None:
+            if self._mode == self.ProgramMode.Automatic:
+                # The user has changed the mode of the program.
+                current_hand = self.get_hand(self.Players.South)
+                bid = self._program_bid(current_hand)
+                break
+
             print(potential_bids.keys())
             selected = input("Your bid: ")
             result = self.parse(selected)
@@ -258,7 +264,7 @@ class BiddingProgram:
         These will then be written to an xml file.
         """
         print(self._settings)
-        settings_keys = self._settings.keys()
+        settings_keys = list(self._settings.keys())
         for i, key in enumerate(settings_keys):
             print(f"{i}: {key}")
 
@@ -272,7 +278,11 @@ class BiddingProgram:
             elif result != ParseResults.Integer:
                 continue
 
-            key = settings_keys[int(input_)]
+            try:
+                key = settings_keys[int(input_)]
+            except KeyError:
+                print("This is not a valid key.")
+                continue
 
             if key == "mode":
                 input_ = input(f"Do you wish to change the mode of the program"

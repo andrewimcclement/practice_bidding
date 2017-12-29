@@ -932,6 +932,35 @@ Law of total tricks.
                 <bid id="03000000">
                   <value>3c</value>
                   <desc>4 clubs, so 4324/4234 shape.</desc>
+                  
+                  <condition type="include">
+                    <shape type="formula">clubs == 4</shape>
+                  </condition>
+                  
+                  <bid id="030000000">
+                    <value>3d</value>
+                    <desc>Relay.</desc>
+                    
+                    <condition type="include"></condition>
+                    
+                    <bid id="0300000000">
+                      <value>3h</value>
+                      <desc>3 diamonds. (lower ranking suit of the two possible)</desc>
+                      
+                      <condition type="include">
+                        <shape type="formula">diamonds == 3</shape>
+                      </condition>
+                    </bid>
+                    
+                    <bid id="0300000001">
+                      <value>3s</value>
+                      <desc>3 hearts. (higher ranking suit of the two possible)</desc>
+                      
+                      <condition type="include">
+                        <shape type="formula">hearts == 3</shape>
+                      </condition>
+                    </bid>
+                  </bid>
                 </bid>
 
                 <bid id="03000001">
@@ -1001,6 +1030,38 @@ Law of total tricks.
             </hcp>
           </evaluation>
         </condition>
+        
+        <bid id="03010">
+          <value>2s</value>
+          <desc>Relay.</desc>
+          
+          <condition type="include"></condition>
+          
+          <condition type="exclude">
+            <shape type="formula">hearts &gt; 4</shape>
+            
+            <evaluation>
+              <points>
+                <max>18.5</max>
+              </points>
+            </evaluation>
+          </condition>
+        </bid>
+        
+        <bid id="03019">
+          <value>4h</value>
+          <desc>To play.</desc>
+          
+          <condition type="include">
+            <shape type="formula">hearts &gt; 4</shape>
+            
+            <evaluation>
+              <points>
+                <max>18.5</max>
+              </points>
+            </evaluation>            
+          </condition>
+        </bid>
       </bid>
 
       <bid id="0302">
@@ -1480,6 +1541,8 @@ Law of total tricks.
           <min>5.5</min>
         </points>
       </evaluation>
+      
+      <shape type="general">unbalanced</shape>
 
       <shape type="hearts">
         <min>4</min>
@@ -2319,11 +2382,27 @@ Law of total tricks.
     <bid id="301">
       <value>2c</value>
       <desc>13-15 points, 4+ clubs.</desc>
+      
+      <condition type="include">
+        <shape type="formula">clubs &gt;= 4</shape>
+        
+        <evaluation>
+          <max>15.5</max>
+        </evaluation>
+      </condition>
     </bid>
 
     <bid id="302">
       <value>2d</value>
       <desc>13-15 points, 4+ diamonds.</desc>
+      
+      <condition type="include">
+        <shape type="formula">diamonds &gt;= 4</shape>
+        
+        <evaluation>
+          <max>15.5</max>
+        </evaluation>
+      </condition>
     </bid>
 
     <bid id="303">
@@ -2525,6 +2604,29 @@ Law of total tricks.
       <shape type="hearts">
         <min>5</min>
       </shape>
+    </condition>
+    
+    <condition type="include">
+      <shape type="formula">hearts &gt;= 5</shape>
+      <shape type="formula">spades &gt;= 5</shape>
+      <shape type="formula">hearts &lt; spades + 2</shape>
+      <shape type="formula">spades &lt; hearts + 2</shape>
+      
+      <evaluation>
+        <points>
+          <max>9.25</max>
+        </points>
+      </evaluation>
+    </condition>
+    
+    <condition type="include">
+      <shape type="shape">(43)51</shape>
+      
+      <evaluation>
+        <hcp>
+          <max>6.25</max>
+        </hcp>
+      </evaluation>
     </condition>
 
     <bid id="400">
@@ -2921,6 +3023,20 @@ Law of total tricks.
         <longer_suit>hearts</longer_suit>
         <shorter_suit>spades</shorter_suit>
       </shape>
+      
+      <shape type="formula">spades != 4</shape>
+    </condition>
+    
+    <!-- Should use Garbage Stayman instead. -->
+    <condition type="exclude">
+      <shape type="formula">spades &gt;= 5</shape>
+      <shape type="formula">hearts &lt; spades + 2</shape>
+      
+      <evaluation>
+        <points>
+          <max>9.25</max>
+        </points>
+      </evaluation>
     </condition>
 
     <bid id="410">
@@ -3046,6 +3162,13 @@ Law of total tricks.
             <min>5</min>
             <max>5</max>
           </shape>
+          
+          <evaluation>
+            <points>
+              <min>11.5</min>
+              <max>16.25</max>
+            </points>
+          </evaluation>
         </condition>
       </bid>
 
@@ -3435,6 +3558,115 @@ Law of total tricks.
           </hcp>
         </evaluation>
       </condition>
+      
+      <bid id="6010">
+        <value>3c</value>
+        <desc>Muppet Stayman.</desc>
+        
+        <condition type="include">
+          <shape type="general">balanced</shape>
+          <shape type="formula">hearts &lt; 5</shape>
+          <shape type="formula">spades &lt; 5</shape>
+          
+          <evaluation>
+            <points>
+              <min>1.5</min>
+            </points>
+          </evaluation>
+        </condition>
+        
+        <condition type="include">
+          <shape type="formula">hearts &gt;= 4</shape>          
+          <shape type="shape">4xxx</shape>
+          
+          <evaluation>
+            <points>
+              <min>1.5</min>
+            </points>
+          </evaluation>
+        </condition>
+        
+        <condition type="include">
+          <shape type="formula">spades &gt;= 4</shape>
+          <shape type="shape">x4xx</shape>
+          
+          <evaluation>
+            <points>
+              <min>1.5</min>
+            </points>
+          </evaluation>
+        </condition>
+        
+        <bid id="60100">
+          <value>3d</value>
+          <desc>At least one 4cM.</desc>
+          
+          <condition type="include">
+            <shape type="formula">hearts == 4</shape>
+          </condition>
+          
+          <shape type="include">
+            <shape type="formula">spades == 4</shape>
+          </shape>
+        </bid>
+        
+        <bid id="60101">
+          <value>3h</value>
+          <desc>No 4cM.</desc>
+          
+          <condition type="include">
+            <shape type="formula">hearts &lt; 4</shape>
+            <shape type="formula">spades &lt; 4</shape>
+          </condition>
+          
+          <bid id="601010">
+            <value>3s</value>
+            <desc>Puppet to 3n.</desc>
+          </bid>
+          
+          <bid id="601011">
+            <value>3n</value>
+            <desc>5 spades, 4 hearts. Offering choice of games.</desc>
+            
+            <condition type="include">
+              <shape type="formula">spades == 5</shape>
+              
+              <evaluation>
+                <points>
+                  <max>7.25</max>
+                </points>
+              </evaluation>
+            </condition>
+          </bid>
+        </bid>
+        
+        <bid id="60102">
+          <value>3s</value>
+          <desc>5 spades.</desc>
+          
+          <condition type="include">
+            <shape type="formula">spades == 5</shape>
+          </condition>
+        </bid>
+        
+        <bid id="60103">
+          <value>3n</value>
+          <desc>5 hearts.</desc>
+          
+          <condition type="include">
+            <shape type="formula">hearts == 5</shape>
+          </condition>
+          
+          <bid id="601031">
+            <value>4d</value>
+            <desc>Retransfer to hearts.</desc>
+            
+            <condition type="include">
+              <shape type="formula">hearts &gt;= 3</shape>
+            </condition>
+          </bid>
+        </bid>
+      </bid>
     </bid>
   </bid>
 

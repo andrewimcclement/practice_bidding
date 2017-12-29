@@ -59,6 +59,16 @@ def main():
 
     program = BiddingProgram()
 
+    def parse_user_input(input_):
+        """
+        Parse user input, allowing them to quit and edit program settings.
+        """
+        result = parse_with_quit(input_)
+        if result == ParseResults.Settings:
+            program.edit_settings()
+
+        return result
+
     def _play_board():
         print(f"\nBoard: {program.board_number}. Vulnerability: "
               f"{program.vulnerability}")
@@ -82,7 +92,7 @@ def main():
             result = None
             while result not in {ParseResults.Back, ParseResults.No}:
                 input_ = input("Please enter the final contract: ")
-                result = parse_with_quit(input_)
+                result = parse_user_input(input_)
                 if result == ParseResults.BridgeContract:
                     contract = input_.upper()
 
@@ -91,8 +101,9 @@ def main():
                         print(f"Double dummy result: {contract} {dd_result}")
                     break
                 elif result == ParseResults.Help:
-                    # TODO: Add Help message.
-                    pass
+                    print("Enter the correct contract in the form '4HS' for"
+                          " 4 hearts by South. Else, enter 'back' or 'no' to "
+                          "skip entering the correct final contract.")
                 else:
                     print("Sorry, that wasn't a valid contract. Example: "
                           "4HS for 4 hearts by South.")
@@ -103,11 +114,7 @@ def main():
         while result not in {ParseResults.Yes,
                              ParseResults.No}:
             input_ = input("Play another hand? (y/n) ")
-            result = parse_with_quit(input_)
-            if result == ParseResults.Help:
-                # TODO: Add help message about back and no being options to
-                #       cancel this option.
-                pass
+            result = parse_user_input(input_)
 
         return result == ParseResults.Yes
 
