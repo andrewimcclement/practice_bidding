@@ -512,7 +512,9 @@ Law of total tricks.
               <shape type="formula">hearts &lt; 5</shape>
               
               <evaluation>
-                <min>6.5</min>
+                <points>
+                  <min>6.5</min>
+                </points>
               </evaluation>
             </condition>
           </bid>
