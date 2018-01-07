@@ -190,6 +190,10 @@ class BiddingProgram:
             # Program must make a bid.
             next_bid = self._program_bid(self.get_hand(current_bidder))
 
+        # TODO: Move this logic to practice_bidding.
+        if ((next_bid != self._pass)
+                and self._settings["display_meaning_of_bids"]):
+            print(f"{next_bid.value}: {next_bid.description}")
         self.bidding_sequence.append((next_bid.value, next_bid))
 
     def _program_bid(self, current_hand):
@@ -229,11 +233,17 @@ class BiddingProgram:
 
         bid = None
         while bid is None:
+            if self._mode == self.ProgramMode.Automatic:
+                # The user has changed the mode of the program.
+                current_hand = self.get_hand(self.Players.South)
+                bid = self._program_bid(current_hand)
+                break
+
             print(potential_bids.keys())
             selected = input("Your bid: ")
             result = self.parse(selected)
             if result == ParseResults.BridgeBid:
-                if selected.upper() == self._pass.value:
+                if selected.upper() in {self._pass.value, "PASS"}:
                     bid = self._pass
                     break
 
@@ -254,7 +264,7 @@ class BiddingProgram:
         These will then be written to an xml file.
         """
         print(self._settings)
-        settings_keys = self._settings.keys()
+        settings_keys = list(self._settings.keys())
         for i, key in enumerate(settings_keys):
             print(f"{i}: {key}")
 
@@ -268,7 +278,11 @@ class BiddingProgram:
             elif result != ParseResults.Integer:
                 continue
 
-            key = settings_keys[int(input_)]
+            try:
+                key = settings_keys[int(input_)]
+            except KeyError:
+                print("This is not a valid key.")
+                continue
 
             if key == "mode":
                 input_ = input(f"Do you wish to change the mode of the program"
@@ -326,7 +340,20 @@ class BiddingProgram:
 
     def get_double_dummy_result(self, contract):
         """ Get the number of tricks and corresponding score. """
-        vulnerability = self.vulnerability in {self.Vulnerability.All,
-                                               self.Vulnerability.Unfavourable}
+
+        assert len(contract) == 3
+        assert int(contract[0]) in range(10)
+        assert contract[1] in {"C", "D", "H", "S", "N"}
+        assert contract[2] in {"N", "E", "S", "W"}
+
+        if contract[2] in {"N", "S"}:
+            vulnerability = self.vulnerability in {
+                self.Vulnerability.All,
+                self.Vulnerability.Unfavourable}
+        else:
+            vulnerability = self.vulnerability in {
+                self.Vulnerability.All,
+                self.Vulnerability.Favourable}
+
         return (self.deal.dd_tricks(contract),
                 self.deal.dd_score(contract, vulnerability))

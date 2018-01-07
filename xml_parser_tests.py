@@ -6,7 +6,9 @@ Created on Tue Dec 19 20:08:26 2017
 """
 
 import unittest
-from xml_parser import get_bids_from_xml, _parse_formula_for_condition
+from xml_parser import get_bids_from_xml
+from xml_parser import _parse_formula_for_condition
+from xml_parser import VALID_EXPRESSION
 from redeal.redeal import Hand
 
 
@@ -17,6 +19,17 @@ class XmlParserTests(unittest.TestCase):
 
     def test_parse_acol_bids(self):
         get_bids_from_xml("acol.xml")
+
+    def test_valid_expressions(self):
+        passes = ["h+s-d*2", "h*s-d*c", "12"]
+        fails = ["x*h*s", "1.0+d", "d/c"]
+        for expression in passes:
+            with self.subTest(expression=expression):
+                self.assertTrue(VALID_EXPRESSION.match(expression))
+
+        for expression in fails:
+            with self.subTest(expression=expression):
+                self.assertFalse(VALID_EXPRESSION.match(expression))
 
     def test_parse_formula_different_operators(self):
         expression1 = "2 * hearts - diamonds+ 1"

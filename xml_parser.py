@@ -21,7 +21,7 @@ except ImportError:
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
 HCP = Evaluator(4, 3, 2, 1)
 OPERATOR = re.compile("<[^=]|>[^=]|[!<>=]=")
-VALID_EXPRESSION = re.compile("^[cdhs0-9]([-+*][cdhs0-9])*$", re.I)
+VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$", re.I)
 
 
 class Bid:

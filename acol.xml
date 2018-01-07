@@ -360,11 +360,7 @@ Key points of system.
       <desc>At least one 4cM.</desc>
       
       <condition type="include">
-        <shape type="shape">x4xx</shape>
-      </condition>
-      
-      <condition type="include">
-        <shape type="shape">4xxx</shape>
+        <shape type="shape">(x4)xx</shape>
       </condition>
     </bid>
 
