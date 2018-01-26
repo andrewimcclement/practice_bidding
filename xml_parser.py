@@ -310,15 +310,14 @@ def get_bids_from_xml(filepath=None):
 
                 info = {"formula": f"{minimum} <= {type_} <= {maximum}"}
 
-                def get_accept():
-                    suit = type_
+                def get_accept(suit):
 
                     def accept(hand):
                         return minimum <= len(getattr(hand, suit)) <= maximum
 
                     return accept
 
-                shape_condition = ShapeCondition(info, get_accept())
+                shape_condition = ShapeCondition(info, get_accept(type_))
             elif type_ in {"longer_than", "strictly_longer_than"}:
                 longer_suit = shape.find("longer_suit").text
                 shorter_suit = shape.find("shorter_suit").text

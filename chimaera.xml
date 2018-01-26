@@ -1497,9 +1497,7 @@ Law of total tricks.
       </evaluation>
 
       <!-- Not getting read correctly -->
-      <shape type="clubs">
-        <min>5</min>
-      </shape>
+      <shape type="formula">clubs &gt;= 5</shape>
 
       <shape type="general">unbalanced</shape>
     </condition>
@@ -2427,8 +2425,8 @@ Law of total tricks.
           <desc>Non-minimum, stop in diamonds.</desc>
           
           <condition type="include">
-            <shape type="shape">diamonds &gt;= 3</shape>
-            <shape type="shape">clubs &lt; 6</shape>
+            <shape type="formula">diamonds &gt;= 3</shape>
+            <shape type="formula">clubs &lt; 6</shape>
             
             <evaluation>
               <points>
@@ -2471,8 +2469,8 @@ Law of total tricks.
           <desc>Minimum, stop in diamonds.</desc>
           
           <condition type="include">
-            <shape type="shape">diamonds &gt;= 3</shape>
-            <shape type="shape">clubs &lt; 6</shape>
+            <shape type="formula">diamonds &gt;= 3</shape>
+            <shape type="formula">clubs &lt; 6</shape>
             
             <evaluation>
               <points>
@@ -2836,6 +2834,15 @@ Law of total tricks.
   <bid id="30">
     <value>1n</value>
     <desc>Forcing NT.</desc>
+    
+    <condition type="include">
+      <evaluation>
+        <min>5.5</min>
+        <max></max>
+      </evaluation>
+      
+      <shape type
+    </condition>
 
     <bid id="301">
       <value>2c</value>
@@ -2916,6 +2923,16 @@ Law of total tricks.
   <bid id="33">
     <value>2h</value>
     <desc>2/1 gf.</desc>
+    
+    <condition type="include">
+      <shape type="formula">hearts &gt;= 5</shape>
+      
+      <evaluation>
+        <points>
+          <min>11.5</min>
+        </points>
+      </evaluation>
+    </condition>
   </bid>
 
   <bid id="34">
@@ -3366,13 +3383,8 @@ Law of total tricks.
       <desc>4+ spades, 3- hearts.</desc>
 
       <condition type="include">
-        <shape type="spades">
-          <min>4</min>
-        </shape>
-
-        <shape type="hearts">
-          <max>3</max>
-        </shape>
+        <shape type="formula">spades &gt;= 4</shape>
+        <shape type="formula">hearts &lt; 4</shape>
       </condition>
 
       <bid id="4020">
@@ -3659,7 +3671,9 @@ Law of total tricks.
       <value>2s</value>
       <desc>Completing the transfer.</desc>
 
-      <condition type="include"></condition>
+      <condition type="include">
+        <shape type="formula">spades &lt; 4</shape>
+      </condition>
       
       <bid id="4200">
         <value>2n</value>
@@ -3684,6 +3698,15 @@ Law of total tricks.
           </condition>
         </bid>
       </bid>
+    </bid>
+    
+    <bid id="425">
+      <value>3s</value>
+      <desc>Super-accept.</desc>
+      
+      <condition type="include">
+        <shape type="formula">spades &gt;= 4</shape>
+      </condition>
     </bid>
   </bid>
 
@@ -4754,6 +4777,52 @@ Law of total tricks.
         <max>3</max>
       </shape>
     </condition>
+    
+    <bid id="910">
+      <value>3h</value>
+      <desc>Completing the transfer.</desc>
+      
+      <condition type="include">
+        <shape type="formula">hearts &lt; 4</shape>
+      </condition>
+      
+      <bid id="9101">
+        <value>3n</value>
+        <desc>Pass or correct.</desc>
+        
+        <condition type="include">
+          <shape type="formula">hearts == 5</shape>
+          <shape type="formula">spades &lt; 3</shape>
+          <shape type="formula">clubs &lt; 5</shape>
+          <shape type="formula">diamonds &lt; 5</shape>
+          
+          <evaluation>
+            <points>
+              <min>5.5</min>
+              <max>11.25</max>
+            </points>
+          </evaluation>
+        </condition>
+        
+        <bid id="91012">
+          <value>4h</value>
+          <desc>3 hearts.</desc>
+          
+          <condition type="include">
+            <shape type="formula">hearts &gt;= 3</shape>
+          </condition>
+        </bid>
+      </bid>
+    </bid>
+    
+    <bid id="915">
+      <value>4h</value>
+      <desc>Super-accept.</desc>
+      
+      <condition type="include">
+        <shape type="formula">hearts &gt;= 4</shape>
+      </condition>
+    </bid>
   </bid>
 
   <bid id="92">
@@ -4962,11 +5031,31 @@ Law of total tricks.
 <bid id="c">
   <value>3h</value>
   <desc>Pre-empt.</desc>
+  
+  <condition type="include">
+    <shape type="formula">hearts &gt;= 7</shape>
+    
+    <evaluation>
+      <points>
+        <max>12.5</max>
+      </points>
+    </evaluation>
+  </condition>
 </bid>
 
 <bid id="d">
   <value>3s</value>
   <desc>Pre-empt.</desc>
+  
+  <condition type="include">
+    <shape type="formula">spades &gt;= 7</shape>
+    
+    <evaluation>
+      <points>
+        <max>12.5</max>
+      </points>
+    </evaluation>
+  </condition>
 </bid>
 
 <bid id="e">
