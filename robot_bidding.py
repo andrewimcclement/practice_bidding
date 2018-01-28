@@ -295,7 +295,7 @@ class BiddingProgram:
                         self._settings["mode"] = self.ProgramMode.Automatic
             else:
                 input_ = input(f"Do you wish to change {key} from "
-                               f"{self._settings[key]}? (y/n))")
+                               f"{self._settings[key]}? (y/n)")
                 if self.parse(input_, True) == ParseResults.Yes:
                     self._settings[key] = not self._settings[key]
 
