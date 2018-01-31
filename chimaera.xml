@@ -1212,6 +1212,58 @@ Law of total tricks.
       <desc>Relay.</desc>
 
       <condition type="include"></condition>
+      
+      <bid id="0200">
+        <value>2c</value>
+        <desc>12+ hcp.</desc>
+        
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <min>11.5</min>
+            </hcp>
+          </evaluation>
+        </condition>
+      </bid>
+      
+      <bid id="0201">
+        <value>2d</value>
+        <desc>8-11 hcp, minor as second suit.</desc>
+        
+        <condition type="include">
+          <shape type="formula">clubs == 4</shape>
+        </condition>
+        
+        <condition type="include">
+          <shape type="formula">diamonds == 4</shape>
+        </condition>
+      </bid>
+      
+      <bid id="0202">
+        <value>2h</value>
+        <desc>8-11 hcp. 4-5 hearts or balanced hand.</desc>
+        
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+          
+          <shape type="formula">hearts == 4</shape>
+        </condition>
+        
+        <condition type="include">
+          <evaluation>
+            <hcp>
+              <max>11.25</max>
+            </hcp>
+          </evaluation>
+          
+          <shape type="formula">hearts == 5</shape>
+          <shape type="formula">spades == 5</shape>
+        </condition>
+      </bid>
     </bid>
   </bid>
 
@@ -2319,19 +2371,28 @@ Law of total tricks.
       </tricks>
     </evaluation>
 
-    <shape type="hearts">
-      <min>4</min>
-    </shape>
+    <shape type="formula">hearts &gt;= 4</shape>
+    <shape type="formula">hearts &gt; spades</shape>
+    <shape type="formula">hearts &gt;= diamonds</shape>
+  </condition>
+  
+  <condition type="include">
+    <evaluation>
+      <hcp>
+        <min>10.75</min>
+        <max>15.5</max>
+      </hcp>
 
-    <shape type="strictly_longer_than">
-      <longer_suit>hearts</longer_suit>
-      <shorter_suit>spades</shorter_suit>
-    </shape>
-
-    <shape type="longer_than">
-      <longer_suit>hearts</longer_suit>
-      <shorter_suit>diamonds</shorter_suit>
-    </shape>
+      <tricks>
+        <max>8.75</max>
+      </tricks>
+    </evaluation>
+  
+    <shape type="shape">4414</shape>
+  </condition>
+  
+  <condition type="exclude">
+    <shape type="general">balanced</shape>
   </condition>
 
   <bid id="20">
