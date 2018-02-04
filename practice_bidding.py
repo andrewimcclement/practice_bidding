@@ -12,7 +12,10 @@ from time import sleep
 from robot_bidding import BiddingProgram
 from xml_parser import get_bids_from_xml
 from bridge_parser import parse, parse_with_quit, ParseResults
+from redeal.redeal import Hand
+from redeal import redeal
 
+redeal.SUITS_FORCE_UNICODE = True
 
 # You may use your own default bidding system here if desired.
 DEFAULT_XML_SOURCE = "chimaera.xml"
@@ -56,6 +59,12 @@ def main():
 
     The system is taken from an xml document, which can be defined at runtime.
     """
+
+    def hand_to_str(hand):
+        """ Improved one line string representation of a Hand object."""
+        return " ".join(map("{}{}".format, redeal.Suit, hand))
+
+    Hand._short_str = hand_to_str
 
     program = BiddingProgram()
 

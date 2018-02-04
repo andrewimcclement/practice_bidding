@@ -24,6 +24,15 @@ OPERATOR = re.compile("<[^=]|>[^=]|[!<>=]=")
 VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$", re.I)
 
 
+def standard_shape_points(hand):
+    return sum((max(len(suit) - 4, 0)) for suit in hand.shape)
+
+
+def freakness_points(hand):
+    """Points for the shape of a hand based on its freakiness."""
+    return hand.freakness/2 - 0.5
+
+
 class Bid:
     """
     Represents a bridge bid, with links to previous and future bids.
@@ -134,6 +143,40 @@ class Condition:
                 f"\n{self.shape_conditions}")
 
 
+def _parse_general_formula(formula):
+    raise NotImplementedError
+
+    formula = "".join(formula.split()).lower()
+
+    assert len(OPERATOR.findall(formula)) >= 1
+    assert ("clubs" in formula
+            or "diamonds" in formula
+            or "hearts" in formula
+            or "spades" in formula
+            or "hcp" in formula
+            or "top_three" in formula
+            or "controls" in formula
+            or "aces" in formula
+            or "rkcbc" in formula
+            or "rkcbd" in formula
+            or "rkcbh" in formula
+            or "rkcbs" in formula
+            or "top_three_c" in formula
+            or "top_three_d" in formula
+            or "top_three_h" in formula
+            or "top_three_s" in formula
+            or "ace_c" in formula
+            or "ace_d" in formula
+            or "ace_h" in formula
+            or "ace_s" in formula
+            or "king_c" in formula
+            or "king_d" in formula
+            or "king_h" in formula
+            or "king_s" in formula
+            or "queen_s" in formula
+            or "")
+
+
 # Does NOT accept brackets in formula!
 def _parse_formula_for_condition(formula):
     """ Parse a formula involving suit lengths.
@@ -191,15 +234,18 @@ def get_bids_from_xml(filepath=None):
     elif hcp_style == "chimaera":
         hcp = CHIMAERA_HCP
     else:
-        raise NotImplementedError
+        raise NotImplementedError("HCP style not defined.")
+
+    shape_style = root.attrib["shape"]
+    if shape_style == "standard":
+        shape_points = standard_shape_points
+    elif shape_style == "freakness":
+        shape_points = freakness_points
+    else:
+        raise NotImplementedError("Shape points not defined.")
 
     def _points(hand):
-        club_length = max(len(hand.clubs) - 4, 0)
-        diamond_length = max(len(hand.diamonds) - 4, 0)
-        heart_length = max(len(hand.hearts) - 4, 0)
-        spade_length = max(len(hand.spades) - 4, 0)
-        return (hcp(hand) + club_length + diamond_length + heart_length
-                + spade_length)
+        return hcp(hand) + shape_points(hand)
 
     def _define_bid(xml_bid):
         value, desc = xml_bid.find("value"), xml_bid.find("desc")
@@ -249,8 +295,25 @@ def get_bids_from_xml(filepath=None):
 
                 evaluation_conditions.append(evaluation_condition)
             elif method.tag == "tricks":
-                # TODO: Add tricks method.
-                continue
+                try:
+                    minimum = float(method.find("min").text)
+                except AttributeError:
+                    minimum = 0
+
+                try:
+                    maximum = float(method.find("max").text)
+                except AttributeError:
+                    maximum = math.inf
+
+                assert (minimum, maximum) != (0, math.inf)
+
+                def pt(hand):
+                    return hand.pt
+
+                evaluation_condition = EvaluationCondition(
+                        pt, minimum, maximum)
+                evaluation_conditions.append(evaluation_condition)
+
             elif method.tag == "points":
                 try:
                     minimum = float(method.find("min").text)

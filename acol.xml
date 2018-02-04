@@ -12,7 +12,7 @@ Key points of system.
 12-14 1n
 20-22 2n
 -->
-<openingBids hcp="standard">
+<openingBids hcp="standard" shape="standard">
 <bid id="0">
   <value>1c</value>
   <desc></desc>
