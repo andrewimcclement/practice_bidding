@@ -4,12 +4,23 @@ import sys
 import os
 import unittest
 
-if __name__ == "__main__":
+
+def _update_path():
     directory = os.path.dirname(os.path.realpath(__file__))
+    # Need the directory one up from /practice_bidding.
     sys.path.append(os.path.split(directory)[0])
 
-from practice_bidding import parser_tests
-from practice_bidding import xml_parser_tests
+
+try:
+    from practice_bidding import parser_tests
+    from practice_bidding import xml_parser_tests
+except ImportError:
+    # This is in place for Travis. It is expected that under normal
+    # circumstances the practice_bidding package will be found on sys.path.
+    _update_path()
+
+    from practice_bidding import parser_tests
+    from practice_bidding import xml_parser_tests
 
 
 def main():
