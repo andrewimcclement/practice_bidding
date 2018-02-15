@@ -5,7 +5,8 @@ import os
 import unittest
 
 if __name__ == "__main__":
-    sys.path.append(os.getcwd())
+    directory = os.path.dirname(os.path.realpath(__file__))
+    sys.path.append(os.path.split(directory)[0])
 
 from practice_bidding import parser_tests
 from practice_bidding import xml_parser_tests
