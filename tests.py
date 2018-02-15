@@ -1,7 +1,11 @@
 """ Test suite for practice_bidding. """
 
 import sys
+import os
 import unittest
+
+if __name__ == "__main__":
+    sys.path.append(os.getcwd())
 
 from practice_bidding import parser_tests
 from practice_bidding import xml_parser_tests
