@@ -5,20 +5,23 @@ Created on Tue Dec 19 20:08:26 2017
 @author: Lynskyder
 """
 
+import os
 import unittest
 from xml_parser import get_bids_from_xml
 from xml_parser import _parse_formula_for_condition
 from xml_parser import VALID_EXPRESSION
+from practice_bidding.practice_bidding_main import DEFAULT_XML_SOURCE
 from redeal.redeal import Hand
 
 
 class XmlParserTests(unittest.TestCase):
 
     def test_parse_chimaera_bids(self):
-        get_bids_from_xml("chimaera.xml")
+        get_bids_from_xml(DEFAULT_XML_SOURCE)
 
     def test_parse_acol_bids(self):
-        get_bids_from_xml("acol.xml")
+        directory = os.path.split(DEFAULT_XML_SOURCE)[0]
+        get_bids_from_xml(os.path.join(directory, "acol.xml"))
 
     def test_valid_expressions(self):
         passes = ["h+s-d*2", "h*s-d*c", "12"]

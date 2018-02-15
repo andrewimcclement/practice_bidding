@@ -3,8 +3,8 @@
 import sys
 import unittest
 
-import parser_tests
-import xml_parser_tests
+from practice_bidding import parser_tests
+from practice_bidding import xml_parser_tests
 
 
 def main():

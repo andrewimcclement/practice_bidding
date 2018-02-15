@@ -2947,6 +2947,16 @@ Law of total tricks.
     <bid id="303">
       <value>2h</value>
       <desc>13-15 points, 4+ hearts.</desc>
+      
+      <condition type="include">
+        <shape type="formula">hearts &gt;= 4</shape>
+        
+        <evaluation>
+          <points>
+            <max>15.5</max>
+          </points>
+        </evaluation>
+      </condition>
     </bid>
 
     <bid id="304">

@@ -12,11 +12,11 @@ Notes:
 
 from random import choice
 from enum import Enum, auto
-from xml_parser import Bid
-from bridge_parser import parse_with_quit, ParseResults
+from practice_bidding.xml_parser import Bid
+from practice_bidding.bridge_parser import parse_with_quit, ParseResults
 
 try:
-    from redeal.redeal import Deal
+    from practice_bidding.redeal.redeal import Deal
 except ImportError:
     print("Using local copy of redeal, not submodule.")
     from redeal import Deal
