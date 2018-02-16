@@ -8,7 +8,9 @@ import unittest
 def _update_path():
     directory = path.dirname(path.realpath(__file__))
     # Need the directory two up from /practice_bidding.
-    sys.path.append(path.dirname(path.dirname(directory)))
+    path_to_add = path.dirname(path.dirname(directory))
+    print(f"Adding \"{path_to_add}\" to sys.path.")
+    sys.path.append(path_to_add)
 
 
 try:

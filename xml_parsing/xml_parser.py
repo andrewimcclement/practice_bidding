@@ -10,8 +10,8 @@ import xml.etree.ElementTree as ET
 import re
 
 try:
-    from redeal.redeal import Shape, Evaluator
-    from redeal.redeal.global_defs import Strain
+    from practice_bidding.redeal.redeal import Shape, Evaluator
+    from practice_bidding.redeal.redeal.global_defs import Strain
 except ImportError:
     print("Using local copy of redeal.")
     from redeal import Shape, Evaluator
