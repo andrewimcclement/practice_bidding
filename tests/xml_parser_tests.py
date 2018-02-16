@@ -12,7 +12,7 @@ from practice_bidding.xml_parsing.xml_parser import \
     _parse_formula_for_condition
 from practice_bidding.xml_parsing.xml_parser import VALID_EXPRESSION
 from practice_bidding.practice_bidding_main import DEFAULT_XML_SOURCE
-from redeal.redeal import Hand
+from practice_bidding.redeal.redeal import Hand
 
 
 class XmlParserTests(unittest.TestCase):
