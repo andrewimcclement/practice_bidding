@@ -21,7 +21,7 @@ except ImportError:
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
 HCP = Evaluator(4, 3, 2, 1)
 OPERATOR = re.compile("<[^=]|>[^=]|[!<>=]=")
-VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$", re.I)
+VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$")
 
 
 def standard_shape_points(hand):
@@ -143,6 +143,57 @@ class Condition:
                 f"\n{self.shape_conditions}")
 
 
+class MultiCondition:
+    def __init__(self, conditions):
+        assert conditions
+        self.conditions = conditions
+
+    def accept(self, hand):
+        raise NotImplementedError("Abstract method.")
+
+
+class AndCondition(MultiCondition):
+    """
+    Collection of conditions which are all required to be true to accept a
+    hand.
+    """
+
+    def accept(self, hand):
+        """
+        If all conditions are satisfied by the hand or not.
+        """
+        for condition in self.conditions:
+            if not condition.accept(hand):
+                return False
+
+        return True
+
+
+class NotCondition:
+    """ An inverted condition """
+    def __init__(self, condition):
+        assert condition
+        self.condition = condition
+
+    def accept(self, hand):
+        """ The inverse of self.condition """
+        return not self.condition.accept(hand)
+
+
+class OrCondition:
+    """
+    Collection of conditions of which at least one is required to be true to
+    accept a hand.
+    """
+
+    def accept(self, hand):
+        for condition in self.conditions:
+            if condition.accept(hand):
+                return True
+
+        return False
+
+
 def _parse_general_formula(formula):
     raise NotImplementedError
 
@@ -175,6 +226,22 @@ def _parse_general_formula(formula):
             or "king_s" in formula
             or "queen_s" in formula
             or "")
+
+
+class FormulaParser:
+    _VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$")
+
+    def __init__(self, formula_module):
+        self._valid_formula_regex = self._get_formula_regex(formula_module)
+
+    @staticmethod
+    def _get_formula_regex(formula_module):
+        pass
+
+
+def _parse_formula(formula):
+    formula = "".join(formula.split()).lower()
+    assert OPERATOR.findall(formula)
 
 
 # Does NOT accept brackets in formula!
@@ -239,10 +306,16 @@ def get_bids_from_xml(filepath=None):
     shape_style = root.attrib["shape"]
     if shape_style == "standard":
         shape_points = standard_shape_points
-    elif shape_style == "freakness":
+    elif shape_style == "freakiness":
         shape_points = freakness_points
     else:
         raise NotImplementedError("Shape points not defined.")
+
+    try:
+        formula_module_location = root.attrib["formulas"]
+        formula_module = __import__(formula_module_location)
+    except KeyError:
+        pass
 
     def _points(hand):
         return hcp(hand) + shape_points(hand)
@@ -255,6 +328,8 @@ def get_bids_from_xml(filepath=None):
         for xml_condition in xml_conditions:
             evaluation_conditions = \
                 _get_evaluation_condition(xml_condition)
+
+            evaluation_conditions.append(_get_formulas(xml_condition))
             shape_conditions = _get_shape_conditions(xml_condition)
             type_ = xml_condition.attrib["type"]
             if type_ == "include":
@@ -269,6 +344,15 @@ def get_bids_from_xml(filepath=None):
                                         shape_conditions))
 
         return Bid(value.text, desc.text, conditions)
+
+    def _get_formulas(xml_condition):
+        formulas = []
+        for xml_formula in xml_condition.findall("formula"):
+            formula_text = xml_formula.text
+            formula = _parse_formula(formula_text, formula_module)
+            formulas.append(formula)
+
+        return formulas
 
     def _get_evaluation_condition(xml_condition):
         evaluation_conditions = []

@@ -1,26 +1,26 @@
 """ Test suite for practice_bidding. """
 
 import sys
-import os
+from os import path
 import unittest
 
 
 def _update_path():
-    directory = os.path.dirname(os.path.realpath(__file__))
-    # Need the directory one up from /practice_bidding.
-    sys.path.append(os.path.split(directory)[0])
+    directory = path.dirname(path.realpath(__file__))
+    # Need the directory two up from /practice_bidding.
+    sys.path.append(path.dirname(path.dirname(directory)))
 
 
 try:
-    from practice_bidding import parser_tests
-    from practice_bidding import xml_parser_tests
+    from practice_bidding.tests import parser_tests
+    from practice_bidding.tests import xml_parser_tests
 except ImportError:
     # This is in place for Travis. It is expected that under normal
     # circumstances the practice_bidding package will be found on sys.path.
     _update_path()
 
-    from practice_bidding import parser_tests
-    from practice_bidding import xml_parser_tests
+    from practice_bidding.tests import parser_tests
+    from practice_bidding.tests import xml_parser_tests
 
 
 def main():

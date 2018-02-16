@@ -12,7 +12,7 @@ Notes:
 
 from random import choice
 from enum import Enum, auto
-from practice_bidding.xml_parser import Bid
+from practice_bidding.xml_parsing.xml_parser import Bid
 from practice_bidding.bridge_parser import parse_with_quit, ParseResults
 
 try:

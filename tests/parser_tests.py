@@ -6,7 +6,7 @@ Created on Sat Dec 16 17:27:28 2017
 """
 
 import unittest
-from bridge_parser import parse, parse_with_quit, ParseResults
+from practice_bidding.bridge_parser import parse, parse_with_quit, ParseResults
 
 
 class ParserTests(unittest.TestCase):

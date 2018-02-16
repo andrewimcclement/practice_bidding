@@ -11,7 +11,7 @@ import traceback
 
 from time import sleep
 from practice_bidding.robot_bidding import BiddingProgram
-from practice_bidding.xml_parser import get_bids_from_xml
+from practice_bidding.xml_parsing.xml_parser import get_bids_from_xml
 from practice_bidding.bridge_parser import parse, parse_with_quit, ParseResults
 from practice_bidding.redeal.redeal import Hand
 from practice_bidding.redeal import redeal
@@ -21,6 +21,7 @@ redeal.SUITS_FORCE_UNICODE = True
 # You may use your own default bidding system here if desired.
 _DEFAULT_XML_SOURCE = "chimaera.xml"
 DEFAULT_XML_SOURCE = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                  "example_systems",
                                   _DEFAULT_XML_SOURCE)
 
 

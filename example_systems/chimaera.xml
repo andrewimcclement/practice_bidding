@@ -23,7 +23,7 @@ Principle of fast arrival.
 Law of total tricks.
  -->
 
-<openingBids hcp="chimaera" shape="freakness">
+<openingBids hcp="chimaera" shape="freakiness">
 <bid id="0">
   <value>1c</value>
   <desc>16+ hcp</desc>
