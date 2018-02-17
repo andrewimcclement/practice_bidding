@@ -25,36 +25,47 @@ DEFAULT_XML_SOURCE = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                   _DEFAULT_XML_SOURCE)
 
 
+def hand_to_str(hand):
+    """ Improved one line string representation of a Hand object."""
+    return " ".join(map("{}{}".format, redeal.Suit, hand))
+
+
+Hand._short_str = hand_to_str
+
+
 def get_xml_source():
     """ Get the xml source file path defining bids for this program. """
+    filepath = ""
+    if __name__ == "__main__"
     try:
-        return sys.argv[1]
+        filepath = sys.argv[1]
     except IndexError:
         pass
 
-    while True:
+    result = ParseResults.Filepath
+    while result != ParseResults.Filepath and not filepath.endswith(".xml"):
+        if result != ParseResults.Filepath:
+            # Previous attempt failed to give a valid filepath.
+            print(f"\"{filepath}\" is not a valid file path."
+                  "\nPlease try again.")
+        else:
+            print(f"\"{filepath}\" is not an XML file.")
+
         print("Please enter the path to the xml source file to be used"
               " for this program.")
         filepath = input("Path to file: ")
         if filepath.lower() == "default":
             filepath = DEFAULT_XML_SOURCE
 
-        result = parse(filepath)
-        if result == ParseResults.Quit:
-            raise KeyboardInterrupt
-        elif result == ParseResults.Help:
+        result = parse_with_quit(filepath)
+        if result == ParseResults.Help:
             print("Do not escape backslashes. The input is expected "
                   "to be raw.\n\nIf the filename you are trying "
                   "to enter conflicts with a regex used by this "
                   "program, please rename the file to something more "
                   "appropriate.")
-        elif result == ParseResults.Filepath:
-            try:
-                assert filepath.endswith(".xml")
-                return filepath
-            except AssertionError:
-                print(f"{filepath} is not a valid file path"
-                      ".\nPlease try again.")
+
+    return filepath
 
 
 def main():
@@ -63,12 +74,6 @@ def main():
 
     The system is taken from an xml document, which can be defined at runtime.
     """
-
-    def hand_to_str(hand):
-        """ Improved one line string representation of a Hand object."""
-        return " ".join(map("{}{}".format, redeal.Suit, hand))
-
-    Hand._short_str = hand_to_str
 
     program = BiddingProgram()
 
@@ -101,7 +106,7 @@ def main():
             print(f"Double dummy result: {contract} {dd_result}")
 
         input_ = input("Is this the correct final contract? (y/n) ")
-        if parse(input_) == ParseResults.No:
+        if parse_user_input(input_) == ParseResults.No:
             result = None
             while result not in {ParseResults.Back, ParseResults.No}:
                 input_ = input("Please enter the final contract: ")
@@ -132,14 +137,11 @@ def main():
         return result == ParseResults.Yes
 
     # Here is the main program.
-    play_another = True
-
     try:
         source = get_xml_source()
         bids = get_bids_from_xml(source)
         program.set_opening_bids(bids)
-        while play_another:
-            play_another = _play_board()
+        while _play_board():
             program.generate_new_deal()
 
     except KeyboardInterrupt:
@@ -151,7 +153,7 @@ def main():
         traceback.print_exc()
         print("Copy the exception and email andrewimcclement@gmail.com with "
               "the results to help fix your problem.")
-        sleep(20)
+        sleep(30)
         raise
     finally:
         print("Thank you for playing!")

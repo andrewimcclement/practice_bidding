@@ -10,14 +10,8 @@ import xml.etree.ElementTree as ET
 import re
 
 from practice_bidding import standard_formulas
-
-try:
-    from practice_bidding.redeal.redeal import Shape, Evaluator
-    from practice_bidding.redeal.redeal.global_defs import Strain
-except ImportError:
-    print("Using local copy of redeal.")
-    from redeal import Shape, Evaluator
-    from redeal.global_defs import Strain
+from practice_bidding.redeal.redeal import Shape, Evaluator
+from practice_bidding.redeal.redeal.global_defs import Strain
 
 
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
@@ -407,11 +401,16 @@ def get_bids_from_xml(filepath=None):
 
                 assert (minimum, maximum) != (0, math.inf)
 
-                def pt(hand):
-                    return hand.pt
+                try:
+                    tricks = get_formula("tricks")
+                except NotImplementedError:
+                    def pt(hand):
+                        return hand.pt
+
+                    tricks = pt
 
                 evaluation_condition = EvaluationCondition(
-                        pt, minimum, maximum)
+                    tricks, minimum, maximum)
                 evaluation_conditions.append(evaluation_condition)
 
             elif method.tag == "points":

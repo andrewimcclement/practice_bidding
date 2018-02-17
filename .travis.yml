@@ -1,4 +1,10 @@
 language: python
 python:
   - "3.6"
-script: python tests/tests.py
+install:
+  - pip install coverage
+  - pip install python-coveralls
+script:
+  - python tests/tests.py
+after-success:
+  - coveralls
