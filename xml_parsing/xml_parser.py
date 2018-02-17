@@ -228,6 +228,7 @@ def _parse_general_formula(formula):
 
 class FormulaParser:
     _VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$")
+    _BINARY_OPERATOR = re.compile("[-+*]")
 
     def __init__(self, formula_module):
         self._valid_formula_regex = self._get_formula_regex(formula_module)
@@ -236,10 +237,22 @@ class FormulaParser:
     def _get_formula_regex(formula_module):
         pass
 
+    @staticmethod
+    def _validate_formula_expression(formula_module):
+        pass
 
-def _parse_formula(formula):
+
+def _parse_formula(formula, formula_module):
     formula = "".join(formula.split()).lower()
     assert OPERATOR.findall(formula)
+
+    def _get_accept(formula_text):
+        def accept(hand):
+            return eval(formula_text)
+
+        return accept
+
+    return _get_accept(formula)
 
 
 def _get_min_max_for_method(xml_method,
@@ -267,12 +280,9 @@ def _get_min_max_for_method(xml_method,
         maximum = math.inf
 
     result = (max(minimum, absolute_min), min(maximum, absolute_max))
-    try:
-        assert result[0] <= result[1], f"minimum, maximum == {result}"
-        assert (not (result[0] in {default_min, absolute_min}
-                     and result[1] in {default_max, absolute_max})), xml_method.tag
-    except AssertionError:
-        raise
+    assert result[0] <= result[1], f"minimum, maximum == {result}"
+    assert (not (result[0] in {default_min, absolute_min}
+                 and result[1] in {default_max, absolute_max})), xml_method.tag
 
     return result
 
@@ -361,7 +371,7 @@ def get_bids_from_xml(filepath=None):
         elif hcp_style == "chimaera":
             hcp = CHIMAERA_HCP
         else:
-            hcp = get_formula("HCP")
+            hcp = get_formula("hcp")
     except AttributeError:
         raise NotImplementedError("HCP style not defined.")
 

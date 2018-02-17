@@ -27,7 +27,11 @@ DEFAULT_XML_SOURCE = os.path.join(os.path.dirname(os.path.realpath(__file__)),
 
 def hand_to_str(hand):
     """ Improved one line string representation of a Hand object."""
-    return " ".join(map("{}{}".format, redeal.Suit, hand))
+    # For some reason, redeal.Suit seems to fail under certain circumstances.
+    # I assume there is some name collision in the redeal module somewhere
+    # and the multiple "from module import *" statements in place cause
+    # Suit not to be available.
+    return " ".join(map("{}{}".format, redeal.redeal.Suit, hand))
 
 
 Hand._short_str = hand_to_str
