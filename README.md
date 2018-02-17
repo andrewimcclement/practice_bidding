@@ -1,4 +1,4 @@
-# practice_bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master)
+# practice_bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/andrewimcclement/practice_bidding/badge.svg)](https://coveralls.io/github/andrewimcclement/practice_bidding)
 A short program to allow practice of new bidding systems in Bridge.
 
 -------------------------------------------------------------------------------
