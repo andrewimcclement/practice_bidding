@@ -42,8 +42,14 @@ This can have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and
 &lt;tricks&gt;. Note that &lt;tricks&gt; is not yet implemented.
 With these elements, you can define &lt;min&gt; and &lt;max&gt; elements.
 
-  - &lt;hcp&gt; evaluates a hand using (A, K, Q, J, T) = (4.5, 3, 1.5, 0.75, 0.25)
-    This can be changed in the \_\_init\_\_ method of BiddingProgram.
+  - &lt;hcp&gt; evaluates a hand using the Milton Work Point Count if the
+    attribute hcp="standard" is added to the root of the XML system file.
+    An alternative point count (hcp="chimaera") is defined with
+    (A, K, Q, J, T) == (4.5, 3, 1.5, 0.75, 0.25)
+    If neither are defined, it will fall back to the HCP function defined
+    in a python file referenced by the XML system file (file location assumed
+    to be in the same directory as the XML system file, referenced by addition
+    of formulas="my_evaluation_methods.py")
 
   - &lt;points&gt; is the sum of &lt;hcp&gt; and the number of cards above 4 in
     each suit.

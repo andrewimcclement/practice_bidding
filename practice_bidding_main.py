@@ -12,7 +12,7 @@ import traceback
 from time import sleep
 from practice_bidding.robot_bidding import BiddingProgram
 from practice_bidding.xml_parsing.xml_parser import get_bids_from_xml
-from practice_bidding.bridge_parser import parse, parse_with_quit, ParseResults
+from practice_bidding.bridge_parser import parse_with_quit, ParseResults
 from practice_bidding.redeal.redeal import Hand
 from practice_bidding.redeal import redeal
 
@@ -43,7 +43,7 @@ def get_xml_source():
             pass
 
     result = ParseResults.Filepath
-    while result != ParseResults.Filepath and not filepath.endswith(".xml"):
+    while result != ParseResults.Filepath or not filepath.endswith(".xml"):
         if result != ParseResults.Filepath:
             # Previous attempt failed to give a valid filepath.
             print(f"\"{filepath}\" is not a valid file path."
