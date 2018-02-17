@@ -5,24 +5,22 @@ A short program to allow practice of new bidding systems in Bridge.
 __Requirements__
 Python v3.6+ (f-strings are used ubiquitously).
 
-https://www.github.com/anntzer/redeal
+-------------------------------------------------------------------------------
+__Installation__
 
-Example method of installation:
- - Run "pip install git+https://github.com/anntzer/redeal"
-
-A fork of this GitHub project is now included as a submodule of this
-repository. See https://git-scm.com/book/en/v2/Git-Tools-Submodules for how to
+See https://git-scm.com/book/en/v2/Git-Tools-Submodules for how to
 ensure you get the redeal library installed as well.
 
 -------------------------------------------------------------------------------
-Usage:
-From the command line, "python C:\path\to\robot_bidding.py" will use the
-XML_DEFAULT_SOURCE constant to locate the XML file describing the bidding
+__Usage__:
+From the command line, `python C:\path\to\practice_bidding_main.py` will use
+the XML_DEFAULT_SOURCE constant to locate the XML file describing the bidding
 system you wish to use, if you enter "default" when asked for the XML file
 location. Otherwise you may enter the file location at that point.
 
-Alternatively, "python C:\path\to\practice_bidding.py C:\path\to\system.xml"
-will use the XML file located at "C:\path\to\system.xml"
+Alternatively,
+    `python C:\path\to\practice_bidding_main.py C:\path\to\system.xml`
+will use the XML file located at `C:\path\to\system.xml`
 
 You may wish to edit the XML_DEFAULT_SOURCE constant for your own usage.
 Please do not commit these changes.
@@ -43,13 +41,13 @@ This can have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and
 With these elements, you can define &lt;min&gt; and &lt;max&gt; elements.
 
   - &lt;hcp&gt; evaluates a hand using the Milton Work Point Count if the
-    attribute hcp="standard" is added to the root of the XML system file.
-    An alternative point count (hcp="chimaera") is defined with
+    attribute `hcp="standard"` is added to the root of the XML system file.
+    An alternative point count `hcp="chimaera"` is defined with
     (A, K, Q, J, T) == (4.5, 3, 1.5, 0.75, 0.25)
     If neither are defined, it will fall back to the HCP function defined
     in a python file referenced by the XML system file (file location assumed
     to be in the same directory as the XML system file, referenced by addition
-    of formulas="my_evaluation_methods.py")
+    of `formulas="my_evaluation_methods.py"`)
 
   - &lt;points&gt; is the sum of &lt;hcp&gt; and the number of cards above 4 in
     each suit.
@@ -81,3 +79,9 @@ element. These must have a "type" tag, which must be one of "general", "shape",
     +, *, - are all allowed (but not brackets). Exactly one operator of "==",
     "!=", "<=", ">=", "<", ">" must be used (replacing "<"/">" with "&[l/g]t;"
     where required).
+
+-------------------------------------------------------------------------------
+__Acknowledgements__
+This would not be possible without the wonderful redeal library implemented
+in Python by Antony Lee. This project uses a forked copy, but the original
+can be found at https://github.com/anntzer/redeal.
