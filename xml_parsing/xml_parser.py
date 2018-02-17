@@ -9,6 +9,8 @@ import math
 import xml.etree.ElementTree as ET
 import re
 
+from practice_bidding import standard_formulas
+
 try:
     from practice_bidding.redeal.redeal import Shape, Evaluator
     from practice_bidding.redeal.redeal.global_defs import Strain
@@ -295,13 +297,33 @@ def get_bids_from_xml(filepath=None):
     tree = ET.parse(filepath, ET.XMLParser(encoding="utf-8"))
     root = tree.getroot()
 
-    hcp_style = root.attrib["hcp"]
-    if hcp_style == "standard":
-        hcp = HCP
-    elif hcp_style == "chimaera":
-        hcp = CHIMAERA_HCP
-    else:
-        raise NotImplementedError("HCP style not defined.")
+    try:
+        formula_module_location = root.attrib["formulas"]
+        formula_module = __import__(formula_module_location)
+    except KeyError:
+        formula_module = None
+
+    def get_formula(method_name):
+        try:
+            return getattr(formula_module, method_name)
+        except AttributeError:
+            try:
+                return getattr(standard_formulas, method_name)
+            except AttributeError:
+                raise NotImplementedError(f"{method_name} not defined in "
+                                          f"{formula_module_location}.")
+
+    try:
+        hcp = get_formula("HCP")
+    except AttributeError:
+        # HCP not defined in formula_module.
+        hcp_style = root.attrib["hcp"]
+        if hcp_style == "standard":
+            hcp = HCP
+        elif hcp_style == "chimaera":
+            hcp = CHIMAERA_HCP
+        else:
+            raise NotImplementedError("HCP style not defined.")
 
     shape_style = root.attrib["shape"]
     if shape_style == "standard":
@@ -310,12 +332,6 @@ def get_bids_from_xml(filepath=None):
         shape_points = freakness_points
     else:
         raise NotImplementedError("Shape points not defined.")
-
-    try:
-        formula_module_location = root.attrib["formulas"]
-        formula_module = __import__(formula_module_location)
-    except KeyError:
-        pass
 
     def _points(hand):
         return hcp(hand) + shape_points(hand)

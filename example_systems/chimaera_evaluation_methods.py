@@ -3,12 +3,16 @@
 Created on Fri Feb  2 00:18:45 2018
 
 @author: Lynskyder
+
+Names here must match those used in the XML, including case.
+Only HCP is handled separately (must be uppercase.)
 """
 
-from redeal.redeal import A, K, Q, J, T, Hand, Shape, Evaluator
+from redeal.redeal import A, K, Q, Evaluator
 
 
 SUITS = ("clubs", "diamonds", "hearts", "spades")
+HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
 
 
 def _get_top_three_suit(suit):
