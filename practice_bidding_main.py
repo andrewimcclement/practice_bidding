@@ -36,11 +36,11 @@ Hand._short_str = hand_to_str
 def get_xml_source():
     """ Get the xml source file path defining bids for this program. """
     filepath = ""
-    if __name__ == "__main__"
-    try:
-        filepath = sys.argv[1]
-    except IndexError:
-        pass
+    if __name__ == "__main__":
+        try:
+            filepath = sys.argv[1]
+        except IndexError:
+            pass
 
     result = ParseResults.Filepath
     while result != ParseResults.Filepath and not filepath.endswith(".xml"):
