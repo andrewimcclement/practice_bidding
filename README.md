@@ -8,13 +8,16 @@ Python v3.6+ (f-strings are used ubiquitously).
 -------------------------------------------------------------------------------
 __Installation__
 
-See https://git-scm.com/book/en/v2/Git-Tools-Submodules for how to
-ensure you get the redeal library installed as well.
+`git clone --recurse-submodules https://github.com/andrewimcclement/practice_bidding`
+will ensure the required redeal submodule is installed at the same time.
+
+Should you have any difficulties, please see
+https://git-scm.com/book/en/v2/Git-Tools-Submodules.
 
 -------------------------------------------------------------------------------
 __Usage__:
 From the command line, `python C:\path\to\practice_bidding_main.py` will use
-the XML_DEFAULT_SOURCE constant to locate the XML file describing the bidding
+the `XML_DEFAULT_SOURCE` constant to locate the XML file describing the bidding
 system you wish to use, if you enter "default" when asked for the XML file
 location. Otherwise you may enter the file location at that point.
 
@@ -22,12 +25,12 @@ Alternatively,
     `python C:\path\to\practice_bidding_main.py C:\path\to\system.xml`
 will use the XML file located at `C:\path\to\system.xml`
 
-You may wish to edit the XML_DEFAULT_SOURCE constant for your own usage.
+You may wish to edit the `XML_DEFAULT_SOURCE` constant for your own usage.
 Please do not commit these changes.
 
 -------------------------------------------------------------------------------
-Defining the XML bidding system:
-See chimaera.xml as an example.
+__Defining the XML bidding system__:
+See example_systems/chimaera.xml as an example.
 
 &lt;bid&gt; element must always have a &lt;value&gt; element and a &lt;desc&gt;
 element. For a bid to be recognised by the program, it must have a
