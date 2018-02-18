@@ -34,9 +34,6 @@ def hand_to_str(hand):
     return " ".join(map("{}{}".format, redeal.redeal.Suit, hand))
 
 
-Hand._short_str = hand_to_str
-
-
 def get_xml_source():
     """ Get the xml source file path defining bids for this program. """
     filepath = ""
@@ -79,6 +76,10 @@ def main():
     The system is taken from an xml document, which can be defined at runtime.
     """
 
+    # Set a prettier printed version of a Hand object.
+    # TODO: this doesn't work for some reason.
+    Hand._short_str = hand_to_str
+
     program = BiddingProgram()
 
     def parse_user_input(input_):
@@ -97,7 +98,7 @@ def main():
         print(f"{program.Players.South}: {program.get_hand()}")
         while not program.is_passed_out(program.bidding_sequence):
             program.bid()
-            print([value for value, bid in program.bidding_sequence])
+            print([bid.value for bid in program.bidding_sequence])
 
         contract = program.get_contract()
         print(f"Contract: {program.get_contract()}")

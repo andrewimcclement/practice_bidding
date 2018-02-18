@@ -159,7 +159,7 @@ class BiddingProgram:
             return False
 
         last_bids = bidding_sequence[-3:]
-        for _, bid in last_bids:
+        for bid in last_bids:
             if bid != cls._pass:
                 return False
 
@@ -189,13 +189,13 @@ class BiddingProgram:
         if ((next_bid != self._pass)
                 and self._settings["display_meaning_of_bids"]):
             print(f"{next_bid.value}: {next_bid.description}")
-        self.bidding_sequence.append((next_bid.value, next_bid))
+        self.bidding_sequence.append(next_bid)
 
     def _program_bid(self, current_hand):
         potential_bids = None
 
         if len(self.bidding_sequence) >= 2:
-            current_bid = self.bidding_sequence[-2][1]
+            current_bid = self.bidding_sequence[-2]
             if current_bid != self._pass:
                 # Partner made a non-trivial bid.
                 potential_bids = [bid for bid in current_bid.children.values()
@@ -221,7 +221,7 @@ class BiddingProgram:
         # By default this is an opening bid.
         potential_bids = self._root
         if len(self.bidding_sequence) >= 2:
-            current_bid = self.bidding_sequence[-2][1]
+            current_bid = self.bidding_sequence[-2]
             if current_bid != self._pass:
                 # Our partner made a non-trivial bid.
                 potential_bids = current_bid.children
@@ -335,11 +335,13 @@ class BiddingProgram:
 
     def get_double_dummy_result(self, contract):
         """ Get the number of tricks and corresponding score. """
-
-        assert len(contract) == 3
-        assert int(contract[0]) in range(10)
-        assert contract[1] in {"C", "D", "H", "S", "N"}
-        assert contract[2] in {"N", "E", "S", "W"}
+        try:
+            assert len(contract) == 3
+            assert int(contract[0]) in range(1, 8)
+            assert contract[1] in {"C", "D", "H", "S", "N"}
+            assert contract[2] in {"N", "E", "S", "W"}
+        except AssertionError:
+            raise ValueError(f"{contract} not a valid contract.")
 
         if contract[2] in {"N", "S"}:
             vulnerability = self.vulnerability in {

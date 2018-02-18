@@ -20,10 +20,24 @@ class RobotBiddingTests(unittest.TestCase):
         self._program.generate_new_deal()
         final_deal = self._program.deal
 
-        assert ((str(initial_deal.north) != str(final_deal.north))
-                or (str(initial_deal.east) != str(final_deal.east))
-                or (str(initial_deal.south) != str(final_deal.south))
-                or (str(initial_deal.west) != str(final_deal.west)))
+        self.assertTrue((str(initial_deal.north) != str(final_deal.north))
+                        or (str(initial_deal.east) != str(final_deal.east))
+                        or (str(initial_deal.south) != str(final_deal.south))
+                        or (str(initial_deal.west) != str(final_deal.west)))
+
+    def test_initial_state(self):
+        self.assertEqual(self._program.board_number, 1)
+        self.assertEqual(self._program.vulnerability,
+                         BiddingProgram.Vulnerability.None_)
+        self.assertFalse(self._program.bidding_sequence)
+
+    def test_is_passed_out_all_pass(self):
+        bidding_sequence = []
+        for i in range(4):
+            self.assertFalse(self._program.is_passed_out(bidding_sequence))
+            bidding_sequence.append(self._program._pass)
+
+        self.assertTrue(self._program.is_passed_out(bidding_sequence))
 
 
 if __name__ == "__main__":
