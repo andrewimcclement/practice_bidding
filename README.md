@@ -16,6 +16,7 @@ https://git-scm.com/book/en/v2/Git-Tools-Submodules.
 
 -------------------------------------------------------------------------------
 __Usage__:
+
 From the command line, `python C:\path\to\practice_bidding_main.py` will use
 the `XML_DEFAULT_SOURCE` constant to locate the XML file describing the bidding
 system you wish to use, if you enter "default" when asked for the XML file
@@ -30,6 +31,7 @@ Please do not commit these changes.
 
 -------------------------------------------------------------------------------
 __Defining the XML bidding system__:
+
 See example_systems/chimaera.xml as an example.
 
 &lt;bid&gt; element must always have a &lt;value&gt; element and a &lt;desc&gt;
@@ -75,10 +77,10 @@ element. These must have a "type" tag, which must be one of "general", "shape",
 
   - "longer_than" and "strictly_longer_than" &lt;shape&gt; elements require
     &lt;longer_suit&gt; and &lt;shorter_suit&gt; elements inside and allow you
-    to define conditions such as len(hearts) > len(spades) for a hand.
+    to define conditions such as `len(hearts) > len(spades)` for a hand.
 
   - "formula" &lt;shape&gt; elements allows the input of a equation in the
-    lengths of the suits, e.g. "hearts + spades > diamonds + clubs".
+    lengths of the suits, e.g. `hearts + spades > diamonds + clubs`.
     +, *, - are all allowed (but not brackets). Exactly one operator of "==",
     "!=", "<=", ">=", "<", ">" must be used (replacing "<"/">" with "&[l/g]t;"
     where required).

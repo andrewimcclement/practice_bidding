@@ -21,7 +21,7 @@ class XmlParserTests(unittest.TestCase):
         get_bids_from_xml(DEFAULT_XML_SOURCE)
 
     def test_parse_acol_bids(self):
-        directory = os.path.split(DEFAULT_XML_SOURCE)[0]
+        directory = os.path.dirname(DEFAULT_XML_SOURCE)
         get_bids_from_xml(os.path.join(directory, "acol.xml"))
 
     def test_valid_expressions(self):

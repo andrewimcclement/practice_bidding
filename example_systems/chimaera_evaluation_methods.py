@@ -40,11 +40,11 @@ def top_three(hand):
 
 
 def _get_tricks(suit):
-    def tricks(hand):
+    def playing_tricks(hand):
         f""" The number of playing tricks in {suit if suit else 'hand'}."""
         return hand.pt if suit is None else getattr(hand, suit).pt
 
-    return tricks
+    return playing_tricks
 
 
 tricks = _get_tricks(None)
@@ -58,12 +58,12 @@ controls = Evaluator(2, 1)
 
 
 def _get_rkcb(suit):
-    def rkcb(hand):
+    def roman_keycard(hand):
         f"""Roman Keycard Blackwood in {suit}."""
         holding = getattr(hand, suit)
         return gerber(hand) + holding.count(K), holding.count(Q)
 
-    return rkcb
+    return roman_keycard
 
 
 rkcb_c = _get_rkcb("clubs")
