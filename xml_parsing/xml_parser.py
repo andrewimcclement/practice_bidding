@@ -192,40 +192,6 @@ class OrCondition:
         return False
 
 
-def _parse_general_formula(formula):
-    raise NotImplementedError
-
-    formula = "".join(formula.split()).lower()
-
-    assert len(OPERATOR.findall(formula)) >= 1
-    assert ("clubs" in formula
-            or "diamonds" in formula
-            or "hearts" in formula
-            or "spades" in formula
-            or "hcp" in formula
-            or "top_three" in formula
-            or "controls" in formula
-            or "aces" in formula
-            or "rkcbc" in formula
-            or "rkcbd" in formula
-            or "rkcbh" in formula
-            or "rkcbs" in formula
-            or "top_three_c" in formula
-            or "top_three_d" in formula
-            or "top_three_h" in formula
-            or "top_three_s" in formula
-            or "ace_c" in formula
-            or "ace_d" in formula
-            or "ace_h" in formula
-            or "ace_s" in formula
-            or "king_c" in formula
-            or "king_d" in formula
-            or "king_h" in formula
-            or "king_s" in formula
-            or "queen_s" in formula
-            or "")
-
-
 class FormulaParser:
     _VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$")
     _BINARY_OPERATOR = re.compile("[-+*]")

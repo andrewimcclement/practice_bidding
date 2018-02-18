@@ -8,7 +8,7 @@ __author__ = "Andrew I McClement"
 import unittest
 from practice_bidding.practice_bidding_main import DEFAULT_XML_SOURCE
 from practice_bidding.practice_bidding_main import get_bids_from_xml
-from practice_bidding.robot_bidding import BiddingProgram
+from practice_bidding.robot_bidding import BiddingProgram, Bid
 
 
 class RobotBiddingTests(unittest.TestCase):
@@ -48,6 +48,22 @@ class RobotBiddingTests(unittest.TestCase):
             bidding_sequence.append(self._program._pass)
 
         self.assertTrue(self._program.is_passed_out(bidding_sequence))
+        self.assertEqual(self._program.get_contract(bidding_sequence), "P")
+
+    def test_get_contract(self):
+        pass_ = self._program._pass
+        one_spade = Bid("1s", "one spade", [])
+        first_bidder_to_bidding_sequence = {
+                "N": [one_spade] + [pass_]*3,
+                "E": [pass_, one_spade] + [pass_]*3,
+                "S": [pass_]*2 + [one_spade] + [pass_]*3,
+                "W": [pass_]*3 + [one_spade] + [pass_]*3}
+
+        for bidder in first_bidder_to_bidding_sequence:
+            with self.subTest(bidder=bidder):
+                bid_sequence = first_bidder_to_bidding_sequence[bidder]
+                self.assertEqual(self._program.get_contract(bid_sequence),
+                                 f"1S{bidder}")
 
     def test_can_bid_automatically(self):
         self._program.set_opening_bids(self._chimaera_bids)
