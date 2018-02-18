@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Dec 16 20:49:14 2017
-
-@author: Lynskyder
 """
 
-import sys
+__author__ = "Andrew I McClement"
+__email__ = "andrewimcclement@gmail.com"
+
+
 import os
+import sys
+from time import sleep
 import traceback
 
-from time import sleep
-from practice_bidding.robot_bidding import BiddingProgram
-from practice_bidding.xml_parsing.xml_parser import get_bids_from_xml
-from practice_bidding.bridge_parser import parse_with_quit, ParseResults
+from practice_bidding.bridge_parser import ParseResults
 from practice_bidding.redeal.redeal import Hand
 from practice_bidding.redeal import redeal
+from practice_bidding.robot_bidding import BiddingProgram
+from practice_bidding.xml_parsing.xml_parser import get_bids_from_xml
 
 redeal.SUITS_FORCE_UNICODE = True
 
@@ -34,7 +36,7 @@ def hand_to_str(hand):
     return " ".join(map("{}{}".format, redeal.redeal.Suit, hand))
 
 
-def get_xml_source():
+def get_xml_source(parse):
     """ Get the xml source file path defining bids for this program. """
     filepath = ""
     if __name__ == "__main__":
@@ -58,7 +60,7 @@ def get_xml_source():
         if filepath.lower() == "default":
             filepath = DEFAULT_XML_SOURCE
 
-        result = parse_with_quit(filepath)
+        result = parse(filepath)
         if result == ParseResults.Help:
             print("Do not escape backslashes. The input is expected "
                   "to be raw.\n\nIf the filename you are trying "
@@ -67,6 +69,53 @@ def get_xml_source():
                   "appropriate.")
 
     return filepath
+
+
+def _play_board(program, get_user_input, parse_user_input):
+    print(f"\nBoard: {program.board_number}. Vulnerability: "
+          f"{program.vulnerability}")
+    print(f"{program.Players.South}: {program.get_hand()}")
+    while not program.is_passed_out(program.bidding_sequence):
+        program.bid()
+        print([bid.value for bid in program.bidding_sequence])
+
+    contract = program.get_contract()
+    print(f"Contract: {program.get_contract()}")
+
+    for seat in program.Players:
+        print(seat, program.get_hand(seat))
+
+    if contract != "P":
+        dd_result = program.get_double_dummy_result(contract)
+        print(f"Double dummy result: {contract} {dd_result}")
+
+    input_ = input("Is this the correct final contract? (y/n) ")
+    if parse_user_input(input_) == ParseResults.No:
+        result = None
+        while result not in {ParseResults.Back, ParseResults.No}:
+            input_ = input("Please enter the final contract: ")
+            result = parse_user_input(input_)
+            if result == ParseResults.BridgeContract:
+                contract = input_.upper()
+
+                if contract not in {"P", "PASS"}:
+                    dd_result = program.get_double_dummy_result(contract)
+                    print(f"Double dummy result: {contract} {dd_result}")
+                break
+            elif result == ParseResults.Help:
+                print("Enter the correct contract in the form '4HS' for"
+                      " 4 hearts by South. Else, enter 'back' or 'no' to "
+                      "skip entering the correct final contract.")
+            else:
+                print("Sorry, that wasn't a valid contract. Example: "
+                      "4HS for 4 hearts by South.")
+
+    # TODO: Add optimal contract (dd_solve).
+
+    result = get_user_input("Play another hand? (y/n)",
+                            {ParseResults.Yes, ParseResults.No})
+
+    return result == ParseResults.Yes
 
 
 def main():
@@ -82,71 +131,12 @@ def main():
 
     program = BiddingProgram()
 
-    def parse_user_input(input_):
-        """
-        Parse user input, allowing them to quit and edit program settings.
-        """
-        result = parse_with_quit(input_)
-        if result == ParseResults.Settings:
-            program.edit_settings()
-
-        return result
-
-    def _play_board():
-        print(f"\nBoard: {program.board_number}. Vulnerability: "
-              f"{program.vulnerability}")
-        print(f"{program.Players.South}: {program.get_hand()}")
-        while not program.is_passed_out(program.bidding_sequence):
-            program.bid()
-            print([bid.value for bid in program.bidding_sequence])
-
-        contract = program.get_contract()
-        print(f"Contract: {program.get_contract()}")
-
-        for seat in program.Players:
-            print(seat, program.get_hand(seat))
-
-        if contract != "P":
-            dd_result = program.get_double_dummy_result(contract)
-            print(f"Double dummy result: {contract} {dd_result}")
-
-        input_ = input("Is this the correct final contract? (y/n) ")
-        if parse_user_input(input_) == ParseResults.No:
-            result = None
-            while result not in {ParseResults.Back, ParseResults.No}:
-                input_ = input("Please enter the final contract: ")
-                result = parse_user_input(input_)
-                if result == ParseResults.BridgeContract:
-                    contract = input_.upper()
-
-                    if contract not in {"P", "PASS"}:
-                        dd_result = program.get_double_dummy_result(contract)
-                        print(f"Double dummy result: {contract} {dd_result}")
-                    break
-                elif result == ParseResults.Help:
-                    print("Enter the correct contract in the form '4HS' for"
-                          " 4 hearts by South. Else, enter 'back' or 'no' to "
-                          "skip entering the correct final contract.")
-                else:
-                    print("Sorry, that wasn't a valid contract. Example: "
-                          "4HS for 4 hearts by South.")
-
-        # TODO: Add optimal contract (dd_solve).
-
-        result = None
-        while result not in {ParseResults.Yes,
-                             ParseResults.No}:
-            input_ = input("Play another hand? (y/n) ")
-            result = parse_user_input(input_)
-
-        return result == ParseResults.Yes
-
-    # Here is the main program.
     try:
-        source = get_xml_source()
+        source = get_xml_source(program.parse_user_input)
         bids = get_bids_from_xml(source)
         program.set_opening_bids(bids)
-        while _play_board():
+        while _play_board(program, program.get_validated_input,
+                          program.parse_user_input):
             program.generate_new_deal()
 
     except KeyboardInterrupt:
@@ -156,7 +146,7 @@ def main():
         print("Sorry! We've hit an error:")
         print(ex)
         traceback.print_exc()
-        print("Copy the exception and email andrewimcclement@gmail.com with "
+        print(f"Copy the exception and email {__email__} with "
               "the results to help fix your problem.")
         sleep(30)
         raise

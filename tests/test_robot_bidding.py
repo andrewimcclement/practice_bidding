@@ -29,6 +29,7 @@ class RobotBiddingTests(unittest.TestCase):
         self.assertEqual(self._program.board_number, 1)
         self.assertEqual(self._program.vulnerability,
                          BiddingProgram.Vulnerability.None_)
+        self.assertEqual(self._program._dealer, self._program.Players.North)
         self.assertFalse(self._program.bidding_sequence)
 
     def test_is_passed_out_all_pass(self):

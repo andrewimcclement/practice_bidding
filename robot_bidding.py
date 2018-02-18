@@ -10,8 +10,10 @@ Notes:
 
 __author__ = "Andrew I McClement"
 
-from random import choice
 from enum import Enum, auto
+import itertools
+from random import choice
+
 from practice_bidding.xml_parsing.xml_parser import Bid
 from practice_bidding.bridge_parser import parse_with_quit, ParseResults
 from practice_bidding.redeal.redeal import Deal
@@ -64,9 +66,6 @@ class BiddingProgram:
         self._settings = {"mode": self.ProgramMode.Default,
                           "display_meaning_of_bids": False,
                           "display_meaning_of_possible_bids": False}
-
-        # Get lazily.
-        self.__xml_source = None
 
     @property
     def _root(self):
@@ -126,12 +125,29 @@ class BiddingProgram:
 
         return result
 
-    def _get_user_input(self, message, valid_inputs):
-        result = self.parse(input(message))
-        while result not in valid_inputs:
-            result = self.parse(input(message))
+    def get_validated_input(self,
+                            message,
+                            valid_formats,
+                            help_message=None,
+                            exclude_settings=False,
+                            tries=0):
+        """ Get user input satisfying the given formats. """
+        input_ = None
+        assert ParseResults.Help not in valid_formats
 
-        return result
+        # Use tries=0 as default, so must start counting from 1.
+        for i in itertools.count(1):
+            input_ = input(message)
+            result = self.parse(input_, exclude_settings)
+            if result == ParseResults.Help:
+                print(help_message)
+            elif result in valid_formats:
+                break
+            elif i == tries:
+                # No sensible value to return here, so must raise an error.
+                raise ValueError(input_)
+
+        return input_
 
     @property
     def _mode(self):
@@ -185,7 +201,6 @@ class BiddingProgram:
             # Program must make a bid.
             next_bid = self._program_bid(self.get_hand(current_bidder))
 
-        # TODO: Move this logic to practice_bidding.
         if ((next_bid != self._pass)
                 and self._settings["display_meaning_of_bids"]):
             print(f"{next_bid.value}: {next_bid.description}")
@@ -235,21 +250,21 @@ class BiddingProgram:
                 break
 
             print(potential_bids.keys())
-            selected = input("Your bid: ")
-            result = self.parse(selected)
-            if result == ParseResults.BridgeBid:
-                if selected.upper() in {self._pass.value, "PASS"}:
-                    bid = self._pass
-                    break
+            selected = self.get_validated_input(
+                "Your bid: ",
+                {ParseResults.BridgeBid},
+                help_message=("Enter a bid from one of the potential bids "
+                              "listed.  You must use a single character to "
+                              "define the suit."))
+            if selected.upper() in {self._pass.value, "PASS"}:
+                bid = self._pass
+                break
 
-                selected = selected.lower()
-                try:
-                    bid = potential_bids[selected]
-                except KeyError:
-                    print("That was not an expected response.")
-            elif result == ParseResults.Help:
-                print("Enter a bid from one of the potential bids listed."
-                      " You must use a single character to define the suit.")
+            selected = selected.lower()
+            try:
+                bid = potential_bids[selected]
+            except KeyError:
+                print("That was not an expected response.")
 
         return bid
 
@@ -264,14 +279,14 @@ class BiddingProgram:
             print(f"{i}: {key}")
 
         while True:
-            input_ = input("Enter a key to edit the value for that key, or "
-                           "'back' to exit the settings editor.\n"
-                           "'Exit' will end the program.\n")
-            result = self.parse(input_, True)
-            if result == ParseResults.Back:
+            message = ("Enter a key to edit the value for that key, or "
+                       "'back' to exit the settings editor.\n"
+                       "'Exit' will end the program.\n")
+            input_ = self.get_validated_input(
+                message, {ParseResults.Back, ParseResults.Integer},
+                exclude_settings=True)
+            if self.parse(input_) == ParseResults.Back:
                 return
-            elif result != ParseResults.Integer:
-                continue
 
             try:
                 key = settings_keys[int(input_)]
