@@ -132,11 +132,11 @@ def main():
     program = BiddingProgram()
 
     try:
-        source = get_xml_source(program.parse_user_input)
+        source = get_xml_source(program.parse)
         bids = get_bids_from_xml(source)
         program.set_opening_bids(bids)
         while _play_board(program, program.get_validated_input,
-                          program.parse_user_input):
+                          program.parse):
             program.generate_new_deal()
 
     except KeyboardInterrupt:

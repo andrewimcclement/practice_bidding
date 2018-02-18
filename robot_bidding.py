@@ -49,8 +49,6 @@ class BiddingProgram:
     # is dealer.
     _dealer_map = {1: Players.North, 2: Players.East, 3: Players.South,
                    0: Players.West}
-    _vulnerability = {1: Vulnerability.None_, 3: Vulnerability.Favourable,
-                      0: Vulnerability.All, 2: Vulnerability.Unfavourable}
     _pass = Bid("P", "Pass", [])
 
     def __init__(self):
@@ -309,13 +307,6 @@ class BiddingProgram:
                 if self.parse(input_, True) == ParseResults.Yes:
                     self._settings[key] = not self._settings[key]
 
-    def _first_bidder(self):
-        if self._dealer in {self.Players.North, self.Players.West}:
-            return self.Players.North
-        elif self._dealer in {self.Players.South, self.Players.East}:
-            return self.Players.South
-        raise NotImplementedError
-
     def get_contract(self, bidding_sequence=None):
         """ Get the contract (including declarer) from a bidding sequence
 
@@ -326,7 +317,7 @@ class BiddingProgram:
             bidding_sequence = self.bidding_sequence
         assert self.is_passed_out(bidding_sequence)
         # Must have 3 passes.
-        last_bid = bidding_sequence[-4][1]
+        last_bid = bidding_sequence[-4]
         if last_bid == self._pass:
             return "P"
 
@@ -335,7 +326,7 @@ class BiddingProgram:
         suit_bid_by_partner = False
         # Work out who bid the suit first.
         for i in range(index - 2, -1, -4):
-            partner_bid = bidding_sequence[i][1]
+            partner_bid = bidding_sequence[i]
             if partner_bid == self._pass:
                 pass
             elif partner_bid.suit == suit:
