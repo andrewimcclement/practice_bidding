@@ -23,7 +23,7 @@ Principle of fast arrival.
 Law of total tricks.
  -->
 
-<openingBids hcp="chimaera">
+<openingBids hcp="chimaera" shape="freakiness" formulas="chimaera_evaluation_methods.py">
 <bid id="0">
   <value>1c</value>
   <desc>16+ hcp</desc>
@@ -402,7 +402,9 @@ Law of total tricks.
         
         <condition type="include">
           <evaluation>
-            <points>6.5</points>
+            <points>
+              <min>6.5</min>
+            </points>
           </evaluation>
           
           <shape type="formula">hearts == 4</shape>
@@ -410,7 +412,9 @@ Law of total tricks.
         
         <condition type="include">
           <evaluation>
-            <points>6.5</points>
+            <points>
+              <min>6.5</min>
+            </points>
           </evaluation>
           
           <shape type="formula">spades == 4</shape>
@@ -1001,7 +1005,9 @@ Law of total tricks.
               </shape>
 
               <evaluation>
-                <hcp>16.25</hcp>
+                <hcp>
+                  <max>16.25</max>
+                </hcp>
               </evaluation>
             </condition>
           </bid>
@@ -2947,6 +2953,16 @@ Law of total tricks.
     <bid id="303">
       <value>2h</value>
       <desc>13-15 points, 4+ hearts.</desc>
+      
+      <condition type="include">
+        <shape type="formula">hearts &gt;= 4</shape>
+        
+        <evaluation>
+          <points>
+            <max>15.5</max>
+          </points>
+        </evaluation>
+      </condition>
     </bid>
 
     <bid id="304">
@@ -4933,8 +4949,13 @@ Law of total tricks.
         <condition type="include">
           <shape type="formula">spades == 5</shape>
         
+          <!-- Update these point ranges. They are inaccurate
+               and only entered so the XML is valid. -->
           <evaluation>
-            <points></points>
+            <points>
+              <min>2.5</min>
+              <max>8.25</max>
+            </points>
           </evaluation>
         </condition>
       </bid>

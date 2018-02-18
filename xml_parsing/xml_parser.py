@@ -5,23 +5,30 @@ Created on Sun Dec 17 04:44:04 2017
 @author: Lynskyder
 """
 
+import os
+import importlib.util
 import math
 import xml.etree.ElementTree as ET
 import re
 
-try:
-    from redeal.redeal import Shape, Evaluator
-    from redeal.redeal.global_defs import Strain
-except ImportError:
-    print("Using local copy of redeal.")
-    from redeal import Shape, Evaluator
-    from redeal.global_defs import Strain
+from practice_bidding import standard_formulas
+from practice_bidding.redeal.redeal import Shape, Evaluator
+from practice_bidding.redeal.redeal.global_defs import Strain
 
 
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
 HCP = Evaluator(4, 3, 2, 1)
 OPERATOR = re.compile("<[^=]|>[^=]|[!<>=]=")
-VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$", re.I)
+VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$")
+
+
+def standard_shape_points(hand):
+    return sum((max(len(suit) - 4, 0)) for suit in hand.shape)
+
+
+def freakness_points(hand):
+    """Points for the shape of a hand based on its freakiness."""
+    return hand.freakness/2 - 0.5
 
 
 class Bid:
@@ -134,6 +141,118 @@ class Condition:
                 f"\n{self.shape_conditions}")
 
 
+class MultiCondition:
+    def __init__(self, conditions):
+        assert conditions
+        self.conditions = conditions
+
+    def accept(self, hand):
+        raise NotImplementedError("Abstract method.")
+
+
+class AndCondition(MultiCondition):
+    """
+    Collection of conditions which are all required to be true to accept a
+    hand.
+    """
+
+    def accept(self, hand):
+        """
+        If all conditions are satisfied by the hand or not.
+        """
+        for condition in self.conditions:
+            if not condition.accept(hand):
+                return False
+
+        return True
+
+
+class NotCondition:
+    """ An inverted condition """
+    def __init__(self, condition):
+        assert condition
+        self.condition = condition
+
+    def accept(self, hand):
+        """ The inverse of self.condition """
+        return not self.condition.accept(hand)
+
+
+class OrCondition:
+    """
+    Collection of conditions of which at least one is required to be true to
+    accept a hand.
+    """
+
+    def accept(self, hand):
+        for condition in self.conditions:
+            if condition.accept(hand):
+                return True
+
+        return False
+
+
+class FormulaParser:
+    _VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$")
+    _BINARY_OPERATOR = re.compile("[-+*]")
+
+    def __init__(self, formula_module):
+        self._valid_formula_regex = self._get_formula_regex(formula_module)
+
+    @staticmethod
+    def _get_formula_regex(formula_module):
+        pass
+
+    @staticmethod
+    def _validate_formula_expression(formula_module):
+        pass
+
+
+def _parse_formula(formula, formula_module):
+    formula = "".join(formula.split()).lower()
+    assert OPERATOR.findall(formula)
+
+    def _get_accept(formula_text):
+        def accept(hand):
+            return eval(formula_text)
+
+        return accept
+
+    return _get_accept(formula)
+
+
+def _get_min_max_for_method(xml_method,
+                            default_min=0,
+                            default_max=math.inf,
+                            absolute_min=-math.inf,
+                            absolute_max=math.inf):
+    """ Returns (minimum, maximum) for XML method."""
+
+    # This is so defaults need not be altered when the absolute values
+    # conflict.
+    default_min = max(default_min, absolute_min)
+    default_max = min(default_max, absolute_max)
+
+    try:
+        minimum = float(xml_method.find("min").text)
+    except AttributeError:
+        # Minimum is not defined, so is assumed to be 0.
+        minimum = default_min
+
+    try:
+        maximum = float(xml_method.find("max").text)
+    except AttributeError:
+        # Maximum is not defined, so use infinity.
+        maximum = math.inf
+
+    result = (max(minimum, absolute_min), min(maximum, absolute_max))
+    assert result[0] <= result[1], f"minimum, maximum == {result}"
+    assert (not (result[0] in {default_min, absolute_min}
+                 and result[1] in {default_max, absolute_max})), xml_method.tag
+
+    return result
+
+
 # Does NOT accept brackets in formula!
 def _parse_formula_for_condition(formula):
     """ Parse a formula involving suit lengths.
@@ -185,21 +304,53 @@ def get_bids_from_xml(filepath=None):
     tree = ET.parse(filepath, ET.XMLParser(encoding="utf-8"))
     root = tree.getroot()
 
-    hcp_style = root.attrib["hcp"]
-    if hcp_style == "standard":
-        hcp = HCP
-    elif hcp_style == "chimaera":
-        hcp = CHIMAERA_HCP
+    try:
+        formula_module_name = root.attrib["formulas"]
+        formula_module_location = os.path.join(os.path.dirname(filepath),
+                                               formula_module_name)
+        spec = importlib.util.spec_from_file_location("bridge_formulas",
+                                                      formula_module_location)
+        formula_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(formula_module)
+    except KeyError:
+        formula_module = None
+    except ImportError:
+        print(f"Warning: formula module count not be found at "
+              f"{formula_module_location}")
+        formula_module = None
+
+    def get_formula(method_name):
+        try:
+            return getattr(formula_module, method_name)
+        except AttributeError:
+            try:
+                return getattr(standard_formulas, method_name)
+            except AttributeError:
+                raise NotImplementedError(f"{method_name} not defined in "
+                                          f"{formula_module_location}.")
+
+    try:
+        # HCP not defined in formula_module.
+        hcp_style = root.attrib["hcp"]
+        if hcp_style == "standard":
+            hcp = HCP
+        elif hcp_style == "chimaera":
+            hcp = CHIMAERA_HCP
+        else:
+            hcp = get_formula("hcp")
+    except AttributeError:
+        raise NotImplementedError("HCP style not defined.")
+
+    shape_style = root.attrib["shape"]
+    if shape_style == "standard":
+        shape_points = standard_shape_points
+    elif shape_style == "freakiness":
+        shape_points = freakness_points
     else:
-        raise NotImplementedError
+        raise NotImplementedError("Shape points not defined.")
 
     def _points(hand):
-        club_length = max(len(hand.clubs) - 4, 0)
-        diamond_length = max(len(hand.diamonds) - 4, 0)
-        heart_length = max(len(hand.hearts) - 4, 0)
-        spade_length = max(len(hand.spades) - 4, 0)
-        return (hcp(hand) + club_length + diamond_length + heart_length
-                + spade_length)
+        return hcp(hand) + shape_points(hand)
 
     def _define_bid(xml_bid):
         value, desc = xml_bid.find("value"), xml_bid.find("desc")
@@ -209,6 +360,8 @@ def get_bids_from_xml(filepath=None):
         for xml_condition in xml_conditions:
             evaluation_conditions = \
                 _get_evaluation_condition(xml_condition)
+
+            evaluation_conditions.extend(_get_formulas(xml_condition))
             shape_conditions = _get_shape_conditions(xml_condition)
             type_ = xml_condition.attrib["type"]
             if type_ == "include":
@@ -224,6 +377,15 @@ def get_bids_from_xml(filepath=None):
 
         return Bid(value.text, desc.text, conditions)
 
+    def _get_formulas(xml_condition):
+        formulas = []
+        for xml_formula in xml_condition.findall("formula"):
+            formula_text = xml_formula.text
+            formula = _parse_formula(formula_text, formula_module)
+            formulas.append(formula)
+
+        return formulas
+
     def _get_evaluation_condition(xml_condition):
         evaluation_conditions = []
         evaluation = xml_condition.find("evaluation")
@@ -231,44 +393,23 @@ def get_bids_from_xml(filepath=None):
             return evaluation_conditions
 
         for method in evaluation:
+            minimum, maximum = _get_min_max_for_method(method)
+
             if method.tag == "hcp":
-                try:
-                    minimum = float(method.find("min").text)
-                except AttributeError:
-                    # Minimum is not defined, so is assumed to be 0.
-                    minimum = 0
-
-                try:
-                    maximum = float(method.find("max").text)
-                except AttributeError:
-                    # Maximum is not defined, so use infinity.
-                    maximum = math.inf
-
                 evaluation_condition = EvaluationCondition(
                     hcp, minimum, maximum)
-
-                evaluation_conditions.append(evaluation_condition)
             elif method.tag == "tricks":
-                # TODO: Add tricks method.
-                continue
-            elif method.tag == "points":
-                try:
-                    minimum = float(method.find("min").text)
-                except AttributeError:
-                    # Minimum is not defined, assumed to be 0.
-                    minimum = 0
-
-                try:
-                    maximum = float(method.find("max").text)
-                except AttributeError:
-                    maximum = math.inf
+                tricks = get_formula("tricks")
 
                 evaluation_condition = EvaluationCondition(
+                    tricks, minimum, maximum)
+            elif method.tag == "points":
+                evaluation_condition = EvaluationCondition(
                     _points, minimum, maximum)
-
-                evaluation_conditions.append(evaluation_condition)
             else:
                 raise NotImplementedError(method.tag)
+
+            evaluation_conditions.append(evaluation_condition)
 
         return evaluation_conditions
 
@@ -296,17 +437,10 @@ def get_bids_from_xml(filepath=None):
                 info = {type_: formula}
                 shape_condition = ShapeCondition(info, accept)
             elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
-                try:
-                    minimum = max(int(shape.find("min").text), 0)
-                except AttributeError:
-                    minimum = 0
-                try:
-                    maximum = min(int(shape.find("max").text), 13)
-                except AttributeError:
-                    maximum = 13
-
-                assert minimum <= maximum, f"{type_}: {minimum}->{maximum}"
-                assert (minimum, maximum) != (0, 13), "Min/max not defined."
+                minimum, maximum = _get_min_max_for_method(
+                    shape,
+                    absolute_min=0,
+                    absolute_max=13)
 
                 info = {"formula": f"{minimum} <= {type_} <= {maximum}"}
 

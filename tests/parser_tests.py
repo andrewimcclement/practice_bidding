@@ -5,8 +5,9 @@ Created on Sat Dec 16 17:27:28 2017
 @author: Lynskyder
 """
 
+import os
 import unittest
-from bridge_parser import parse, parse_with_quit, ParseResults
+from practice_bidding.bridge_parser import parse, parse_with_quit, ParseResults
 
 
 class ParserTests(unittest.TestCase):
@@ -57,6 +58,13 @@ class ParserTests(unittest.TestCase):
         for option in exit_options:
             with self.subTest(option=option):
                 self.assertEqual(ParseResults.Quit, parse(option))
+                with self.assertRaises(KeyboardInterrupt):
+                    parse_with_quit(option)
+
+    def test_parse_filepath(self):
+        """ Check a filepath is parsed correctly. """
+        path = os.path.realpath(__file__)
+        self.assertEqual(parse_with_quit(path), ParseResults.Filepath)
 
 
 if __name__ == "__main__":

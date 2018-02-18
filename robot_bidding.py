@@ -2,24 +2,21 @@
 """
 Created on Sat Nov 25 12:51:07 2017
 
-@author: Lynskyder
-
 Automated practice bidding.
 
 Notes:
     - Further define settings manipulation.
 """
 
-from random import choice
-from enum import Enum, auto
-from xml_parser import Bid
-from bridge_parser import parse_with_quit, ParseResults
+__author__ = "Andrew I McClement"
 
-try:
-    from redeal.redeal import Deal
-except ImportError:
-    print("Using local copy of redeal, not submodule.")
-    from redeal import Deal
+from enum import Enum, auto
+import itertools
+from random import choice
+
+from practice_bidding.xml_parsing.xml_parser import Bid
+from practice_bidding.bridge_parser import parse_with_quit, ParseResults
+from practice_bidding.redeal.redeal import Deal
 
 
 class BiddingProgram:
@@ -52,8 +49,6 @@ class BiddingProgram:
     # is dealer.
     _dealer_map = {1: Players.North, 2: Players.East, 3: Players.South,
                    0: Players.West}
-    _vulnerability = {1: Vulnerability.None_, 3: Vulnerability.Favourable,
-                      0: Vulnerability.All, 2: Vulnerability.Unfavourable}
     _pass = Bid("P", "Pass", [])
 
     def __init__(self):
@@ -69,9 +64,6 @@ class BiddingProgram:
         self._settings = {"mode": self.ProgramMode.Default,
                           "display_meaning_of_bids": False,
                           "display_meaning_of_possible_bids": False}
-
-        # Get lazily.
-        self.__xml_source = None
 
     @property
     def _root(self):
@@ -131,12 +123,29 @@ class BiddingProgram:
 
         return result
 
-    def _get_user_input(self, message, valid_inputs):
-        result = self.parse(input(message))
-        while result not in valid_inputs:
-            result = self.parse(input(message))
+    def get_validated_input(self,
+                            message,
+                            valid_formats,
+                            help_message=None,
+                            exclude_settings=False,
+                            tries=0):
+        """ Get user input satisfying the given formats. """
+        input_ = None
+        assert ParseResults.Help not in valid_formats
 
-        return result
+        # Use tries=0 as default, so must start counting from 1.
+        for i in itertools.count(1):
+            input_ = input(message)
+            result = self.parse(input_, exclude_settings)
+            if result == ParseResults.Help:
+                print(help_message)
+            elif result in valid_formats:
+                break
+            elif i == tries:
+                # No sensible value to return here, so must raise an error.
+                raise ValueError(input_)
+
+        return input_
 
     @property
     def _mode(self):
@@ -164,7 +173,7 @@ class BiddingProgram:
             return False
 
         last_bids = bidding_sequence[-3:]
-        for _, bid in last_bids:
+        for bid in last_bids:
             if bid != cls._pass:
                 return False
 
@@ -190,17 +199,16 @@ class BiddingProgram:
             # Program must make a bid.
             next_bid = self._program_bid(self.get_hand(current_bidder))
 
-        # TODO: Move this logic to practice_bidding.
         if ((next_bid != self._pass)
                 and self._settings["display_meaning_of_bids"]):
             print(f"{next_bid.value}: {next_bid.description}")
-        self.bidding_sequence.append((next_bid.value, next_bid))
+        self.bidding_sequence.append(next_bid)
 
     def _program_bid(self, current_hand):
         potential_bids = None
 
         if len(self.bidding_sequence) >= 2:
-            current_bid = self.bidding_sequence[-2][1]
+            current_bid = self.bidding_sequence[-2]
             if current_bid != self._pass:
                 # Partner made a non-trivial bid.
                 potential_bids = [bid for bid in current_bid.children.values()
@@ -226,7 +234,7 @@ class BiddingProgram:
         # By default this is an opening bid.
         potential_bids = self._root
         if len(self.bidding_sequence) >= 2:
-            current_bid = self.bidding_sequence[-2][1]
+            current_bid = self.bidding_sequence[-2]
             if current_bid != self._pass:
                 # Our partner made a non-trivial bid.
                 potential_bids = current_bid.children
@@ -240,21 +248,21 @@ class BiddingProgram:
                 break
 
             print(potential_bids.keys())
-            selected = input("Your bid: ")
-            result = self.parse(selected)
-            if result == ParseResults.BridgeBid:
-                if selected.upper() in {self._pass.value, "PASS"}:
-                    bid = self._pass
-                    break
+            selected = self.get_validated_input(
+                "Your bid: ",
+                {ParseResults.BridgeBid},
+                help_message=("Enter a bid from one of the potential bids "
+                              "listed.  You must use a single character to "
+                              "define the suit."))
+            if selected.upper() in {self._pass.value, "PASS"}:
+                bid = self._pass
+                break
 
-                selected = selected.lower()
-                try:
-                    bid = potential_bids[selected]
-                except KeyError:
-                    print("That was not an expected response.")
-            elif result == ParseResults.Help:
-                print("Enter a bid from one of the potential bids listed."
-                      " You must use a single character to define the suit.")
+            selected = selected.lower()
+            try:
+                bid = potential_bids[selected]
+            except KeyError:
+                print("That was not an expected response.")
 
         return bid
 
@@ -269,14 +277,14 @@ class BiddingProgram:
             print(f"{i}: {key}")
 
         while True:
-            input_ = input("Enter a key to edit the value for that key, or "
-                           "'back' to exit the settings editor.\n"
-                           "'Exit' will end the program.\n")
-            result = self.parse(input_, True)
-            if result == ParseResults.Back:
+            message = ("Enter a key to edit the value for that key, or "
+                       "'back' to exit the settings editor.\n"
+                       "'Exit' will end the program.\n")
+            input_ = self.get_validated_input(
+                message, {ParseResults.Back, ParseResults.Integer},
+                exclude_settings=True)
+            if self.parse(input_) == ParseResults.Back:
                 return
-            elif result != ParseResults.Integer:
-                continue
 
             try:
                 key = settings_keys[int(input_)]
@@ -299,13 +307,6 @@ class BiddingProgram:
                 if self.parse(input_, True) == ParseResults.Yes:
                     self._settings[key] = not self._settings[key]
 
-    def _first_bidder(self):
-        if self._dealer in {self.Players.North, self.Players.West}:
-            return self.Players.North
-        elif self._dealer in {self.Players.South, self.Players.East}:
-            return self.Players.South
-        raise NotImplementedError
-
     def get_contract(self, bidding_sequence=None):
         """ Get the contract (including declarer) from a bidding sequence
 
@@ -316,7 +317,7 @@ class BiddingProgram:
             bidding_sequence = self.bidding_sequence
         assert self.is_passed_out(bidding_sequence)
         # Must have 3 passes.
-        last_bid = bidding_sequence[-4][1]
+        last_bid = bidding_sequence[-4]
         if last_bid == self._pass:
             return "P"
 
@@ -325,7 +326,7 @@ class BiddingProgram:
         suit_bid_by_partner = False
         # Work out who bid the suit first.
         for i in range(index - 2, -1, -4):
-            partner_bid = bidding_sequence[i][1]
+            partner_bid = bidding_sequence[i]
             if partner_bid == self._pass:
                 pass
             elif partner_bid.suit == suit:
@@ -340,11 +341,13 @@ class BiddingProgram:
 
     def get_double_dummy_result(self, contract):
         """ Get the number of tricks and corresponding score. """
-
-        assert len(contract) == 3
-        assert int(contract[0]) in range(10)
-        assert contract[1] in {"C", "D", "H", "S", "N"}
-        assert contract[2] in {"N", "E", "S", "W"}
+        try:
+            assert len(contract) == 3
+            assert int(contract[0]) in range(1, 8)
+            assert contract[1] in {"C", "D", "H", "S", "N"}
+            assert contract[2] in {"N", "E", "S", "W"}
+        except AssertionError:
+            raise ValueError(f"{contract} not a valid contract.")
 
         if contract[2] in {"N", "S"}:
             vulnerability = self.vulnerability in {
