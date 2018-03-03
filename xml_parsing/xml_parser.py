@@ -109,16 +109,6 @@ class EvaluationCondition(BaseCondition):
         super().__init__(accept, info)
 
 
-class ShapeCondition(BaseCondition):
-    """Specifies a condition on the shape of a hand."""
-
-    _balanced = Shape("(4333)") + Shape("(4432)") + Shape("(5332)")
-    _any = Shape("xxxx")
-    _unbalanced = _any - _balanced
-    general_types = {"balanced": _balanced, "any": _any,
-                     "unbalanced": _unbalanced}
-
-
 class ShapeConditionFactory:
     """ Creates ShapeConditions. """
 
