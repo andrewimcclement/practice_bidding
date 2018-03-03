@@ -436,9 +436,24 @@ def get_bids_from_xml(filepath=None):
     except KeyError:
         _points = get_formula("points")
 
-    def _define_bid(xml_bid):
-        value, desc = xml_bid.find("value"), xml_bid.find("desc")
+    def _define_bid(xml_bid) -> Bid:
+        value, desc = xml_bid.find("value").text, xml_bid.find("desc").text
         xml_conditions = xml_bid.findall("condition")
+        if not xml_conditions:
+            and_ = xml_bid.find("and")
+            or_ = xml_bid.find("or")
+            xml_condition = and_ or or_
+
+            if not xml_condition:
+                # No conditions defined. Use OrCondition so accept method
+                # always returns false.
+                return Bid(value, desc, OrCondition())
+
+            # In new style should have exactly one condition for a bid.
+            assert not (and_ and or_)
+            condition = _define_and_or_condition(xml_condition)
+            return Bid(value, desc, condition)
+
         # Include conditions
         or_ = OrCondition()
         # All conditions
@@ -463,7 +478,25 @@ def get_bids_from_xml(filepath=None):
                 raise NotImplementedError(
                     type_, "Expected 'include' or 'exclude'")
 
-        return Bid(value.text, desc.text, and_)
+        return Bid(value, desc, and_)
+
+    def _define_and_or_condition(xml_condition) -> MultiCondition:
+        tag = xml_condition.tag
+        base_condition = AndCondition() if tag == "and" else OrCondition()
+
+        child_conditions = []
+
+        for and_ in xml_condition.findall("and"):
+            child_conditions.append(_define_and_or_condition(and_))
+
+        for or_ in xml_condition.findall("or"):
+            child_conditions.append(_define_and_or_condition(or_))
+
+        child_conditions.extend(_get_evaluation_condition(xml_condition))
+        child_conditions.extend(_get_shape_conditions(xml_condition))
+        base_condition.conditions.extend(child_conditions)
+
+        return base_condition
 
     def _get_formulas(xml_condition):
         formulas = []

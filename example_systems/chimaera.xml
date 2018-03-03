@@ -653,6 +653,10 @@ Law of total tricks.
         <bid id="00220">
           <value>2s</value>
           <desc>Completing the transfer.</desc>
+          
+          <and>
+            <shape type="formula">spades &lt; 4</shape>
+          </and>
         </bid>
       </bid>
     </bid>
