@@ -645,6 +645,16 @@ Law of total tricks.
           <shape type="formula">spades == 4</shape>
         </condition>
       </bid>
+      
+      <bid id="0022">
+        <value>2h</value>
+        <desc>Transfer to spades.</desc>
+        
+        <bid id="00220">
+          <value>2s</value>
+          <desc>Completing the transfer.</desc>
+        </bid>
+      </bid>
     </bid>
 
     <bid id="003">
@@ -3968,6 +3978,40 @@ Law of total tricks.
     <bid id="480">
       <value>3n</value>
       <desc>To play.</desc>
+    </bid>
+  </bid>
+  
+  <bid id="49">
+    <value>3n</value>
+    <desc>To play.</desc>
+  </bid>
+  
+  <bid id="4a">
+    <value>4c</value>
+    <desc>Gerber.</desc>
+  </bid>
+  
+  <bid id="4b">
+    <value>4d</value>
+    <desc>Transfer to hearts.</desc>
+    
+    <bid id="4b0">
+      <value>4h</value>
+      <desc></desc>
+      
+      <condition type="include"></condition>
+    </bid>
+  </bid>
+  
+  <bid id="4c">
+    <value>4h</value>
+    <desc>Transfer to spades.</desc>
+    
+    <bid id="4c0">
+      <value>4s</value>
+      <desc></desc>
+      
+      <condition type="include"></condition>
     </bid>
   </bid>
 </bid>

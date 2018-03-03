@@ -9,8 +9,9 @@ This version of Acol assumes majors are bid in preference to minors if 44.
 
 Key points of system.
 4 card majors.
-12-14 1n
-20-22 2n
+12-14 1n (Stayman + transfers)
+20-22 2n (Puppet Stayman + transfers)
+Weak twos.
 -->
 <openingBids hcp="standard" shape="standard">
 <bid id="0">

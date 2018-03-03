@@ -51,7 +51,7 @@ def get_xml_source(parse):
             # Previous attempt failed to give a valid filepath.
             print(f"\"{filepath}\" is not a valid file path."
                   "\nPlease try again.")
-        else:
+        elif filepath:
             print(f"\"{filepath}\" is not an XML file.")
 
         print("Please enter the path to the xml source file to be used"
@@ -112,8 +112,8 @@ def _play_board(program, get_user_input, parse_user_input):
 
     # TODO: Add optimal contract (dd_solve).
 
-    result = get_user_input("Play another hand? (y/n)",
-                            {ParseResults.Yes, ParseResults.No})
+    input_, result = get_user_input("Play another hand? (y/n)",
+                                    {ParseResults.Yes, ParseResults.No})
 
     return result == ParseResults.Yes
 
