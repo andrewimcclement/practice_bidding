@@ -16,7 +16,7 @@ Weak twos.
 <openingBids hcp="standard" shape="standard">
 <bid id="0">
   <value>1c</value>
-  <desc></desc>
+  <desc>10-20 hcp, 4+ clubs, 13-21 points.</desc>
 
   <condition type="include">
     <evaluation>
@@ -85,6 +85,66 @@ Weak twos.
   <bid id="01">
     <value>1h</value>
     <desc>6-15 points, 4+ hearts</desc>
+    
+    <and>
+      <shape type="formula">hearts &gt;= 4</shape>
+      <shape type="formula">hearts &gt;= spades</shape>
+      <evaluation>
+        <points>
+          <min>6</min>
+          <max>15</max>
+        </points>
+      </evaluation>
+    </and>
+    
+    <bid id="010">
+      <value>1s</value>
+      <desc>13-16 points, 4+ spades, longer clubs than spades, unbalanced.</desc>
+      
+      <and>
+        <shape type="general">unbalanced</shape>
+        <shape type="formula">spades &gt;= 4</shape>
+        <shape type="formula">clubs &gt; spades</shape>
+        <evaluation>
+          <points>
+            <min>13</min>
+            <max>16</max>
+          </points>
+        </evaluation>
+      </and>
+    </bid>
+    
+    <bid id="011">
+      <value>1n</value>
+      <desc>15-17 hcp, balanced.</desc>
+      
+      <and>
+        <evaluation>
+          <hcp>
+            <min>15</min>
+            <max>17</max>
+          </hcp>
+        </evaluation>
+        
+        <shape type="general">balanced</shape>
+        <shape type="formula">hearts &lt; 4</shape>
+      </and>
+      
+      <bid id="0110">
+        <value>2c</value>
+        <desc>To play.</desc>
+        
+        <and>
+          <shape type="formula">clubs &gt;= 4</shape>
+          
+          <evaluation>
+            <points>
+              <max>7</max>
+            </points>
+          </evaluation>
+        </and>
+      </bid>
+    </bid>
   </bid>
   
   <bid id="02">
