@@ -131,6 +131,7 @@ class BiddingProgram:
                             tries=0):
         """ Get user input satisfying the given formats. """
         input_ = None
+        result = None
         assert ParseResults.Help not in valid_formats
 
         # Use tries=0 as default, so must start counting from 1.
@@ -145,7 +146,7 @@ class BiddingProgram:
                 # No sensible value to return here, so must raise an error.
                 raise ValueError(input_)
 
-        return input_
+        return input_, result
 
     @property
     def _mode(self):
@@ -248,7 +249,7 @@ class BiddingProgram:
                 break
 
             print(potential_bids.keys())
-            selected = self.get_validated_input(
+            selected, _ = self.get_validated_input(
                 "Your bid: ",
                 {ParseResults.BridgeBid},
                 help_message=("Enter a bid from one of the potential bids "
@@ -280,10 +281,10 @@ class BiddingProgram:
             message = ("Enter a key to edit the value for that key, or "
                        "'back' to exit the settings editor.\n"
                        "'Exit' will end the program.\n")
-            input_ = self.get_validated_input(
+            input_, result = self.get_validated_input(
                 message, {ParseResults.Back, ParseResults.Integer},
                 exclude_settings=True)
-            if self.parse(input_) == ParseResults.Back:
+            if result == ParseResults.Back:
                 return
 
             try:
@@ -302,9 +303,11 @@ class BiddingProgram:
                     elif self._mode == self.ProgramMode.Default:
                         self._settings["mode"] = self.ProgramMode.Automatic
             else:
-                input_ = input(f"Do you wish to change {key} from "
-                               f"{self._settings[key]}? (y/n)")
-                if self.parse(input_, True) == ParseResults.Yes:
+                input_, result = self.get_validated_input(
+                    f"Do you wish to change {key} from {self._settings[key]}?"
+                    " (y/n)",
+                    {ParseResults.Yes, ParseResults.No, ParseResults.Back})
+                if result == ParseResults.Yes:
                     self._settings[key] = not self._settings[key]
 
     def get_contract(self, bidding_sequence=None):

@@ -16,13 +16,34 @@ from practice_bidding.redeal.redeal import Hand
 
 
 class XmlParserTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # An example hand.
+        cls._hand = Hand.from_str("KQJ3 AK32 T5 J32")
+        directory = os.path.dirname(DEFAULT_XML_SOURCE)
+        cls._acol_location = os.path.join(directory, "acol.xml")
+        cls._chimaera_location = DEFAULT_XML_SOURCE
 
-    def test_parse_chimaera_bids(self):
-        get_bids_from_xml(DEFAULT_XML_SOURCE)
+    def test_parse_system_bids(self):
+        systems = {self._acol_location, self._chimaera_location}
+        for system in systems:
+            with self.subTest(system=system):
+                bids = get_bids_from_xml(DEFAULT_XML_SOURCE)
+                expected_accept_values = {True, False}
+                all_bids = []
 
-    def test_parse_acol_bids(self):
-        directory = os.path.split(DEFAULT_XML_SOURCE)[0]
-        get_bids_from_xml(os.path.join(directory, "acol.xml"))
+                def _add_bid_to_all_bids(bid):
+                    all_bids.append(bid)
+                    for child_bid in bid.children.values():
+                        _add_bid_to_all_bids(child_bid)
+
+                for bid in bids.values():
+                    _add_bid_to_all_bids(bid)
+
+                for bid in all_bids:
+                    with self.subTest(bid_value=bid.value):
+                        self.assertIn(bid.accept(self._hand),
+                                      expected_accept_values)
 
     def test_valid_expressions(self):
         passes = ["h+s-d*2", "h*s-d*c", "12"]
@@ -39,7 +60,7 @@ class XmlParserTests(unittest.TestCase):
         expression1 = "2 * hearts - diamonds+ 1"
         expression2 = " spades + clubs"
         expression3 = "4"
-        hand = Hand.from_str("KQJ3 AK32 T5 J32")
+        hand = self._hand
         operators = ["==", ">=", "<=", ">", "<"]
 
         for operator in operators:

@@ -40,7 +40,7 @@ class RobotBiddingTests(unittest.TestCase):
         self.assertFalse(self._program.bidding_sequence)
 
     def test_is_passed_out_all_pass(self):
-        """ Check the program correctly knows when a passout occurs. """
+        """ Check the program knows when a passout occurs. """
 
         bidding_sequence = []
         for i in range(4):

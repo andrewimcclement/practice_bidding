@@ -66,6 +66,10 @@ class ParserTests(unittest.TestCase):
         path = os.path.realpath(__file__)
         self.assertEqual(parse_with_quit(path), ParseResults.Filepath)
 
+    def test_get_user_input(self):
+        # Not yet implemented.
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()

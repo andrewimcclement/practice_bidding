@@ -645,29 +645,43 @@ Law of total tricks.
           <shape type="formula">spades == 4</shape>
         </condition>
       </bid>
+      
+      <bid id="0022">
+        <value>2h</value>
+        <desc>Transfer to spades.</desc>
+        
+        <bid id="00220">
+          <value>2s</value>
+          <desc>Completing the transfer.</desc>
+          
+          <and>
+            <shape type="formula">spades &lt; 4</shape>
+          </and>
+        </bid>
+      </bid>
     </bid>
 
     <bid id="003">
       <value>2c</value>
       <desc>Relay, gf. 23+ hcp. If balanced, 27+ hcp.</desc>
       
-      <condition type="include">
-        <evaluation>
-          <hcp>
-            <min>22.75</min>
-          </hcp>
-        </evaluation>
+      <or>
+        <and>
+          <evaluation>
+            <hcp>
+              <min>22.75</min>
+            </hcp>
+          </evaluation>
         
-        <shape type="general">unbalanced</shape>
-      </condition>
-      
-      <condition type="include">
+          <shape type="general">unbalanced</shape>
+        </and>
+        
         <evaluation>
           <hcp>
             <min>26.75</min>
           </hcp>
         </evaluation>
-      </condition>
+      </or>
 
       <bid id="0030">
         <value>2d</value>
@@ -686,6 +700,19 @@ Law of total tricks.
         <bid id="00302">
           <value>2n</value>
           <desc>27+ hcp, balanced. (May be 4441 or 5422).</desc>
+          
+          <and>
+            <evaluation>
+              <hcp>
+                <min>26.75</min>
+              </hcp>
+            </evaluation>
+            
+            <or>
+              <shape type="general">balanced</shape>
+              <shape type="shape">(4441)+(5422)</shape>
+            </or>
+          </and>
         </bid>
 
         <bid id="00303">
@@ -3968,6 +3995,40 @@ Law of total tricks.
     <bid id="480">
       <value>3n</value>
       <desc>To play.</desc>
+    </bid>
+  </bid>
+  
+  <bid id="49">
+    <value>3n</value>
+    <desc>To play.</desc>
+  </bid>
+  
+  <bid id="4a">
+    <value>4c</value>
+    <desc>Gerber.</desc>
+  </bid>
+  
+  <bid id="4b">
+    <value>4d</value>
+    <desc>Transfer to hearts.</desc>
+    
+    <bid id="4b0">
+      <value>4h</value>
+      <desc></desc>
+      
+      <condition type="include"></condition>
+    </bid>
+  </bid>
+  
+  <bid id="4c">
+    <value>4h</value>
+    <desc>Transfer to spades.</desc>
+    
+    <bid id="4c0">
+      <value>4s</value>
+      <desc></desc>
+      
+      <condition type="include"></condition>
     </bid>
   </bid>
 </bid>
