@@ -6,12 +6,15 @@ from practice_bidding.redeal.redeal import Shape
 
 class BaseCondition:
     """ Base class for all condition classes. """
-
     def __init__(self, accept, info):
         self._accept = accept
         assert info
-        # A description of the condition.
-        self.info = info
+        self._info = info
+
+    @property
+    def info(self):
+        """ Get a description of the condition. """
+        return self._info
 
     def accept(self, hand):
         """ Determine if the hand satisfies the condition or not. """
@@ -28,13 +31,14 @@ class EvaluationCondition(BaseCondition):
         self.minimum = minimum
         self.maximum = maximum
         self._evaluation_method = evaluation_method
-        self.info = (f"Evaluation method: {self._evaluation_method}. Min: "
-                     f"{self.minimum}. Max: {self.maximum}.")
+        info = (f"Evaluation method: {self._evaluation_method}. Min: "
+                f"{self.minimum}. Max: {self.maximum}.")
 
-    def accept(self, hand):
-        """If the hand evaluates to within the specified range."""
-        evaluation = self._evaluation_method(hand)
-        return self.minimum <= evaluation <= self.maximum
+        def accept(hand):
+            """If the hand evaluates to within the specified range."""
+            evaluation = self._evaluation_method(hand)
+            return self.minimum <= evaluation <= self.maximum
+        super().__init__(accept, info)
 
 
 class ShapeConditionFactory:
@@ -80,17 +84,34 @@ class ShapeConditionFactory:
                              f"{minimum} <= {suit} <= {maximum}")
 
 
-class NotCondition(BaseCondition):
-    """ An inverted condition """
-    def __init__(self, condition):
-        assert condition
-        self.condition = condition
+class Condition:
+    """ A set of conditions on a hand. """
 
-        def _accept(hand):
-            """ The inverse of self.condition """
-            return not self.condition.accept(hand)
+    def __init__(self, evaluation_conditions, shape_conditions):
+        self.evaluation_conditions = evaluation_conditions
+        self.shape_conditions = shape_conditions
 
-        super().__init__(_accept, f"NOT ({self.condition.info})")
+    def _conditions(self):
+        return self.evaluation_conditions + self.shape_conditions
+
+    def accept(self, hand):
+        """
+        Returns boolean as to whether the hand satisfies the condition or not.
+        """
+        for condition in self._conditions():
+            if not condition.accept(hand):
+                return False
+
+        return True
+
+    # TODO: Make Condition a subclass of BaseCondition
+    @property
+    def info(self):
+        return str(self)
+
+    def __str__(self):
+        return (f"{self.evaluation_conditions}"
+                f"\n{self.shape_conditions}")
 
 
 class MultiCondition(BaseCondition):
@@ -134,6 +155,19 @@ class AndCondition(MultiCondition):
         return _accept
 
 
+class NotCondition(BaseCondition):
+    """ An inverted condition """
+    def __init__(self, condition):
+        assert condition
+        self.condition = condition
+
+        def _accept(hand):
+            """ The inverse of self.condition """
+            return not self.condition.accept(hand)
+
+        super().__init__(_accept, f"NOT ({self.condition.info})")
+
+
 class OrCondition(MultiCondition):
     """
     Collection of conditions of which at least one is required to be true to
@@ -153,37 +187,3 @@ class OrCondition(MultiCondition):
             return False
 
         return _accept
-
-
-class Condition(MultiCondition):
-    """ A set of conditions on a hand. """
-
-    def __init__(self, evaluation_conditions, shape_conditions):
-        self.evaluation_conditions = list(evaluation_conditions)
-        self.shape_conditions = list(shape_conditions)
-
-    def _conditions(self):
-        return self.evaluation_conditions + self.shape_conditions
-
-    def accept(self, hand):
-        """
-        Returns boolean as to whether the hand satisfies the condition or not.
-        """
-        for condition in self._conditions():
-            if not condition.accept(hand):
-                return False
-
-        return True
-
-    # TODO: Make Condition a subclass of BaseCondition
-    @property
-    def info(self):
-        return str(self)
-
-    def __str__(self):
-        return (f"{self.evaluation_conditions}"
-                f"\n{self.shape_conditions}")
-
-
-if __name__ == "__main__":
-    or_ = OrCondition()
