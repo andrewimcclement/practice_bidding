@@ -18,64 +18,53 @@ Weak twos.
   <value>1c</value>
   <desc>10-20 hcp, 4+ clubs, 13-21 points.</desc>
 
-  <condition type="include">
-    <evaluation>
-      <points>
-        <min>13</min>
-        <max>21</max>
-      </points>
-    </evaluation>
+  <or>
+    <and>
+      <evaluation>
+        <points>
+          <min>13</min>
+          <max>21</max>
+        </points>
+      </evaluation>
+      
+      <or>
+        <and>
+          <shape type="strictly_longer_than">
+            <longer_suit>clubs</longer_suit>
+            <shorter_suit>diamonds</shorter_suit>
+          </shape>
 
-    <shape type="strictly_longer_than">
-      <longer_suit>clubs</longer_suit>
-      <shorter_suit>diamonds</shorter_suit>
-    </shape>
+          <shape type="strictly_longer_than">
+            <longer_suit>clubs</longer_suit>
+            <shorter_suit>hearts</shorter_suit>
+          </shape>
 
-    <shape type="strictly_longer_than">
-      <longer_suit>clubs</longer_suit>
-      <shorter_suit>hearts</shorter_suit>
-    </shape>
+          <shape type="strictly_longer_than">
+            <longer_suit>clubs</longer_suit>
+            <shorter_suit>spades</shorter_suit>
+          </shape>
 
-    <shape type="strictly_longer_than">
-      <longer_suit>clubs</longer_suit>
-      <shorter_suit>spades</shorter_suit>
-    </shape>
-
-    <shape type="general">unbalanced</shape>
-  </condition>
-
-  <condition type="include">
-    <shape type="shape">3334</shape>
-
-    <evaluation>
-      <hcp>
-        <min>15</min>
-        <max>19</max>
-      </hcp>
-    </evaluation>
-  </condition>
-
-  <condition type="include">
-    <shape type="shape">(332)5</shape>
-
-    <evaluation>
-      <hcp>
-        <min>15</min>
-        <max>19</max>
-      </hcp>
-    </evaluation>
-  </condition>
-
-  <condition type="include">
-    <evaluation>
-      <points>
-        <min>13</min>
-        <max>21</max>
-      </points>
-    </evaluation>
-
-    <shape type="shape">4414</shape>
-  </condition>
+          <shape type="general">unbalanced</shape>
+        </and>
+        
+        <shape type="shape">4414</shape>
+      </or>
+    </and>
+    
+    <and>
+      <evaluation>
+        <hcp>
+          <min>15</min>
+          <max>19</max>
+        </hcp>
+      </evaluation>
+      
+      <or>
+        <shape type="shape">(332)5</shape>
+        <shape type="shape">3334</shape>
+      </or>
+    </and>
+  </or>
   
   <bid id="00">
     <value>1d</value>
