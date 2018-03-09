@@ -3,6 +3,7 @@ python:
   - "3.6"
 install:
   - pip install coverage
+  - pip install coveralls
 script:
   - coverage run tests/tests.py
 after-success:
