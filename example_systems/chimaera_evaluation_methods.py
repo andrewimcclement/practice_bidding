@@ -7,7 +7,7 @@ Names here must match those used in the XML and must all be lower case.
 
 __author__ = "Andrew I McClement"
 
-from redeal.redeal import A, K, Q, Evaluator
+from practice_bidding.redeal.redeal import A, K, Q, Evaluator
 
 
 SUITS = ("clubs", "diamonds", "hearts", "spades")
