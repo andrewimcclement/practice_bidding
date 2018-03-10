@@ -26,7 +26,7 @@ Weak twos.
           <max>21</max>
         </points>
       </evaluation>
-      
+
       <or>
         <and>
           <shape type="strictly_longer_than">
@@ -46,11 +46,11 @@ Weak twos.
 
           <shape type="general">unbalanced</shape>
         </and>
-        
+
         <shape type="shape">4414</shape>
       </or>
     </and>
-    
+
     <and>
       <evaluation>
         <hcp>
@@ -58,23 +58,23 @@ Weak twos.
           <max>19</max>
         </hcp>
       </evaluation>
-      
+
       <or>
         <shape type="shape">(332)5</shape>
         <shape type="shape">3334</shape>
       </or>
     </and>
   </or>
-  
+
   <bid id="00">
     <value>1d</value>
     <desc>6-15 points, 4+ diamonds</desc>
   </bid>
-  
+
   <bid id="01">
     <value>1h</value>
     <desc>6-15 points, 4+ hearts</desc>
-    
+
     <and>
       <shape type="formula">hearts &gt;= 4</shape>
       <shape type="formula">hearts &gt;= spades</shape>
@@ -85,11 +85,11 @@ Weak twos.
         </points>
       </evaluation>
     </and>
-    
+
     <bid id="010">
       <value>1s</value>
       <desc>13-16 points, 4+ spades, longer clubs than spades, unbalanced.</desc>
-      
+
       <and>
         <shape type="general">unbalanced</shape>
         <shape type="formula">spades &gt;= 4</shape>
@@ -102,11 +102,11 @@ Weak twos.
         </evaluation>
       </and>
     </bid>
-    
+
     <bid id="011">
       <value>1n</value>
       <desc>15-17 hcp, balanced.</desc>
-      
+
       <and>
         <evaluation>
           <hcp>
@@ -114,18 +114,18 @@ Weak twos.
             <max>17</max>
           </hcp>
         </evaluation>
-        
+
         <shape type="general">balanced</shape>
         <shape type="formula">hearts &lt; 4</shape>
       </and>
-      
+
       <bid id="0110">
         <value>2c</value>
         <desc>To play.</desc>
-        
+
         <and>
           <shape type="formula">clubs &gt;= 4</shape>
-          
+
           <evaluation>
             <points>
               <max>7</max>
@@ -135,16 +135,16 @@ Weak twos.
       </bid>
     </bid>
   </bid>
-  
+
   <bid id="02">
     <value>1s</value>
     <desc>6-15 points, 6+ points</desc>
   </bid>
-  
+
   <bid id="03">
     <value>1n</value>
     <desc>6-9 hcp, 3343</desc>
-    
+
     <condition type="include">
       <evaluation>
         <hcp>
@@ -152,21 +152,21 @@ Weak twos.
           <max>9</max>
         </hcp>
       </evaluation>
-      
+
       <shape type="shape">3343</shape>
     </condition>
   </bid>
-  
+
   <bid id="04">
     <value>2c</value>
     <desc>6-9 points, 4+ clubs.</desc>
-    
+
     <condition type="include">
       <shape type="formula">clubs &gt;= 4</shape>
       <shape type="formula">hearts &lt; 4</shape>
       <shape type="formula">spades &lt; 4</shape>
       <shape type="formula">clubs &gt;= diamonds</shape>
-      
+
       <evaluation>
         <points>
           <min>5</min>
@@ -284,31 +284,31 @@ Weak twos.
 <bid id="6">
   <value>2d</value>
   <desc>5-10 hcp, 6 diamonds</desc>
-  
+
   <bid id="62">
     <value>2n</value>
     <desc>Ogust (strength and quality ask).</desc>
-    
+
     <bid id="620">
       <value>3c</value>
       <desc>5-7 hcp, 1- of top 3 in suit. (weak hand, bad suit)</desc>
     </bid>
-    
+
     <bid id="621">
       <value>3d</value>
       <desc>5-7 hcp, 2 of top 3 in suit. (weak hand, good suit)</desc>
     </bid>
-    
+
     <bid id="622">
       <value>3h</value>
       <desc>8-10 hcp, 1- of top 3 in suit. (strong hand, bad suit)</desc>
     </bid>
-    
+
     <bid id="623">
       <value>3s</value>
       <desc>8-10 hcp, 2 of top 3 in suit. (strong hand, good suit)</desc>
     </bid>
-    
+
     <bid id="624">
       <value>3n</value>
       <desc>9-10 hcp, AKQ in suit. (strong hand, excellent suit)</desc>
@@ -319,31 +319,31 @@ Weak twos.
 <bid id="7">
   <value>2h</value>
   <desc>5-10 hcp, 6 hearts.</desc>
-  
+
   <bid id="62">
     <value>2n</value>
     <desc>Ogust (strength and quality ask).</desc>
-    
+
     <bid id="620">
       <value>3c</value>
       <desc>5-7 hcp, 1- of top 3 in suit. (weak hand, bad suit)</desc>
     </bid>
-    
+
     <bid id="621">
       <value>3d</value>
       <desc>5-7 hcp, 2 of top 3 in suit. (weak hand, good suit)</desc>
     </bid>
-    
+
     <bid id="622">
       <value>3h</value>
       <desc>8-10 hcp, 1- of top 3 in suit. (strong hand, bad suit)</desc>
     </bid>
-    
+
     <bid id="623">
       <value>3s</value>
       <desc>8-10 hcp, 2 of top 3 in suit. (strong hand, good suit)</desc>
     </bid>
-    
+
     <bid id="624">
       <value>3n</value>
       <desc>9-10 hcp, AKQ in suit. (strong hand, excellent suit)</desc>
@@ -354,31 +354,31 @@ Weak twos.
 <bid id="8">
   <value>2s</value>
   <desc>5-10 hcp, 6 spades.</desc>
-  
+
   <bid id="62">
     <value>2n</value>
     <desc>Ogust (strength and quality ask).</desc>
-    
+
     <bid id="620">
       <value>3c</value>
       <desc>5-7 hcp, 1- of top 3 in suit. (weak hand, bad suit)</desc>
     </bid>
-    
+
     <bid id="621">
       <value>3d</value>
       <desc>5-7 hcp, 2 of top 3 in suit. (weak hand, good suit)</desc>
     </bid>
-    
+
     <bid id="622">
       <value>3h</value>
       <desc>8-10 hcp, 1- of top 3 in suit. (strong hand, bad suit)</desc>
     </bid>
-    
+
     <bid id="623">
       <value>3s</value>
       <desc>8-10 hcp, 2 of top 3 in suit. (strong hand, good suit)</desc>
     </bid>
-    
+
     <bid id="624">
       <value>3n</value>
       <desc>9-10 hcp, AKQ in suit. (strong hand, excellent suit)</desc>
@@ -408,7 +408,7 @@ Weak twos.
     <bid id="900">
       <value>3d</value>
       <desc>At least one 4cM.</desc>
-      
+
       <condition type="include">
         <shape type="shape">(x4)xx</shape>
       </condition>
@@ -417,16 +417,16 @@ Weak twos.
     <bid id="901">
       <value>3h</value>
       <desc>5 hearts.</desc>
-      
+
       <condition type="include">
         <shape type="shape">x5xx</shape>
       </condition>
-      
+
       <bid id="9011">
         <value>3n</value>
         <desc>To play.</desc>
       </bid>
-      
+
       <bid id="9014">
         <value>4h</value>
         <desc>To play.</desc>
@@ -436,7 +436,7 @@ Weak twos.
     <bid id="902">
       <value>3s</value>
       <desc>5 spades.</desc>
-      
+
       <condition type="include">
         <shape type="shape">5xxx</shape>
       </condition>
@@ -457,7 +457,7 @@ Weak twos.
     <bid id="903">
       <value>3n</value>
       <desc>No 4cM.</desc>
-      
+
       <condition type="include">
         <shape type="formula">hearts &lt; 4</shape>
         <shape type="formula">spades &lt; 4</shape>
