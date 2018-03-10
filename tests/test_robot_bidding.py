@@ -50,7 +50,7 @@ class RobotBiddingTests(unittest.TestCase):
         self.assertTrue(self._program.is_passed_out(bidding_sequence))
         self.assertEqual(self._program.get_contract(bidding_sequence), "P")
 
-    def test_get_contract(self):
+    def test_get_contract_when_suit_bid_by_only_one_player(self):
         pass_ = self._program._pass
         one_spade = Bid("1s", "one spade", [])
         first_bidder_to_bidding_sequence = {
@@ -62,8 +62,25 @@ class RobotBiddingTests(unittest.TestCase):
         for bidder in first_bidder_to_bidding_sequence:
             with self.subTest(bidder=bidder):
                 bid_sequence = first_bidder_to_bidding_sequence[bidder]
-                self.assertEqual(self._program.get_contract(bid_sequence),
-                                 f"1S{bidder}")
+                self._assert_bid_sequence(bid_sequence, f"1S{bidder}")
+
+    def test_get_contract_when_suit_bid_by_several_players(self):
+        pass_ = self._program._pass
+        one_spade = Bid("1s", "one spade", [])
+        two_spades = Bid("2s", "two spades", [])
+        three_spades = Bid("3s", "three spades", [])
+        competitive_bidding = [one_spade, two_spades, three_spades]
+
+        first_bidder_to_bidding_sequence = {
+                "N": competitive_bidding + [pass_]*3,
+                "E": [pass_] + competitive_bidding + [pass_]*3,
+                "S": [pass_]*2 + competitive_bidding + [pass_]*3,
+                "W": [pass_]*3 + competitive_bidding + [pass_]*3}
+
+        for bidder in first_bidder_to_bidding_sequence:
+            with self.subTest(bidder=bidder):
+                bid_sequence = first_bidder_to_bidding_sequence[bidder]
+                self._assert_bid_sequence(bid_sequence, f"3S{bidder}")
 
     def test_can_bid_automatically(self):
         self._program.set_opening_bids(self._chimaera_bids)
@@ -81,6 +98,20 @@ class RobotBiddingTests(unittest.TestCase):
                                      count)
 
                 self._program.generate_new_deal()
+
+    @unittest.skip("Test not written yet.")
+    def test_gets_valid_double_dummy_result(self):
+        pass
+
+    def _assert_bid_sequence(self, bid_sequence, expected_contract):
+        self.assertEqual(self._program.get_contract(bid_sequence),
+                         expected_contract)
+
+        # Should get the same when using the internal bidding sequence.
+        self._program.bidding_sequence.clear()
+        self._program.bidding_sequence.extend(bid_sequence)
+        self.assertEqual(self._program.get_contract(),
+                         expected_contract)
 
 
 if __name__ == "__main__":

@@ -162,9 +162,9 @@ class BiddingProgram:
             return self.deal.south
         elif seat == self.Players.West:
             return self.deal.west
-        elif isinstance(seat, self.Players):
+        elif isinstance(seat, self.Players):  # pragma: no cover
             raise ValueError(seat)
-        else:
+        else:  # pragma: no cover
             raise TypeError(seat, self.Players)
 
     @classmethod
@@ -331,9 +331,10 @@ class BiddingProgram:
         for i in range(index - 2, -1, -4):
             partner_bid = bidding_sequence[i]
             if partner_bid == self._pass:
-                pass
+                break
             elif partner_bid.suit == suit:
                 suit_bid_by_partner = True
+                break
 
         bidder = self._bidder(index - 2 if suit_bid_by_partner else index)
         contract = last_bid.value.upper()

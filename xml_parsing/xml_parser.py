@@ -23,7 +23,6 @@ from practice_bidding.xml_parsing.conditions import NotCondition
 from practice_bidding.xml_parsing.conditions import EvaluationCondition
 
 
-
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
 HCP = Evaluator(4, 3, 2, 1)
 OPERATOR = re.compile("<[^=]|>[^=]|[!<>=]=")
@@ -77,7 +76,7 @@ class Bid:
         return self._suits[suit_text]
 
 
-class FormulaParser:
+class FormulaParser:  # pragma: no cover
     _VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$")
     _BINARY_OPERATOR = re.compile("[-+*]")
 
@@ -93,7 +92,8 @@ class FormulaParser:
         raise NotImplementedError
 
 
-def _parse_formula(formula, formula_module):
+def _parse_formula(formula, formula_module):  # pragma: no cover
+    raise NotImplementedError
     formula = "".join(formula.split()).lower()
     assert OPERATOR.findall(formula)
 
@@ -195,8 +195,8 @@ def _get_formula_module(xml_root, current_directory):
         spec.loader.exec_module(formula_module)
     except KeyError:
         formula_module = None
-    except ImportError:
-        print(f"Warning: formula module count not be found at "
+    except ImportError:  # pragma: no cover
+        print(f"Warning: formula module could not be found at "
               f"{formula_module_location}")
         formula_module = None
 
@@ -237,7 +237,7 @@ def get_bids_from_xml(filepath=None):
         except AttributeError:
             try:
                 return getattr(standard_formulas, method_name)
-            except AttributeError:
+            except AttributeError:  # pragma: no cover
                 location = os.path.realpath(formula_module.__file__)
                 raise NotImplementedError(f"{method_name} not defined in "
                                           f"{location}.")
@@ -258,21 +258,19 @@ def get_bids_from_xml(filepath=None):
 
     def _define_bid(xml_bid) -> Bid:
         value, desc = xml_bid.find("value").text, xml_bid.find("desc").text
-        xml_conditions = xml_bid.findall("condition")
-        if not xml_conditions:
-            and_ = xml_bid.find("and")
-            or_ = xml_bid.find("or")
-            xml_condition = and_ or or_
 
-            if not xml_condition:
-                # No conditions defined. Use OrCondition so accept method
-                # always returns false.
-                return Bid(value, desc, OrCondition())
+        and_ = xml_bid.find("and")
+        or_ = xml_bid.find("or")
+        xml_condition = and_ or or_
 
+        if xml_condition:
             # In new style should have exactly one condition for a bid.
             assert not (and_ and or_)
             condition = _define_and_or_condition(xml_condition)
             return Bid(value, desc, condition)
+
+        # New style and/or not defined. Take legacy path.
+        xml_conditions = xml_bid.findall("condition")
 
         # Include conditions
         or_ = OrCondition()
@@ -294,7 +292,7 @@ def get_bids_from_xml(filepath=None):
             if type_ == "exclude":
                 condition = NotCondition(condition)
                 and_.conditions.append(condition)
-            elif type_ != "include":
+            elif type_ != "include":  # pragma: no cover
                 raise NotImplementedError(
                     type_, "Expected 'include' or 'exclude'")
 
@@ -318,7 +316,9 @@ def get_bids_from_xml(filepath=None):
 
         return base_condition
 
-    def _get_formulas(xml_condition):
+    # Using no cover since _parse_formula not implemented yet.
+    # TODO: Remove this when it gets implemented.
+    def _get_formulas(xml_condition):  # pragma: no cover
         formulas = []
         for xml_formula in xml_condition.findall("formula"):
             formula_text = xml_formula.text
@@ -358,12 +358,7 @@ def get_bids_from_xml(filepath=None):
         shapes = xml_condition.findall("shape")
         shape_conditions = []
         for shape in shapes:
-            try:
-                type_ = shape.attrib["type"]
-            except KeyError:
-                # Empty shape definition.
-                print("Warning: empty shape definition.")
-                continue
+            type_ = shape.attrib["type"]
 
             if type_ == "shape":
                 shape_condition = \
@@ -403,7 +398,7 @@ def get_bids_from_xml(filepath=None):
         for child_xml_bid in xml_bid.findall("bid"):
             try:
                 child_bid = _define_bid(child_xml_bid)
-            except Exception:
+            except Exception:  # pragma: no cover
                 # -------------------------------------------------------------
                 # This is very useful at finding the correct bit of XML which
                 # is invalid.
@@ -434,7 +429,7 @@ def get_bids_from_xml(filepath=None):
     for xml_bid in root:
         try:
             bid = _define_bid(xml_bid)
-        except Exception:
+        except Exception:  # pragma: no cover
             value = xml_bid.find("value")
             if value:
                 print(f"Error in XML of {value.text}")
