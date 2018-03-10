@@ -28,7 +28,7 @@ class XmlParserTests(unittest.TestCase):
         systems = {self._acol_location, self._chimaera_location}
         for system in systems:
             with self.subTest(system=system):
-                bids = get_bids_from_xml(DEFAULT_XML_SOURCE)
+                bids = get_bids_from_xml(system)
                 expected_accept_values = {True, False}
                 all_bids = []
 
