@@ -1090,16 +1090,79 @@ Law of total tricks.
       <bid id="0101">
         <value>2c</value>
         <desc>12+ hcp, 5+ hearts. (If 5cm, has 6+ hearts.)</desc>
+        
+        <and>
+          <evaluation>
+            <hcp>
+              <min>11.5</min>
+            </hcp>
+          </evaluation>
+          
+          <or>
+            <and>
+              <shape type="formula">hearts &gt;= 6</shape>
+              <or>
+                <shape type="formula">clubs &gt;= 5</shape>
+                <shape type="formula">diamonds &gt;= 5</shape>
+              </or>
+            </and>
+            
+            <and>
+              <shape type="formula">hearts &gt;= 5</shape>
+              <and>
+                <shape type="formula">clubs &lt; 5</shape>
+                <shape type="formula">diamonds &lt; 5</shape>
+              </and>
+            </and>
+          </or>
+        </and>
       </bid>
 
       <bid id="0102">
         <value>2d</value>
         <desc>8-11(12) hcp, 5 hearts, 4+ cm.</desc>
+        
+        <and>
+          <evaluation>
+            <hcp>
+              <min>7.5</min>
+              <max>11.75</max>
+            </hcp>
+          </evaluation>
+          
+          <shape type="formula">hearts == 5</shape>
+          
+          <or>
+            <shape type="formula">clubs &gt;= 4</shape>
+            <shape type="formula">diamonds &gt;= 4</shape>
+          </or>
+        </and>
       </bid>
 
       <bid id="0103">
         <value>2h</value>
         <desc>8-11(12) hcp, 5+ hearts, 4-5 spades. (5 spades means exactly 5 hearts.)</desc>
+        
+        <and>
+          <evaluation>
+            <hcp>
+              <min>7.5</min>
+              <max>11.75</max>
+            </hcp>
+          </evaluation>
+          
+          <or>
+            <and>
+              <shape type="formula">spades == 5</shape>
+              <shape type="formula">hearts == 5</shape>
+            </and>
+            
+            <and>
+              <shape type="formula">spades == 4</shape>
+              <shape type="formula">hearts &gt;= 5</shape>
+            </and>
+          </or>
+        </and>
 
         <bid id="01030">
           <value>2s</value>
@@ -1172,6 +1235,20 @@ Law of total tricks.
       <bid id="0104">
         <value>2s</value>
         <desc>8-11(12) hcp, 6+ hearts, single suited.</desc>
+        
+        <and>
+          <evaluation>
+            <hcp>
+              <min>7.5</min>
+              <max>11.75</max>
+            </hcp>
+          </evaluation>
+          
+          <shape type="formula">hearts &gt;= 6</shape>
+          <shape type="formula">clubs &lt; 4</shape>
+          <shape type="formula">diamonds &lt; 4</shape>
+          <shape type="formula">spades &lt;= 4</shape>
+        </and>
 
         <bid id="01040">
           <value>2n</value>
