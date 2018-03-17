@@ -14,7 +14,7 @@ import re
 from practice_bidding import standard_formulas
 from practice_bidding.redeal.redeal import Evaluator
 from practice_bidding.redeal.redeal.global_defs import Strain
-from practice_bidding.xml_parsing.conditions import BaseCondition
+from practice_bidding.xml_parsing.conditions import SimpleCondition
 from practice_bidding.xml_parsing.conditions import ShapeConditionFactory
 from practice_bidding.xml_parsing.conditions import AndCondition, OrCondition
 from practice_bidding.xml_parsing.conditions import MultiCondition
@@ -58,7 +58,7 @@ class Bid:
         self.condition = condition
         self.suit = self._get_suit()
 
-    def accept(self, hand):
+    def accept(self, hand) -> bool:
         """
         Whether the hand is valid for this bid or not.
 
@@ -67,7 +67,7 @@ class Bid:
         """
         return self.condition.accept(hand)
 
-    def _get_suit(self):
+    def _get_suit(self) -> str:
         try:
             suit_text = self.value[1].lower()
         except IndexError:
@@ -370,7 +370,7 @@ def get_bids_from_xml(filepath=None):
             elif type_ == "formula":
                 formula = shape.text
                 accept = _parse_formula_for_condition(formula)
-                shape_condition = BaseCondition(accept, formula)
+                shape_condition = SimpleCondition(accept, formula)
             elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
                 minimum, maximum = _get_min_max_for_method(
                     shape,
@@ -386,7 +386,8 @@ def get_bids_from_xml(filepath=None):
                 operator = "<=" if type_ == "longer_than" else "<"
                 formula = f"{shorter_suit} {operator} {longer_suit}"
                 accept = _parse_formula_for_condition(formula)
-                shape_condition = BaseCondition(accept, f"Formula: {formula}")
+                shape_condition = SimpleCondition(accept,
+                                                  f"Formula: {formula}")
             else:
                 raise NotImplementedError(type_)
 
