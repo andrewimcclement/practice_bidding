@@ -1,4 +1,4 @@
-# practice_bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/andrewimcclement/practice_bidding/badge.svg)](https://coveralls.io/github/andrewimcclement/practice_bidding)
+# practice_bidding ![alt-text](https://travis-ci.org/andrewimcclement/practice_bidding.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/andrewimcclement/practice_bidding/badge.svg?branch=master)](https://coveralls.io/github/andrewimcclement/practice_bidding?branch=master)
 A short program to allow practice of new bidding systems in Bridge.
 
 -------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ __Usage__:
 
 From the command line, `python C:\path\to\practice_bidding_main.py` will use
 the `XML_DEFAULT_SOURCE` constant to locate the XML file describing the bidding
-system you wish to use, if you enter "default" when asked for the XML file
+system you wish to use, if you enter `default` when asked for the XML file
 location. Otherwise you may enter the file location at that point.
 
 Alternatively,
