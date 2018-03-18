@@ -7,12 +7,38 @@ Created on Tue Dec 19 20:08:26 2017
 
 import os
 import unittest
+import math
+
 from practice_bidding.xml_parsing.xml_parser import get_bids_from_xml
 from practice_bidding.xml_parsing.xml_parser import \
     _parse_formula_for_condition
 from practice_bidding.xml_parsing.xml_parser import VALID_EXPRESSION
+from practice_bidding.xml_parsing.xml_parser import _get_min_max_for_method
 from practice_bidding.practice_bidding_main import DEFAULT_XML_SOURCE
 from practice_bidding.redeal.redeal import Hand
+
+
+class FakeXmlElement:
+    def __init__(self, tag=None, text=None):
+        self._sub_elements = {}
+        self.tag = None
+        self.text = text
+
+    def find(self, tag):
+        try:
+            return self._sub_elements[tag][0]
+        except (KeyError, IndexError):
+            return None
+
+    def findall(self, tag):
+        return self._sub_elements[tag]
+
+    def add_element(self, tag, text):
+        element = FakeXmlElement(tag, text)
+        try:
+            self._sub_elements[tag].append(element)
+        except KeyError:
+            self._sub_elements[tag] = [element]
 
 
 class XmlParserTests(unittest.TestCase):
@@ -23,6 +49,18 @@ class XmlParserTests(unittest.TestCase):
         directory = os.path.dirname(DEFAULT_XML_SOURCE)
         cls._acol_location = os.path.join(directory, "acol.xml")
         cls._chimaera_location = DEFAULT_XML_SOURCE
+
+    def test_get_min_max_throws_with_no_values(self):
+        element = FakeXmlElement()
+        with self.assertRaises(AssertionError):
+            _get_min_max_for_method(element)
+
+    def test_get_min_max_throws_with_invalid_values(self):
+        element = FakeXmlElement()
+        element.add_element("min", "1")
+        element.add_element("max", "0")
+        with self.assertRaises(AssertionError):
+            _get_min_max_for_method(element)
 
     def test_parse_system_bids(self):
         systems = {self._acol_location, self._chimaera_location}

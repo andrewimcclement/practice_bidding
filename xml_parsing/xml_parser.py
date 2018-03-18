@@ -110,13 +110,8 @@ def _get_min_max_for_method(xml_method,
                             default_min=0,
                             default_max=math.inf,
                             absolute_min=-math.inf,
-                            absolute_max=math.inf):
+                            absolute_max=math.inf) -> (float, float):
     """ Returns (minimum, maximum) for XML method."""
-
-    # This is so defaults need not be altered when the absolute values
-    # conflict.
-    default_min = max(default_min, absolute_min)
-    default_max = min(default_max, absolute_max)
 
     try:
         minimum = float(xml_method.find("min").text)
@@ -128,7 +123,7 @@ def _get_min_max_for_method(xml_method,
         maximum = float(xml_method.find("max").text)
     except AttributeError:
         # Maximum is not defined, so use infinity.
-        maximum = math.inf
+        maximum = default_max
 
     result = (max(minimum, absolute_min), min(maximum, absolute_max))
     assert result[0] <= result[1], f"minimum, maximum == {result}"

@@ -18,6 +18,7 @@ try:
     from practice_bidding.tests import parser_tests
     from practice_bidding.tests import xml_parser_tests
     from practice_bidding.tests import test_robot_bidding
+    from practice_bidding.tests import test_main
 except ImportError:
     # This is in place for Travis. It is expected that under normal
     # circumstances the practice_bidding package will be found on sys.path.
@@ -26,6 +27,7 @@ except ImportError:
     from practice_bidding.tests import parser_tests
     from practice_bidding.tests import xml_parser_tests
     from practice_bidding.tests import test_robot_bidding
+    from practice_bidding.tests import test_main
 
 
 def main():
@@ -40,6 +42,7 @@ def main():
     suite.addTests(loader.loadTestsFromModule(parser_tests))
     suite.addTests(loader.loadTestsFromModule(xml_parser_tests))
     suite.addTests(loader.loadTestsFromModule(test_robot_bidding))
+    suite.addTests(loader.loadTestsFromModule(test_main))
 
     runner = unittest.TextTestRunner(verbosity=verbosity)
     result = runner.run(suite)
