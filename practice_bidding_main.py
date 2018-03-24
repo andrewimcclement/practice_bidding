@@ -11,7 +11,9 @@ import os
 import sys
 from time import sleep
 import traceback
+from typing import Callable, Dict
 
+from practice_bidding.xml_parsing.xml_parser import Bid
 from practice_bidding.bridge_parser import ParseResults
 from practice_bidding.redeal.redeal import Hand
 from practice_bidding.redeal import redeal
@@ -27,7 +29,7 @@ DEFAULT_XML_SOURCE = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                   _DEFAULT_XML_SOURCE)
 
 
-def hand_to_str(hand):
+def hand_to_str(hand: Hand) -> str:
     """ Improved one line string representation of a Hand object."""
     # For some reason, redeal.Suit seems to fail under certain circumstances.
     # I assume there is some name collision in the redeal module somewhere
@@ -36,7 +38,7 @@ def hand_to_str(hand):
     return " ".join(map("{}{}".format, redeal.redeal.Suit, hand))
 
 
-def get_xml_source(parse):
+def get_xml_source(parse: Callable[[str], ParseResults]) -> str:
     """ Get the xml source file path defining bids for this program. """
     filepath = ""
     if __name__ == "__main__":
@@ -71,6 +73,21 @@ def get_xml_source(parse):
     return filepath
 
 
+def _get_final_contract(parse_method,
+                        rejection_options) -> (bool, str):
+    result = None
+    help_message = ("Enter the correct contract in the form '4HS' for"
+                    " 4 hearts by South. Else, enter 'back' or 'no' to "
+                    "skip entering the correct final contract.")
+    input_, result = parse_method(
+        "Please enter the final contract: ",
+        {ParseResults.BridgeContract}.union(rejection_options),
+        help_message)
+
+    # Convert to upper case for returning a bridge contract.
+    return result not in rejection_options, input_.upper()
+
+
 def _play_board(program, get_user_input, parse_user_input):
     print(f"\nBoard: {program.board_number}. Vulnerability: "
           f"{program.vulnerability}")
@@ -91,24 +108,12 @@ def _play_board(program, get_user_input, parse_user_input):
 
     input_ = input("Is this the correct final contract? (y/n) ")
     if parse_user_input(input_) == ParseResults.No:
-        result = None
-        while result not in {ParseResults.Back, ParseResults.No}:
-            input_ = input("Please enter the final contract: ")
-            result = parse_user_input(input_)
-            if result == ParseResults.BridgeContract:
-                contract = input_.upper()
-
-                if contract not in {"P", "PASS"}:
-                    dd_result = program.get_double_dummy_result(contract)
-                    print(f"Double dummy result: {contract} {dd_result}")
-                break
-            elif result == ParseResults.Help:
-                print("Enter the correct contract in the form '4HS' for"
-                      " 4 hearts by South. Else, enter 'back' or 'no' to "
-                      "skip entering the correct final contract.")
-            else:
-                print("Sorry, that wasn't a valid contract. Example: "
-                      "4HS for 4 hearts by South.")
+        rejection_options = {ParseResults.Back, ParseResults.No}
+        result, contract = _get_final_contract(program.get_validated_input,
+                                               rejection_options)
+        if result and contract not in {"P", "PASS"}:
+            dd_result = program.get_double_dummy_result(contract)
+            print(f"Double dummy result: {contract} {dd_result}")
 
     # TODO: Add optimal contract (dd_solve).
 
@@ -116,6 +121,30 @@ def _play_board(program, get_user_input, parse_user_input):
                                     {ParseResults.Yes, ParseResults.No})
 
     return result == ParseResults.Yes
+
+
+def _get_general_bid_details(bids) -> (int, int):
+    """ Gets #bids and #bids with non trivial conditions."""
+    counts = [0, 0]
+
+    def _process_bid(bid):
+        counts[0] += 1
+        counts[1] += bid.condition.is_non_trivial_condition
+        for _, child in bid.children.items():
+            _process_bid(child)
+
+    for _, bid in bids.items():
+        _process_bid(bid)
+
+    return counts
+
+
+def print_general_bid_details(bids: Dict[str, Bid]):
+    """ Prints how many bids there are. """
+    bid_count, non_trivial_bid_count = _get_general_bid_details(bids)
+
+    print(f"{bid_count} bids found.")
+    print(f"{non_trivial_bid_count} non-trivial bids found.")
 
 
 def main():
@@ -126,14 +155,14 @@ def main():
     """
 
     # Set a prettier printed version of a Hand object.
-    # TODO: this doesn't work for some reason.
-    Hand._short_str = hand_to_str
+    Hand.__str__ = hand_to_str
 
     program = BiddingProgram()
 
     try:
         source = get_xml_source(program.parse)
         bids = get_bids_from_xml(source)
+        print_general_bid_details(bids)
         program.set_opening_bids(bids)
         while _play_board(program, program.get_validated_input,
                           program.parse):

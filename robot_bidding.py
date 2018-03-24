@@ -128,7 +128,7 @@ class BiddingProgram:
                             valid_formats,
                             help_message=None,
                             exclude_settings=False,
-                            tries=0):
+                            tries=0) -> (str, ParseResults):
         """ Get user input satisfying the given formats. """
         input_ = None
         result = None

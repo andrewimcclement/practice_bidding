@@ -10,6 +10,7 @@ import importlib.util
 import math
 import xml.etree.ElementTree as ET
 import re
+import operator
 
 from practice_bidding import standard_formulas
 from practice_bidding.redeal.redeal import Evaluator
@@ -17,16 +18,24 @@ from practice_bidding.redeal.redeal.global_defs import Strain
 from practice_bidding.xml_parsing.conditions import SimpleCondition
 from practice_bidding.xml_parsing.conditions import ShapeConditionFactory
 from practice_bidding.xml_parsing.conditions import AndCondition, OrCondition
-from practice_bidding.xml_parsing.conditions import MultiCondition
-from practice_bidding.xml_parsing.conditions import Condition
+from practice_bidding.xml_parsing.conditions import Condition, BaseCondition
 from practice_bidding.xml_parsing.conditions import NotCondition
 from practice_bidding.xml_parsing.conditions import EvaluationCondition
 
 
 CHIMAERA_HCP = Evaluator(4.5, 3, 1.5, 0.75, 0.25)
 HCP = Evaluator(4, 3, 2, 1)
-OPERATOR = re.compile("<[^=]|>[^=]|[!<>=]=")
-VALID_EXPRESSION = re.compile("^([cdhs]|[0-9]+)([-+*]([cdhs]|[0-9]+))*$")
+OPERATOR = re.compile("([!<>=]=|[<>])")
+VALID_EXPRESSION = re.compile("^(-?([cdhs]|[0-9]+))([-+*]([cdhs]|[0-9]+))*$")
+SAFE_FORMULA = re.compile("^(-?([0-9]+)([-+*]([0-9]+))*([<>]|[!<>=]=))+"
+                          "([0-9]+)([-+*]([0-9]+))*$")
+SAFE_EXPRESSION = re.compile("^-?[0-9]+([-+*]([0-9]+))*$")
+OPERATOR_MAP = {"==": operator.eq,
+                "!=": operator.ne,
+                ">=": operator.ge,
+                ">": operator.gt,
+                "<=": operator.le,
+                "<": operator.lt}
 
 
 def standard_shape_points(hand):
@@ -159,11 +168,11 @@ def _parse_formula_for_condition(formula):
 
     result = [simplified_formula]
     i = 0
-    operator = None
+    cmp_operator = None
     while len(result) == 1:
         to_parse = result[0]
-        operator = operators[i]
-        result = to_parse.split(operator)
+        cmp_operator = operators[i]
+        result = to_parse.split(cmp_operator)
         i += 1
 
     assert len(result) == 2
@@ -172,9 +181,38 @@ def _parse_formula_for_condition(formula):
     for expression in result:
         assert VALID_EXPRESSION.match(expression), expression
 
-    def _accept(hand):
-        s, h, d, c = hand.shape
-        return eval(f"{simplified_formula}")
+    expr_operator_seq = OPERATOR.split(simplified_formula)
+    assert len(expr_operator_seq) % 2 == 1
+    comparison_count = len(expr_operator_seq) // 2
+    comparisons = [(expr_operator_seq[2*i],
+                    expr_operator_seq[2*i + 1],
+                    expr_operator_seq[2*i + 2])
+                   for i in range(comparison_count)]
+
+    def _evaluate_expression(expression: str, hand_shape) -> int:
+        s, h, d, c = hand_shape
+        evaluated_expression = (expression
+                                .replace("s", str(s))
+                                .replace("h", str(h))
+                                .replace("d", str(d))
+                                .replace("c", str(c)))
+        assert SAFE_EXPRESSION.match(evaluated_expression), \
+            evaluated_expression
+        return eval(evaluated_expression)
+
+    def _comparison_accept(comparison, hand) -> bool:
+        lhs, operator_string, rhs = comparison
+        operator = OPERATOR_MAP[operator_string]
+        evaluated_lhs = _evaluate_expression(lhs, hand.shape)
+        evaluated_rhs = _evaluate_expression(rhs, hand.shape)
+        return operator(evaluated_lhs, evaluated_rhs)
+
+    def _accept(hand) -> bool:
+        for comparison in comparisons:
+            if not _comparison_accept(comparison, hand):
+                return False
+
+        return True
 
     return _accept
 
@@ -202,7 +240,7 @@ def _get_hcp_method(xml_root, get_formula):
     try:
         # HCP not defined in formula_module.
         hcp_style = xml_root.attrib["hcp"]
-    except (AttributeError, KeyError):  # TODO: Check which is correct.
+    except KeyError:
         print("Warning: HCP style not defined. "
               "Taking hcp from formula module.")
         hcp_style = None
@@ -214,6 +252,48 @@ def _get_hcp_method(xml_root, get_formula):
 
     # Default.
     return get_formula("hcp")
+
+
+def _get_shape_conditions(xml_condition):
+    shapes = xml_condition.findall("shape")
+    shape_conditions = []
+    for shape in shapes:
+        type_ = shape.attrib["type"]
+
+        if type_ == "shape":
+            shape_condition = \
+                ShapeConditionFactory.create_shape_condition(shape.text)
+        elif type_ == "general":
+            shape_condition = \
+                ShapeConditionFactory.create_general_shape_condition(
+                    shape.text)
+        elif type_ == "formula":
+            formula = shape.text
+            accept = _parse_formula_for_condition(formula)
+            shape_condition = SimpleCondition(accept, formula)
+        elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
+            minimum, maximum = _get_min_max_for_method(
+                shape,
+                absolute_min=0,
+                absolute_max=13)
+
+            shape_condition = \
+                ShapeConditionFactory.create_suit_length_condition(
+                    type_, minimum, maximum)
+        elif type_ in {"longer_than", "strictly_longer_than"}:
+            longer_suit = shape.find("longer_suit").text
+            shorter_suit = shape.find("shorter_suit").text
+            cmp_operator = "<=" if type_ == "longer_than" else "<"
+            formula = f"{shorter_suit} {cmp_operator} {longer_suit}"
+            accept = _parse_formula_for_condition(formula)
+            shape_condition = SimpleCondition(accept,
+                                              f"Formula: {formula}")
+        else:
+            raise NotImplementedError(type_)
+
+        shape_conditions.append(shape_condition)
+
+    return shape_conditions
 
 
 def get_bids_from_xml(filepath=None):
@@ -256,12 +336,13 @@ def get_bids_from_xml(filepath=None):
 
         and_ = xml_bid.find("and")
         or_ = xml_bid.find("or")
-        xml_condition = and_ or or_
+        not_ = xml_bid.find("not")
+        xml_condition = and_ or or_ or not_
 
         if xml_condition:
             # In new style should have exactly one condition for a bid.
-            assert not (and_ and or_)
-            condition = _define_and_or_condition(xml_condition)
+            assert bool(and_) + bool(or_) + bool(not_) == 1
+            condition = _define_logical_condition(xml_condition)
             return Bid(value, desc, condition)
 
         # New style and/or not defined. Take legacy path.
@@ -274,7 +355,7 @@ def get_bids_from_xml(filepath=None):
 
         for xml_condition in xml_conditions:
             evaluation_conditions = \
-                _get_evaluation_condition(xml_condition)
+                _get_evaluation_conditions(xml_condition)
 
             evaluation_conditions.extend(_get_formulas(xml_condition))
             shape_conditions = _get_shape_conditions(xml_condition)
@@ -293,21 +374,31 @@ def get_bids_from_xml(filepath=None):
 
         return Bid(value, desc, and_)
 
-    def _define_and_or_condition(xml_condition) -> MultiCondition:
+    def _define_logical_condition(xml_condition) -> BaseCondition:
         tag = xml_condition.tag
-        base_condition = AndCondition() if tag == "and" else OrCondition()
-
         child_conditions = []
 
         for and_ in xml_condition.findall("and"):
-            child_conditions.append(_define_and_or_condition(and_))
+            child_conditions.append(_define_logical_condition(and_))
 
         for or_ in xml_condition.findall("or"):
-            child_conditions.append(_define_and_or_condition(or_))
+            child_conditions.append(_define_logical_condition(or_))
 
-        child_conditions.extend(_get_evaluation_condition(xml_condition))
+        for not_ in xml_condition.findall("not"):
+            child_conditions.append(_define_logical_condition(not_))
+
+        child_conditions.extend(_get_evaluation_conditions(xml_condition))
         child_conditions.extend(_get_shape_conditions(xml_condition))
-        base_condition.conditions.extend(child_conditions)
+
+        if tag == "and":
+            base_condition = AndCondition(child_conditions)
+        elif tag == "or":
+            base_condition = OrCondition(child_conditions)
+        elif tag == "not":
+            assert len(child_conditions) == 1
+            base_condition = NotCondition(child_conditions[0])
+        else:
+            raise ValueError(f"Incorrect tag for logical condition: {tag}.")
 
         return base_condition
 
@@ -322,7 +413,7 @@ def get_bids_from_xml(filepath=None):
 
         return formulas
 
-    def _get_evaluation_condition(xml_condition):
+    def _get_evaluation_conditions(xml_condition):
         evaluation_conditions = []
         evaluation = xml_condition.find("evaluation")
         if not evaluation:
@@ -348,47 +439,6 @@ def get_bids_from_xml(filepath=None):
             evaluation_conditions.append(evaluation_condition)
 
         return evaluation_conditions
-
-    def _get_shape_conditions(xml_condition):
-        shapes = xml_condition.findall("shape")
-        shape_conditions = []
-        for shape in shapes:
-            type_ = shape.attrib["type"]
-
-            if type_ == "shape":
-                shape_condition = \
-                    ShapeConditionFactory.create_shape_condition(shape.text)
-            elif type_ == "general":
-                shape_condition = \
-                    ShapeConditionFactory.create_general_shape_condition(
-                        shape.text)
-            elif type_ == "formula":
-                formula = shape.text
-                accept = _parse_formula_for_condition(formula)
-                shape_condition = SimpleCondition(accept, formula)
-            elif type_ in {"clubs", "diamonds", "hearts", "spades"}:
-                minimum, maximum = _get_min_max_for_method(
-                    shape,
-                    absolute_min=0,
-                    absolute_max=13)
-
-                shape_condition = \
-                    ShapeConditionFactory.create_suit_length_condition(
-                        type_, minimum, maximum)
-            elif type_ in {"longer_than", "strictly_longer_than"}:
-                longer_suit = shape.find("longer_suit").text
-                shorter_suit = shape.find("shorter_suit").text
-                operator = "<=" if type_ == "longer_than" else "<"
-                formula = f"{shorter_suit} {operator} {longer_suit}"
-                accept = _parse_formula_for_condition(formula)
-                shape_condition = SimpleCondition(accept,
-                                                  f"Formula: {formula}")
-            else:
-                raise NotImplementedError(type_)
-
-            shape_conditions.append(shape_condition)
-
-        return shape_conditions
 
     def _find_all_children_bids(bid, xml_bid):
         for child_xml_bid in xml_bid.findall("bid"):

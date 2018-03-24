@@ -4681,6 +4681,32 @@ Law of total tricks.
       </condition>
     </bid>
   </bid>
+  
+  <bid id="63">
+    <value>3c</value>
+    <desc>6+ clubs, to play.</desc>
+  </bid>
+  
+  <bid id="64">
+    <value>3d</value>
+    <desc>6+ diamonds, to play.</desc>
+  </bid>
+  
+  <bid id="65">
+    <value>3h</value>
+    <desc>Pass or correct, good support for both suits.</desc>
+    
+    <and>
+      <shape type="formula">hearts &gt;= 4</shape>
+      <shape type="formula">spades &gt;= 4</shape>
+      
+      <evaluation>
+        <points>
+          <max>11.25</max>
+        </points>
+      </evaluation>
+    </and>
+  </bid>
 </bid>
 
 <bid id="7">
@@ -4755,6 +4781,21 @@ Law of total tricks.
       </points>
     </evaluation>
   </condition>
+  
+  <bid id="70">
+    <value>2s</value>
+    <desc>To play, unless spades is the other suit. 6+ spades.</desc>
+    
+    <and>
+      <shape type="formula">spades &gt;= 6</shape>
+      
+      <evaluation>
+        <points>
+          <max>14.25</max>
+        </points>
+      </evaluation>
+    </and>
+  </bid>
 
   <bid id="71">
     <value>2n</value>
@@ -5163,16 +5204,129 @@ Law of total tricks.
   <bid id="93">
     <value>3s</value>
     <desc>Puppet to 3n. Long minor, slam seeking.</desc>
+    
+    <bid id="930">
+      <value>3n</value>
+      <desc>Waiting for partner to declare their long minor.</desc>
+      
+      <and></and>
+      
+      <bid id="9300">
+        <value>4c</value>
+        <desc>Long clubs, slam seeking. Cue bids follow.</desc>
+        
+        <and>
+          <evaluation>
+            <points>
+              <min>10.5</min>
+            </points>
+          </evaluation>
+          
+          <shape type="formula">clubs &gt;= 6</shape>
+          <shape type="formula">hearts &lt; 4</shape>
+          <shape type="formula">spades &lt; 4</shape>
+          <shape type="formula">clubs &gt;= diamonds + 3</shape>
+        </and>
+      </bid>
+    </bid>
   </bid>
 
   <bid id="94">
     <value>3n</value>
     <desc>45+ dc. Clubs at least as long as diamonds.</desc>
+    
+    <bid id="940">
+      <value>4c</value>
+      <desc>3 clubs</desc>
+      
+      <and>
+        <shape type="formula">clubs == 3</shape>
+      </and>
+    </bid>
+    
+    <bid id="941">
+      <value>4d</value>
+      <desc>4 diamonds.</desc>
+      
+      <and>
+        <shape type="formula">diamonds &gt;= 4</shape>
+      </and>
+    </bid>
+    
+    <bid id="942">
+      <value>4h</value>
+      <desc>4+ clubs, heart cue.</desc>
+      
+      <and>
+        <shape type="formula">clubs &gt;= 4</shape>
+        <!-- heart cue -->
+      </and>
+    </bid>
+    
+    <bid id="943">
+      <value>4s</value>
+      <desc>4+ clubs, spades cue.</desc>
+      
+      <and>
+        <shape type="formula">clubs &gt;= 4</shape>
+        <!-- spade cue, no heart cue -->
+      </and>
+    </bid>
+    
+    <bid id="944">
+      <value>4n</value>
+      <desc>No fit (4432 shape).</desc>
+      
+      <and>
+        <shape type="shape">4432</shape>
+      </and>
+    </bid>
   </bid>
 
   <bid id="95">
     <value>4c</value>
     <desc>64+ dc. Longer diamonds than clubs.</desc>
+    
+    <and>
+      <shape type="formula">diamonds &gt;= 6</shape>
+      <shape type="formula">clubs &gt;= 4</shape>
+      <shape type="formula">diamonds &gt; clubs</shape>
+      
+      <evaluation>
+        <points>
+          <min>10.5</min>
+        </points>
+      </evaluation>
+    </and>
+    
+    <bid id="950">
+      <value>4d</value>
+      <desc>3- clubs. Agreeing diamonds. Cues follow.</desc>
+      
+      <and>
+        <shape type="formula">clubs &lt; 4</shape>
+      </and>
+    </bid>
+    
+    <bid id="951">
+      <value>4h</value>
+      <desc>4+ clubs. Heart cue.</desc>
+      
+      <and>
+        <shape type="formula">clubs &gt;= 4</shape>
+        <!-- Heart cue -->
+      </and>
+    </bid>
+    
+    <bid id="952">
+      <value>4s</value>
+      <desc>4+ clubs. Spade cue.</desc>
+      
+      <and>
+        <shape type="formula">clubs &gt;= 4</shape>
+        <!-- Spade cue. No heart cue. -->
+      </and>
+    </bid>
   </bid>
 
   <bid id="96">
