@@ -12,6 +12,15 @@ class BaseCondition:
         """ Get a description of the condition. """
         raise NotImplementedError("Abstract property.")
 
+    @property
+    def is_non_trivial_condition(self):
+        return self.condition_count > 0
+
+    @property
+    def condition_count(self):
+        """ Count the number of simple conditions associated. """
+        raise NotImplementedError("Abstract property")
+
     def accept(self, hand):
         """ Determine if the hand satisfies the condition or not. """
         raise NotImplementedError("Abstract method.")
@@ -31,6 +40,10 @@ class SimpleCondition(BaseCondition):
         """ Get a description of the condition. """
         return self._info
 
+    @property
+    def condition_count(self):
+        return 1
+
     def accept(self, hand):
         """ Determine if the hand satisfies the condition or not. """
         return self._accept(hand)
@@ -43,6 +56,10 @@ class EvaluationCondition(BaseCondition):
         self.minimum = minimum
         self.maximum = maximum
         self._evaluation_method = evaluation_method
+
+    @property
+    def condition_count(self):
+        return 1
 
     @property
     def info(self):
@@ -109,6 +126,11 @@ class MultiCondition(BaseCondition):
     # Should use self.conditions to get info from them.
     def _get_info(self):
         raise NotImplementedError("Abstract method.")
+
+    @property
+    def condition_count(self):
+        return sum((condition.condition_count
+                    for condition in self.conditions))
 
     @property
     def info(self):
@@ -184,6 +206,10 @@ class NotCondition(BaseCondition):
     def __init__(self, condition):
         assert condition
         self.condition = condition
+
+    @property
+    def condition_count(self):
+        return self.condition.condition_count
 
     def accept(self, hand):
         """ The inverse of self.condition """

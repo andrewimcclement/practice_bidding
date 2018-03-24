@@ -11,7 +11,9 @@ import os
 import sys
 from time import sleep
 import traceback
+from typing import Callable, Dict
 
+from practice_bidding.xml_parsing.xml_parser import Bid
 from practice_bidding.bridge_parser import ParseResults
 from practice_bidding.redeal.redeal import Hand
 from practice_bidding.redeal import redeal
@@ -27,7 +29,7 @@ DEFAULT_XML_SOURCE = os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                   _DEFAULT_XML_SOURCE)
 
 
-def hand_to_str(hand):
+def hand_to_str(hand: Hand) -> str:
     """ Improved one line string representation of a Hand object."""
     # For some reason, redeal.Suit seems to fail under certain circumstances.
     # I assume there is some name collision in the redeal module somewhere
@@ -36,7 +38,7 @@ def hand_to_str(hand):
     return " ".join(map("{}{}".format, redeal.redeal.Suit, hand))
 
 
-def get_xml_source(parse):
+def get_xml_source(parse: Callable[[str], ParseResults]) -> str:
     """ Get the xml source file path defining bids for this program. """
     filepath = ""
     if __name__ == "__main__":
@@ -118,6 +120,30 @@ def _play_board(program, get_user_input, parse_user_input):
     return result == ParseResults.Yes
 
 
+def _get_general_bid_details(bids) -> (int, int):
+    """ Gets #bids and #bids with non trivial conditions."""
+    counts = [0, 0]
+
+    def _process_bid(bid):
+        counts[0] += 1
+        counts[1] += bid.condition.is_non_trivial_condition
+        for _, child in bid.children.items():
+            _process_bid(child)
+
+    for _, bid in bids.items():
+        _process_bid(bid)
+
+    return counts
+
+
+def print_general_bid_details(bids: Dict[str, Bid]):
+    """ Prints how many bids there are. """
+    bid_count, non_trivial_bid_count = _get_general_bid_details(bids)
+
+    print(f"{bid_count} bids found.")
+    print(f"{non_trivial_bid_count} non-trivial bids found.")
+
+
 def main():
     """
     Bid practice hands opposite a robot.
@@ -134,6 +160,7 @@ def main():
     try:
         source = get_xml_source(program.parse)
         bids = get_bids_from_xml(source)
+        print_general_bid_details(bids)
         program.set_opening_bids(bids)
         while _play_board(program, program.get_validated_input,
                           program.parse):
