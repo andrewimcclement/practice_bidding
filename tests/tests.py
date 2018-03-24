@@ -16,6 +16,7 @@ def _update_path():
 
 try:
     from practice_bidding.tests import parser_tests
+    from practice_bidding.tests import formula_module_tests
     from practice_bidding.tests import xml_parser_tests
     from practice_bidding.tests import test_robot_bidding
     from practice_bidding.tests import test_main
@@ -25,6 +26,7 @@ except ImportError:
     _update_path()
 
     from practice_bidding.tests import parser_tests
+    from practice_bidding.tests import formula_module_tests
     from practice_bidding.tests import xml_parser_tests
     from practice_bidding.tests import test_robot_bidding
     from practice_bidding.tests import test_main
@@ -40,6 +42,7 @@ def main():
     loader = unittest.TestLoader()
     suite = unittest.TestSuite()
     suite.addTests(loader.loadTestsFromModule(parser_tests))
+    suite.addTests(loader.loadTestsFromModule(formula_module_tests))
     suite.addTests(loader.loadTestsFromModule(xml_parser_tests))
     suite.addTests(loader.loadTestsFromModule(test_robot_bidding))
     suite.addTests(loader.loadTestsFromModule(test_main))
