@@ -73,6 +73,21 @@ def get_xml_source(parse: Callable[[str], ParseResults]) -> str:
     return filepath
 
 
+def _get_final_contract(parse_method,
+                        rejection_options) -> (bool, str):
+    result = None
+    help_message = ("Enter the correct contract in the form '4HS' for"
+                    " 4 hearts by South. Else, enter 'back' or 'no' to "
+                    "skip entering the correct final contract.")
+    input_, result = parse_method(
+        "Please enter the final contract: ",
+        {ParseResults.BridgeContract}.extend(rejection_options),
+        help_message)
+
+    # Convert to upper case for returning a bridge contract.
+    return result not in rejection_options, input_.upper()
+
+
 def _play_board(program, get_user_input, parse_user_input):
     print(f"\nBoard: {program.board_number}. Vulnerability: "
           f"{program.vulnerability}")
@@ -93,24 +108,12 @@ def _play_board(program, get_user_input, parse_user_input):
 
     input_ = input("Is this the correct final contract? (y/n) ")
     if parse_user_input(input_) == ParseResults.No:
-        result = None
-        while result not in {ParseResults.Back, ParseResults.No}:
-            input_ = input("Please enter the final contract: ")
-            result = parse_user_input(input_)
-            if result == ParseResults.BridgeContract:
-                contract = input_.upper()
-
-                if contract not in {"P", "PASS"}:
-                    dd_result = program.get_double_dummy_result(contract)
-                    print(f"Double dummy result: {contract} {dd_result}")
-                break
-            elif result == ParseResults.Help:
-                print("Enter the correct contract in the form '4HS' for"
-                      " 4 hearts by South. Else, enter 'back' or 'no' to "
-                      "skip entering the correct final contract.")
-            else:
-                print("Sorry, that wasn't a valid contract. Example: "
-                      "4HS for 4 hearts by South.")
+        rejection_options = {ParseResults.Back, ParseResults.No}
+        result, contract = _get_final_contract(program.get_validated_input,
+                                               rejection_options)
+        if result and contract not in {"P", "PASS"}:
+            dd_result = program.get_double_dummy_result(contract)
+            print(f"Double dummy result: {contract} {dd_result}")
 
     # TODO: Add optimal contract (dd_solve).
 
