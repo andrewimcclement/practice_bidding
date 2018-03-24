@@ -119,25 +119,10 @@ class MultiCondition(BaseCondition):
     def __init__(self, conditions=None):
         self.conditions = list(conditions or [])
 
-    # Should use self.conditions to determine acceptance.
-    def _get_accept(self):
-        raise NotImplementedError("Abstract method.")
-
-    # Should use self.conditions to get info from them.
-    def _get_info(self):
-        raise NotImplementedError("Abstract method.")
-
     @property
     def condition_count(self):
         return sum((condition.condition_count
                     for condition in self.conditions))
-
-    @property
-    def info(self):
-        return self._get_info()
-
-    def accept(self, hand):
-        return self._get_accept()(hand)
 
 
 class Condition(MultiCondition):
@@ -151,19 +136,6 @@ class Condition(MultiCondition):
     def _conditions(self):
         return self.evaluation_conditions + self.shape_conditions
 
-    def _get_accept(self):
-        def _accept(hand):
-            for condition in self.conditions:
-                if not condition.accept(hand):
-                    return False
-
-            return True
-
-        return _accept
-
-    def _get_info(self):
-        return str(self)
-
     def accept(self, hand):
         """
         Returns boolean as to whether the hand satisfies the condition or not.
@@ -174,7 +146,8 @@ class Condition(MultiCondition):
 
         return True
 
-    def __str__(self):
+    @property
+    def info(self):
         return (f"{self.evaluation_conditions}"
                 f"\n{self.shape_conditions}")
 
@@ -184,21 +157,20 @@ class AndCondition(MultiCondition):
     Collection of conditions which are all required to be true to accept a
     hand.
     """
-    def _get_info(self):
+    @property
+    def info(self):
         infos = (condition.info for condition in self.conditions)
         return f"AND ({', '.join(infos)})"
 
-    def _get_accept(self):
-        def _accept(hand):
-            """
-            If all conditions are satisfied by the hand or not.
-            """
-            for condition in self.conditions:
-                if not condition.accept(hand):
-                    return False
+    def accept(self, hand):
+        """
+        If all conditions are satisfied by the hand or not.
+        """
+        for condition in self.conditions:
+            if not condition.accept(hand):
+                return False
 
-            return True
-        return _accept
+        return True
 
 
 class NotCondition(BaseCondition):
@@ -226,16 +198,14 @@ class OrCondition(MultiCondition):
     accept a hand.
     """
 
-    def _get_info(self):
+    @property
+    def info(self):
         infos = (condition.info for condition in self.conditions)
         return f"OR ({', '.join(infos)})"
 
-    def _get_accept(self):
-        def _accept(hand):
-            for condition in self.conditions:
-                if condition.accept(hand):
-                    return True
+    def accept(self, hand):
+        for condition in self.conditions:
+            if condition.accept(hand):
+                return True
 
-            return False
-
-        return _accept
+        return False

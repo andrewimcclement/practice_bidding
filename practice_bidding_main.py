@@ -81,7 +81,7 @@ def _get_final_contract(parse_method,
                     "skip entering the correct final contract.")
     input_, result = parse_method(
         "Please enter the final contract: ",
-        {ParseResults.BridgeContract}.extend(rejection_options),
+        {ParseResults.BridgeContract}.union(rejection_options),
         help_message)
 
     # Convert to upper case for returning a bridge contract.
@@ -155,8 +155,7 @@ def main():
     """
 
     # Set a prettier printed version of a Hand object.
-    # TODO: this doesn't work for some reason.
-    Hand._short_str = hand_to_str
+    Hand.__str__ = hand_to_str
 
     program = BiddingProgram()
 
