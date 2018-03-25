@@ -18,7 +18,7 @@ from practice_bidding.bridge_parser import ParseResults
 from practice_bidding.redeal.redeal import Hand
 from practice_bidding.redeal import redeal
 from practice_bidding.robot_bidding import BiddingProgram
-from practice_bidding.xml_parsing.xml_parser import get_bids_from_xml
+from practice_bidding.xml_parsing.xml_parser import XmlReaderForFile
 
 redeal.SUITS_FORCE_UNICODE = True
 
@@ -161,7 +161,8 @@ def main():
 
     try:
         source = get_xml_source(program.parse)
-        bids = get_bids_from_xml(source)
+        reader = XmlReaderForFile(source)
+        bids = reader.get_bids_from_xml(source)
         print_general_bid_details(bids)
         program.set_opening_bids(bids)
         while _play_board(program, program.get_validated_input,

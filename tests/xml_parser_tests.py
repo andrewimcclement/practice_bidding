@@ -9,7 +9,7 @@ import os
 import unittest
 import math
 
-from practice_bidding.xml_parsing.xml_parser import get_bids_from_xml
+from practice_bidding.xml_parsing.xml_parser import XmlReaderForFile
 from practice_bidding.xml_parsing.xml_parser import \
     _parse_formula_for_condition
 from practice_bidding.xml_parsing.xml_parser import VALID_EXPRESSION
@@ -66,7 +66,8 @@ class XmlParserTests(unittest.TestCase):
         systems = {self._acol_location, self._chimaera_location}
         for system in systems:
             with self.subTest(system=system):
-                bids = get_bids_from_xml(system)
+                reader = XmlReaderForFile(system)
+                bids = reader.get_bids_from_xml()
                 expected_accept_values = {True, False}
                 all_bids = []
 

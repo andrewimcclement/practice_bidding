@@ -35,7 +35,10 @@ OPERATOR_MAP = {"==": operator.eq,
                 ">=": operator.ge,
                 ">": operator.gt,
                 "<=": operator.le,
-                "<": operator.lt}
+                "<": operator.lt,
+                "+": operator.add,
+                "-": operator.sub,
+                "*": operator.mul}
 
 
 def standard_shape_points(hand):
@@ -236,24 +239,6 @@ def _get_formula_module(xml_root, current_directory):
     return formula_module
 
 
-def _get_hcp_method(xml_root, get_formula):
-    try:
-        # HCP not defined in formula_module.
-        hcp_style = xml_root.attrib["hcp"]
-    except KeyError:
-        print("Warning: HCP style not defined. "
-              "Taking hcp from formula module.")
-        hcp_style = None
-
-    if hcp_style == "standard":
-        return HCP
-    elif hcp_style == "chimaera":
-        return CHIMAERA_HCP
-
-    # Default.
-    return get_formula("hcp")
-
-
 def _get_shape_conditions(xml_condition):
     shapes = xml_condition.findall("shape")
     shape_conditions = []
@@ -296,98 +281,104 @@ def _get_shape_conditions(xml_condition):
     return shape_conditions
 
 
-def get_bids_from_xml(filepath=None):
-    """ Returns a dictionary of opening bids. """
-    tree = ET.parse(filepath, ET.XMLParser(encoding="utf-8"))
-    root = tree.getroot()
+class XmlReaderForFile:
+    """ Reads bids from XML for a specific file. """
 
-    # parser = FormulaParser(formula_module)
+    def __init__(self, filepath: str):
+        tree = ET.parse(filepath, ET.XMLParser(encoding="utf-8"))
+        self._root = tree.getroot()
 
-    directory = os.path.dirname(filepath)
-    formula_module = _get_formula_module(root, directory)
+        directory = os.path.dirname(filepath)
+        self._formula_module = _get_formula_module(self._root, directory)
 
-    def get_formula(method_name):
+        self.hcp = self._get_hcp_method()
+        # Requires self._hcp to be defined, usually.
+        self.points = self._get_points_method()
+
+    def _get_formula(self, method_name):
         try:
-            return getattr(formula_module, method_name)
+            return getattr(self.formula_module, method_name)
         except AttributeError:
             try:
                 return getattr(standard_formulas, method_name)
             except AttributeError:  # pragma: no cover
-                location = os.path.realpath(formula_module.__file__)
+                location = os.path.realpath(self._formula_module.__file__)
                 raise NotImplementedError(f"{method_name} not defined in "
                                           f"{location}.")
 
-    hcp = _get_hcp_method(root, get_formula)
+    def _get_hcp_method(self):
+        try:
+            # HCP not defined in formula_module.
+            hcp_style = self._root.attrib["hcp"]
+        except KeyError:
+            hcp_style = None
 
-    try:
-        shape_style = root.attrib["shape"]
-        if shape_style == "standard":
-            shape_points = standard_shape_points
-        elif shape_style == "freakiness":
-            shape_points = freakness_points
+        if hcp_style == "standard":
+            return HCP
+        elif hcp_style == "chimaera":
+            return CHIMAERA_HCP
 
-        def _points(hand):
-            return hcp(hand) + shape_points(hand)
-    except KeyError:
-        _points = get_formula("points")
+        # Default.
+        return self._get_formula("hcp")
 
-    def _define_bid(xml_bid) -> Bid:
-        value, desc = xml_bid.find("value").text, xml_bid.find("desc").text
+    def _get_points_method(self):
+        try:
+            shape_style = self._root.attrib["shape"]
+            if shape_style == "standard":
+                shape_points = standard_shape_points
+            elif shape_style == "freakiness":
+                shape_points = freakness_points
 
-        and_ = xml_bid.find("and")
-        or_ = xml_bid.find("or")
-        not_ = xml_bid.find("not")
-        xml_condition = and_ or or_ or not_
+            def _points(hand):
+                return self.hcp(hand) + shape_points(hand)
+        except KeyError:
+            _points = self._get_formula("points")
 
-        if xml_condition:
-            # In new style should have exactly one condition for a bid.
-            assert bool(and_) + bool(or_) + bool(not_) == 1
-            condition = _define_logical_condition(xml_condition)
-            return Bid(value, desc, condition)
+        return _points
 
-        # New style and/or not defined. Take legacy path.
-        xml_conditions = xml_bid.findall("condition")
+    def _get_evaluation_conditions(self, xml_condition):
+        evaluation_conditions = []
+        evaluation = xml_condition.find("evaluation")
+        if not evaluation:
+            return evaluation_conditions
 
-        # Include conditions
-        or_ = OrCondition()
-        # All conditions
-        and_ = AndCondition([or_])
+        for method in evaluation:
+            minimum, maximum = _get_min_max_for_method(method)
 
-        for xml_condition in xml_conditions:
-            evaluation_conditions = \
-                _get_evaluation_conditions(xml_condition)
+            if method.tag == "hcp":
+                evaluation_condition = EvaluationCondition(
+                    self.hcp, minimum, maximum)
+            elif method.tag == "tricks":
+                tricks = self._get_formula("tricks")
 
-            evaluation_conditions.extend(_get_formulas(xml_condition))
-            shape_conditions = _get_shape_conditions(xml_condition)
-            type_ = xml_condition.attrib["type"]
+                evaluation_condition = EvaluationCondition(
+                    tricks, minimum, maximum)
+            elif method.tag == "points":
+                evaluation_condition = EvaluationCondition(
+                    self.points, minimum, maximum)
+            else:
+                raise NotImplementedError(method.tag)
 
-            condition = Condition(evaluation_conditions, shape_conditions)
+            evaluation_conditions.append(evaluation_condition)
 
-            if type_ == "include":
-                or_.conditions.append(condition)
-            if type_ == "exclude":
-                condition = NotCondition(condition)
-                and_.conditions.append(condition)
-            elif type_ != "include":  # pragma: no cover
-                raise NotImplementedError(
-                    type_, "Expected 'include' or 'exclude'")
+        return evaluation_conditions
 
-        return Bid(value, desc, and_)
-
-    def _define_logical_condition(xml_condition) -> BaseCondition:
+    def _define_logical_condition(self, xml_condition) -> BaseCondition:
         tag = xml_condition.tag
         child_conditions = []
 
         for and_ in xml_condition.findall("and"):
-            child_conditions.append(_define_logical_condition(and_))
+            child_conditions.append(self._define_logical_condition(and_))
 
         for or_ in xml_condition.findall("or"):
-            child_conditions.append(_define_logical_condition(or_))
+            child_conditions.append(self._define_logical_condition(or_))
 
         for not_ in xml_condition.findall("not"):
-            child_conditions.append(_define_logical_condition(not_))
+            child_conditions.append(self._define_logical_condition(not_))
 
-        child_conditions.extend(_get_evaluation_conditions(xml_condition))
+        child_conditions.extend(
+            self._get_evaluation_conditions(xml_condition))
+        child_conditions.extend(self._get_formulas(xml_condition))
         child_conditions.extend(_get_shape_conditions(xml_condition))
 
         if tag == "and":
@@ -404,46 +395,64 @@ def get_bids_from_xml(filepath=None):
 
     # Using no cover since _parse_formula not implemented yet.
     # TODO: Remove this when it gets implemented.
-    def _get_formulas(xml_condition):  # pragma: no cover
+    def _get_formulas(self, xml_condition):  # pragma: no cover
         formulas = []
         for xml_formula in xml_condition.findall("formula"):
             formula_text = xml_formula.text
-            formula = _parse_formula(formula_text, formula_module)
+            formula = _parse_formula(formula_text, self._formula_module)
             formulas.append(formula)
 
         return formulas
 
-    def _get_evaluation_conditions(xml_condition):
-        evaluation_conditions = []
-        evaluation = xml_condition.find("evaluation")
-        if not evaluation:
-            return evaluation_conditions
+    def _define_bid(self, xml_bid) -> Bid:
+        value, desc = xml_bid.find("value").text, xml_bid.find("desc").text
 
-        for method in evaluation:
-            minimum, maximum = _get_min_max_for_method(method)
+        and_ = xml_bid.find("and")
+        or_ = xml_bid.find("or")
+        not_ = xml_bid.find("not")
+        xml_condition = and_ or or_ or not_
 
-            if method.tag == "hcp":
-                evaluation_condition = EvaluationCondition(
-                    hcp, minimum, maximum)
-            elif method.tag == "tricks":
-                tricks = get_formula("tricks")
+        if xml_condition:
+            # In new style should have exactly one condition for a bid.
+            assert bool(and_) + bool(or_) + bool(not_) == 1
+            condition = self._define_logical_condition(xml_condition)
+            return Bid(value, desc, condition)
 
-                evaluation_condition = EvaluationCondition(
-                    tricks, minimum, maximum)
-            elif method.tag == "points":
-                evaluation_condition = EvaluationCondition(
-                    _points, minimum, maximum)
+        # New style and/or not defined. Take legacy path.
+        xml_conditions = xml_bid.findall("condition")
+
+        # Include conditions
+        or_ = OrCondition()
+        # All conditions
+        and_ = AndCondition([or_])
+
+        for xml_condition in xml_conditions:
+            evaluation_conditions = \
+                self._get_evaluation_conditions(xml_condition)
+
+            evaluation_conditions.extend(self._get_formulas(xml_condition))
+            shape_conditions = _get_shape_conditions(xml_condition)
+            # We do not allow new style formulas in old style conditions.
+
+            type_ = xml_condition.attrib["type"]
+
+            condition = Condition(evaluation_conditions, shape_conditions)
+
+            if type_ == "include":
+                or_.conditions.append(condition)
+            elif type_ == "exclude":
+                condition = NotCondition(condition)
+                and_.conditions.append(condition)
             else:
-                raise NotImplementedError(method.tag)
+                raise NotImplementedError(
+                    type_, "Expected 'include' or 'exclude'")
 
-            evaluation_conditions.append(evaluation_condition)
+        return Bid(value, desc, and_)
 
-        return evaluation_conditions
-
-    def _find_all_children_bids(bid, xml_bid):
+    def _find_all_children_bids(self, bid, xml_bid):
         for child_xml_bid in xml_bid.findall("bid"):
             try:
-                child_bid = _define_bid(child_xml_bid)
+                child_bid = self._define_bid(child_xml_bid)
             except Exception:  # pragma: no cover
                 # -------------------------------------------------------------
                 # This is very useful at finding the correct bit of XML which
@@ -468,28 +477,28 @@ def get_bids_from_xml(filepath=None):
             child_bid.parent = bid
             assert child_bid.value not in bid.children
             bid.children[child_bid.value] = child_bid
-            _find_all_children_bids(child_bid, child_xml_bid)
+            self._find_all_children_bids(child_bid, child_xml_bid)
 
-    # The actual function.
-    result = {}
-    for xml_bid in root:
-        try:
-            bid = _define_bid(xml_bid)
-        except Exception:  # pragma: no cover
-            value = xml_bid.find("value")
-            if value:
-                print(f"Error in XML of {value.text}")
-
+    def get_bids_from_xml(self):
+        result = {}
+        for xml_bid in self._root:
             try:
-                id_ = xml_bid.attrib["id"]
-                print(f"Error in XML of bid with ID {id_}")
-            except KeyError:
-                pass
+                bid = self._define_bid(xml_bid)
+            except Exception:  # pragma: no cover
+                value = xml_bid.find("value")
+                if value:
+                    print(f"Error in XML of {value.text}")
 
-            raise
+                try:
+                    id_ = xml_bid.attrib["id"]
+                    print(f"Error in XML of bid with ID {id_}")
+                except KeyError:
+                    pass
 
-        assert bid.value not in result
-        result[bid.value] = bid
-        _find_all_children_bids(bid, xml_bid)
+                raise
 
-    return result
+            assert bid.value not in result
+            result[bid.value] = bid
+            self._find_all_children_bids(bid, xml_bid)
+
+        return result
