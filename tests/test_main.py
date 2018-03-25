@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 from practice_bidding.practice_bidding_main import get_xml_source
 from practice_bidding.practice_bidding_main import DEFAULT_XML_SOURCE
-from practice_bidding.practice_bidding_main import get_bids_from_xml
+from practice_bidding.xml_parsing.xml_parser import XmlReaderForFile
 from practice_bidding.practice_bidding_main import _get_general_bid_details
 from practice_bidding.bridge_parser import parse_with_quit
 
@@ -26,7 +26,8 @@ class TestMain(unittest.TestCase):
                          DEFAULT_XML_SOURCE)
 
     def test_count_bids(self):
-        bids = get_bids_from_xml(DEFAULT_XML_SOURCE)
+        reader = XmlReaderForFile(DEFAULT_XML_SOURCE)
+        bids = reader.get_bids_from_xml()
         bid_count, non_trivial_bid_count = _get_general_bid_details(bids)
         self.assertGreaterEqual(bid_count, non_trivial_bid_count)
         self.assertGreaterEqual(non_trivial_bid_count, 0)

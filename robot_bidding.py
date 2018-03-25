@@ -277,7 +277,8 @@ class BiddingProgram:
         for i, key in enumerate(settings_keys):
             print(f"{i}: {key}")
 
-        while True:
+        result = None
+        while result != ParseResults.Back:
             message = ("Enter a key to edit the value for that key, or "
                        "'back' to exit the settings editor.\n"
                        "'Exit' will end the program.\n")

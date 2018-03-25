@@ -6,8 +6,9 @@ Created on Sat Feb 17 22:35:39 2018
 __author__ = "Andrew I McClement"
 
 import unittest
+from unittest.mock import patch
 from practice_bidding.practice_bidding_main import DEFAULT_XML_SOURCE
-from practice_bidding.practice_bidding_main import get_bids_from_xml
+from practice_bidding.practice_bidding_main import XmlReaderForFile
 from practice_bidding.robot_bidding import BiddingProgram, Bid
 
 
@@ -15,10 +16,23 @@ class RobotBiddingTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls._chimaera_bids = get_bids_from_xml(DEFAULT_XML_SOURCE)
+        reader = XmlReaderForFile(DEFAULT_XML_SOURCE)
+        cls._chimaera_bids = reader.get_bids_from_xml()
 
     def setUp(self):
         self._program = BiddingProgram()
+
+    @patch("builtins.print")
+    @patch("builtins.input")
+    def test_edit_settings(self, mock_input, mock_print):
+        for i, setting in enumerate(self._program._settings):
+            with self.subTest(setting=setting):
+                # Select the correct setting, yes to change, back to exit.
+                mock_input.side_effect = [f"{i}", "y", "back"]
+                original_value = self._program._settings[setting]
+                self._program.edit_settings()
+                new_value = self._program._settings[setting]
+                self.assertNotEqual(new_value, original_value)
 
     def test_generate_new_deal(self):
         """ Assert that a new deal is generated randomly. """
