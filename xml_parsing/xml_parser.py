@@ -6,6 +6,7 @@ Created on Sun Dec 17 04:44:04 2017
 """
 
 import os
+import ast
 import importlib.util
 import math
 import xml.etree.ElementTree as ET
@@ -39,6 +40,32 @@ OPERATOR_MAP = {"==": operator.eq,
                 "+": operator.add,
                 "-": operator.sub,
                 "*": operator.mul}
+
+AST_OPERATOR_MAP = {ast.Eq: operator.eq,
+                    ast.NotEq: operator.ne,
+                    ast.Gt: operator.gt,
+                    ast.GtE: operator.ge,
+                    ast.LtE: operator.le,
+                    ast.Lt: operator.lt,
+                    ast.Add: operator.add,
+                    ast.Mult: operator.mul,
+                    ast.Sub: operator.sub}
+
+
+def eval_expression(expression: str):
+    return _eval_node(ast.parse(expression, mode="eval").body)
+
+
+def _eval_node(node):
+    if isinstance(node, ast.Num):
+        return node.n
+    elif isinstance(node, ast.BinOp):
+        return AST_OPERATOR_MAP[type(node.op)](_eval_node(node.left),
+                                               _eval_node(node.right))
+    elif isinstance(node, ast.UnaryOp):
+        return AST_OPERATOR_MAP[type(node.op)](_eval_node(node.operand))
+    else:
+        raise TypeError(node)
 
 
 def standard_shape_points(hand):
@@ -111,7 +138,7 @@ def _parse_formula(formula, formula_module):  # pragma: no cover
 
     def _get_accept(formula_text):
         def accept(hand):
-            return eval(formula_text)
+            return eval_expression(formula_text)
 
         return accept
 
@@ -201,14 +228,14 @@ def _parse_formula_for_condition(formula):
                                 .replace("c", str(c)))
         assert SAFE_EXPRESSION.match(evaluated_expression), \
             evaluated_expression
-        return eval(evaluated_expression)
+        return eval_expression(evaluated_expression)
 
     def _comparison_accept(comparison, hand) -> bool:
         lhs, operator_string, rhs = comparison
-        operator = OPERATOR_MAP[operator_string]
+        binary_operator = OPERATOR_MAP[operator_string]
         evaluated_lhs = _evaluate_expression(lhs, hand.shape)
         evaluated_rhs = _evaluate_expression(rhs, hand.shape)
-        return operator(evaluated_lhs, evaluated_rhs)
+        return binary_operator(evaluated_lhs, evaluated_rhs)
 
     def _accept(hand) -> bool:
         for comparison in comparisons:

@@ -162,7 +162,7 @@ def main():
     try:
         source = get_xml_source(program.parse)
         reader = XmlReaderForFile(source)
-        bids = reader.get_bids_from_xml(source)
+        bids = reader.get_bids_from_xml()
         print_general_bid_details(bids)
         program.set_opening_bids(bids)
         while _play_board(program, program.get_validated_input,
