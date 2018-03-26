@@ -35,15 +35,40 @@ __Defining the XML bidding system__:
 See example_systems/chimaera.xml as an example.
 
 &lt;bid&gt; element must always have a &lt;value&gt; element and a &lt;desc&gt;
-element. For a bid to be recognised by the program, it must have a
-&lt;condition&gt; element. A &lt;condition&gt; element must have a "type" tag
-as either "include" or "exclude" depending on whether the hand type should be
-included as a valid hand type or excluded as an invalid hand type for that bid.
+element. To be bid by the program, it must have at least one logical element
+as a child (to define when it should be bid). Subsequent bids should be
+included as child &lt;bid&gt; elements.
 
-An &lt;evaluation&gt; element can be added inside a &lt;condition&gt; element.
+###### Logical elements
+&lt;and&gt;, &lt;or&gt;, &lt;not&gt; elements allow the inclusion of arbitrary
+logical flows into the requirements for a bid. Only one such element should be
+a direct child of a &lt;bid&gt; element.
+
+A &lt;not&gt; element can only have one conditional element inside. It will
+pass the hand if the condition inside does _not_ pass the hand.
+
+An &lt;and&gt; element can have multiple conditional elements inside. It will
+pass the hand if the hand does not fail any of the child conditional elements.
+
+An &lt;or&gt; element can have multiple conditional elements inside. It will
+pass the hand if the hand passes at least one of the child elements.
+
+Hence an empty &lt;and&gt; element will pass every hand while an empty
+&lt;or&gt; element will fail every hand.
+
+[Deprecated]
+Alternatively &lt;condition&gt; elements may be used.
+A &lt;condition&gt; element must have a "type" tag as either "include" or
+"exclude" depending on whether the hand type should be
+included as a valid hand type or excluded as an invalid hand type for that bid.
+If there are multiple &lt;condition&gt; elements, a hand must pass the
+requirements for at least one include condition and not pass the requirements
+for any of the exclude conditions. (An empty condition will pass all hands.)
+
+###### Non-logical elements
+An &lt;evaluation&gt; element can be added inside a logical element.
 This can have various evaluation methods: &lt;hcp&gt;, &lt;points&gt; and
-&lt;tricks&gt;. Note that &lt;tricks&gt; is not yet implemented.
-With these elements, you can define &lt;min&gt; and &lt;max&gt; elements.
+&lt;tricks&gt;. With these elements, you can define &lt;min&gt; and &lt;max&gt; elements.
 
   - &lt;hcp&gt; evaluates a hand using the Milton Work Point Count if the
     attribute `hcp="standard"` is added to the root of the XML system file.
@@ -71,13 +96,14 @@ element. These must have a "type" tag, which must be one of "general", "shape",
   - "shape" allows you to define precise shapes eg 5431 for 5 spades, 4 hearts,
     3 diamonds and 1 club, or (54)xx for 54 in the majors.
 
-  - A suit allows you define &lt;min&gt; and &lt;max&gt; lengths for that suit
-    (inclusive). Note if min > max the program will throw when parsing the
-    XML file.
+  - [DEPRECATED] A suit allows you define &lt;min&gt; and &lt;max&gt; lengths
+    for that suit (inclusive). Note if min > max the program will throw when
+    parsing the XML file.
 
-  - "longer_than" and "strictly_longer_than" &lt;shape&gt; elements require
-    &lt;longer_suit&gt; and &lt;shorter_suit&gt; elements inside and allow you
-    to define conditions such as `len(hearts) > len(spades)` for a hand.
+  - [DEPRECATED] "longer_than" and "strictly_longer_than" &lt;shape&gt;
+    elements require &lt;longer_suit&gt; and &lt;shorter_suit&gt; elements
+    inside and allow you to define conditions such as
+    `len(hearts) > len(spades)` for a hand.
 
   - "formula" &lt;shape&gt; elements allows the input of a equation in the
     lengths of the suits, e.g. `hearts + spades > diamonds + clubs`.
