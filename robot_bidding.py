@@ -248,7 +248,12 @@ class BiddingProgram:
                 bid = self._program_bid(current_hand)
                 break
 
-            print(potential_bids.keys())
+            if not self._settings["display_meaning_of_possible_bids"]:
+                print(potential_bids.keys())
+            else:
+                for key, bid in potential_bids.items():
+                    print(f"{key}: {bid.description}")
+
             selected, _ = self.get_validated_input(
                 "Your bid: ",
                 {ParseResults.BridgeBid},
