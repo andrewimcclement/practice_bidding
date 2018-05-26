@@ -196,6 +196,35 @@ Law of total tricks.
                 </hcp>
               </evaluation>
             </condition>
+            
+            <bid id="0000000">
+              <value>2d</value>
+              <desc>No 4cM.</desc>
+              
+              <and>
+                <shape type="formula">hearts &lt; 4</shape>
+                <shape type="formula">spades &lt; 4</shape>
+              </and>
+            </bid>
+            
+            <bid id="0000001">
+              <value>2h</value>
+              <desc>4+ hearts.</desc>
+              
+              <and>
+                <shape type="formula">hearts &gt;= 4</shape>
+              </and>
+            </bid>
+            
+            <bid id="0000002">
+              <value>2s</value>
+              <desc>4+ spades (not 4 hearts).</desc>
+              
+              <and>
+                <shape type="formula">hearts &lt; 4</shape>
+                <shape type="formula">spades &gt;= 4</shape>
+              </and>
+            </bid>
           </bid>
 
           <bid id="000001">
@@ -1559,7 +1588,9 @@ Law of total tricks.
           <value>2n</value>
           <desc>Relay.</desc>
           
-          <and></and>
+          <and>
+            <shape type="general">any</shape>
+          </and>
           
           <bid id="020300">
             <value>3c</value>
@@ -1765,31 +1796,90 @@ Law of total tricks.
           <bid id="030001">
             <value>2n</value>
             <desc>4 hearts, 3- spades.</desc>
+            
+            <and>
+              <shape type="formula">hearts &gt;= 4</shape>
+              <shape type="formula">spades &lt; 4</shape>
+            </and>
           </bid>
 
           <bid id="030002">
             <value>3c</value>
             <desc>5 clubs, so 5332 shape.</desc>
+            
+            <shape type="formula">clubs == 5</shape>
+            
+            <bid id="0300020">
+              <value>3d</value>
+              <desc>Relay.</desc>
+              
+              <and>
+                <shape type="general">any</shape>
+              </and>
+              
+              <bid id="03000200">
+                <value>3h</value>
+                <desc>3325</desc>
+                
+                <and>
+                  <shape type="shape">3325</shape>
+                </and>
+              </bid>
+              
+              <bid id="03000201">
+                <value>3s</value>
+                <desc>3235</desc>
+                
+                <and>
+                  <shape type="shape">3235</shape>
+                </and>
+              </bid>
+              
+              <bid id="03000202">
+                <value>3n</value>
+                <desc>2335</desc>
+                
+                <and>
+                  <shape type="shape">2335</shape>
+                </and>
+              </bid>
+            </bid>
           </bid>
 
           <bid id="030003">
             <value>3d</value>
             <desc>5 diamonds, so 5332 shape.</desc>
+            
+            <and>
+              <shape type="formula">diamonds == 5</shape>
+            </and>
           </bid>
 
           <bid id="030004">
             <value>3h</value>
             <desc>3343 shape.</desc>
+            
+            <and>
+              <shape type="shape">3343</shape>
+            </and>
           </bid>
 
           <bid id="030005">
             <value>3s</value>
             <desc>2344 shape.</desc>
+            
+            <and>
+              <shape type="shape">2344</shape>
+            </and>
           </bid>
 
           <bid id="030006">
             <value>3n</value>
             <desc>3244 shape.</desc>
+            
+            <and>
+              <shape type="shape">3244</shape>
+            </and>
           </bid>
         </bid>
       </bid>
@@ -1823,6 +1913,60 @@ Law of total tricks.
               </points>
             </evaluation>
           </condition>
+          
+          <bid id="030100">
+            <value>2n</value>
+            <desc>4 spades.</desc>
+            
+            <and>
+              <shape type="formula">spades == 4</shape>
+            </and>
+          </bid>
+          
+          <bid id="030101">
+            <value>3c</value>
+            <desc>4 clubs.</desc>
+            
+            <and>
+              <shape type="formula">clubs == 4</shape>
+            </and>
+          </bid>
+          
+          <bid id="030102">
+            <value>3d</value>
+            <desc>4 diamonds.</desc>
+            
+            <and>
+              <shape type="formula">diamonds == 4</shape>
+            </and>
+          </bid>
+          
+          <bid id="030103">
+            <value>3h</value>
+            <desc>3433</desc>
+            
+            <and>
+              <shape type="shape">3433</shape>
+            </and>
+          </bid>
+          
+          <bid id="030104">
+            <value>3s</value>
+            <desc>2425</desc>
+            
+            <and>
+              <shape type="shape">2425</shape>
+            </and>
+          </bid>
+          
+          <bid id="030105">
+            <value>3n</value>
+            <desc>2452</desc>
+            
+            <and>
+              <shape type="shape">2452</shape>
+            </and>
+          </bid>
         </bid>
 
         <bid id="03019">
@@ -1877,6 +2021,33 @@ Law of total tricks.
         <bid id="03030">
           <value>3c</value>
           <desc>Relay.</desc>
+          
+          <and>
+            <shape type="general">any</shape>
+          </and>
+          
+          <bid id="030300">
+            <value>3d</value>
+            <desc>3343</desc>
+            
+            <and>
+              <shape type="shape">3343</shape>
+            </and>
+          </bid>
+          
+          <bid id="030301">
+            <value>3h</value>
+            <desc>3334</desc>
+            
+            <and>
+              <shape type="shape">3334</shape>
+            </and>
+          </bid>
+          
+          <bid id="030302">
+            <value>3s</value>
+            <desc>3244</desc>
+          </bid>
         </bid>
       </bid>
 
@@ -1893,6 +2064,15 @@ Law of total tricks.
             </hcp>
           </evaluation>
         </condition>
+        
+        <bid id="03040">
+          <value>3d</value>
+          <desc>Relay</desc>
+          
+          <and>
+            <shape type="general">any</shape>
+          </and>
+        </bid>
       </bid>
 
       <bid id="0305">
@@ -1968,7 +2148,9 @@ Law of total tricks.
       <value>2h</value>
       <desc>Relay</desc>
 
-      <and></and>
+      <and>
+        <shape type="general">any</shape>
+      </and>
       
       <bid id="0500">
         <value>2s</value>
@@ -2042,7 +2224,9 @@ Law of total tricks.
       <value>2n</value>
       <desc>Relay.</desc>
       
-      <and></and>
+      <and>
+        <shape type="general">any</shape>
+      </and>
       
       <bid id="0700">
         <value>3c</value>
@@ -2072,9 +2256,47 @@ Law of total tricks.
   <bid id="09">
     <value>3c</value>
     <desc>8-11(12) hcp, 4441 shape with black singleton.</desc>
+    
+    <and>
+      <evaluation>
+        <hcp>
+          <min>7.5</min>
+          <max>11.75</max>
+        </hcp>
+      </evaluation>
+      
+      <shape type="shape">(4)44(1)</shape>
+    </and>
+    
+    <bid id="090">
+      <value>3d</value>
+      <desc>Which singleton?</desc>
+      
+      <and>
+        <shape type="general">any</shape>
+      </and>
+      
+      <bid id="0900">
+        <value>3h</value>
+        <desc>4441</desc>
+        
+        <and>
+          <shape type="shape">4441</shape>
+        </and>
+      </bid>
+      
+      <bid id="0901">
+        <value>3s</value>
+        <desc>1444</desc>
+        
+        <and>
+          <shape type="shape">1444</shape>
+        </and>
+      </bid>
+    </bid>
   </bid>
 
-  <bid id="09">
+  <bid id="0a">
     <value>3d</value>
     <desc>8-11(12) hcp, 4441 shape with red singleton.</desc>
 
@@ -2088,9 +2310,36 @@ Law of total tricks.
 
       <shape type="shape">4(41)4</shape>
     </condition>
+    
+    <bid id ="0a0">
+      <value>3h</value>
+      <desc>Which singleton?</desc>
+      
+      <and>
+        <shape type="general">any</shape>
+      </and>
+      
+      <bid id="0a00">
+        <value>3s</value>
+        <desc>4414</desc>
+        
+        <and>
+          <shape type="shape">4414</shape>
+        </and>
+      </bid>
+      
+      <bid id="0a01">
+        <value>3n</value>
+        <desc>4144</desc>
+        
+        <and>
+          <shape type="shape">4144</shape>
+        </and>
+      </bid>
+    </bid>
   </bid>
 
-  <bid id="0a">
+  <bid id="0b">
     <value>3h</value>
     <desc>Solid 7 card suit. AKQJxxx+</desc>
 
@@ -2164,7 +2413,7 @@ Law of total tricks.
     </condition>
   </bid>
 
-  <bid id="0b">
+  <bid id="0c">
     <value>3s</value>
     <desc>Solid 8 card suit. AKQxxxxx+</desc>
 
@@ -2237,7 +2486,7 @@ Law of total tricks.
     </condition>
   </bid>
 
-  <bid id="0c">
+  <bid id="0d">
     <value>3n</value>
     <desc>Solid 9+ card suit. AKQxxxxxx+</desc>
 
@@ -2692,6 +2941,41 @@ Law of total tricks.
           </points>
         </evaluation>
       </condition>
+    </bid>
+    
+    <bid id="111">
+      <value>2c</value>
+      <desc>13-15 points. Longer diamonds than clubs. (5+ diamonds)</desc>
+      
+      <and>
+        <evaluation>
+          <points>
+            <max>15.5</max>
+          </points>
+        </evaluation>
+        
+        <shape type="formula">spades &lt; 4</shape>
+        <shape type="formula">clubs &gt;= 4</shape>
+        <shape type="formula">diamonds &gt;= clubs</shape>
+        <shape type="formula">diamonds &gt;= 5</shape>
+      </and>
+    </bid>
+    
+    <bid id="112">
+      <value>2d</value>
+      <desc>13-15 points. 6+ diamonds.</desc>
+      
+      <and>
+        <evaluation>
+          <points>
+            <max>15.5</max>
+          </points>
+        </evaluation>
+        
+        <shape type="formula">diamonds &gt;= 6</shape>
+        <shape type="formula">spades &lt; 4</shape>
+        <shape type="formula">clubs + 2 &lt; diamonds</shape>
+      </and>
     </bid>
   </bid>
 
@@ -4141,6 +4425,7 @@ Law of total tricks.
           <evaluation>
             <hcp>
               <min>10.5</min>
+              <max>11.25</max>
             </hcp>
           </evaluation>
 
@@ -4157,29 +4442,164 @@ Law of total tricks.
         <bid id="40210">
           <value>3d</value>
           <desc>4 clubs, so 4324/4234 shape.</desc>
+          
+          <and>
+            <shape type="formula">clubs == 4</shape>
+          </and>
         </bid>
 
         <bid id="40211">
           <value>3h</value>
           <desc>4 diamonds, so 4342/4243 shape.</desc>
+          
+          <and>
+            <shape type="formula">diamonds == 4</shape>
+          </and>
         </bid>
 
         <bid id="40212">
           <value>3s</value>
           <desc>5 spades (5332 shape).</desc>
+          
+          <shape type="formula">spades == 5</shape>
         </bid>
 
         <bid id="40213">
           <value>3n</value>
           <desc>4333 shape.</desc>
+          
+          <shape type="shape">4333</shape>
         </bid>
       </bid>
 
       <bid id="4022">
         <value>3d</value>
         <desc>ASID</desc>
+        
+        <bid id="40220">
+          <value>3h</value>
+          <desc>Heart doubleton.</desc>
+          
+          <and>
+            <shape type="formula">hearts == 2</shape>
+          </and>
+        </bid>
+        
+        <bid id="40221">
+          <value>3s</value>
+          <desc>4333, minimum.</desc>
+          
+          <and>
+            <shape type="shape">4333</shape>
+            
+            <evaluation>
+              <hcp>
+                <max>13.5</max>
+              </hcp>
+            </evaluation>
+          </and>
+        </bid>
+        
+        <bid id="40222">
+          <value>3n</value>
+          <desc>4333, non-minimum.</desc>
+          
+          <and>
+            <shape type="shape">4333</shape>
+            
+            <evaluation>
+              <hcp>
+                <min>13.75</min>
+              </hcp>
+            </evaluation>
+          </and>
+        </bid>
+        
+        <bid id="40223">
+          <value>4c</value>
+          <desc>Club doubleton.</desc>
+          
+          <and>
+            <shape type="formula">clubs == 2</shape>
+          </and>
+        </bid>
+        
+        <bid id="40224">
+          <value>4d</value>
+          <desc>Diamond doubleton.</desc>
+          
+          <and>
+            <shape type="formula">diamonds == 2</shape>
+          </and>
+        </bid>
+        
+        <bid id="40226">
+          <value>4s</value>
+          <desc>5 spades.</desc>
+          
+          <and>
+            <shape type="formula">spades == 5</shape>
+          </and>
+        </bid>
       </bid>
 
+      <bid id="4023">
+        <value>3h</value>
+        <desc>Ambiguous splinter.</desc>
+        
+        <bid id="40230">
+          <value>3s</value>
+          <desc>Relay ask.</desc>
+          
+          <and>
+            <shape type="general">any</shape>
+          </and>
+          
+          <bid id="402300">
+            <value>3n</value>
+            <desc>Ambiguous void.</desc>
+            
+            <shape type="formula">hearts * diamonds * clubs == 0</shape>
+            
+            <bid id="4023000">
+              <value>4c</value>
+              <desc>Where is the void?</desc>
+              
+              <and>
+                <shape type="general">any</shape>
+              </and>
+              
+              <bid id="40230000">
+                <value>4d</value>
+                <desc>Diamond void.</desc>
+                
+                <and>
+                  <shape type="formula">diamonds == 0</shape>
+                </and>
+              </bid>
+              
+              <bid id="40230001">
+                <value>4h</value>
+                <desc>Heart void.</desc>
+                
+                <and>
+                  <shape type="formula">hearts == 0</shape>
+                </and>
+              </bid>
+              
+              <bid id="40230002">
+                <value>4s</value>
+                <desc>Club void.</desc>
+                
+                <and>
+                  <shape type="formula">clubs == 0</shape>
+                </and>
+              </bid>
+            </bid>
+          </bid>
+        </bid>
+      </bid>
+      
       <bid id="4024">
         <value>3s</value>
         <desc>4+ spades, invitational.</desc>
@@ -4196,6 +4616,32 @@ Law of total tricks.
             <min>4</min>
           </shape>
         </condition>
+      </bid>
+      
+      <bid id="4025">
+        <value>3n</value>
+        <desc>To play.</desc>
+        
+        <and>
+          <shape type="formula">spades &lt; 4</shape>
+        
+          <evaluation>
+            <hcp>
+              <min>11.5</min>
+              <max>17.25</max>
+            </hcp>
+          </evaluation>
+        </and>
+      </bid>
+      
+      <bid id="4026">
+        <value>4c</value>
+        <desc>RKCB in spades.</desc>
+        
+        <bid id="40260">
+          <value>4d</value>
+          <desc>0/3 keycards.</desc>
+        </bid>
       </bid>
 
       <bid id="4029">
@@ -4535,6 +4981,21 @@ Law of total tricks.
           <min>4</min>
         </shape>
       </condition>
+      
+      <bid id="4300">
+        <value>3c</value>
+        <desc>Weak, to play.</desc>
+        
+        <and>
+          <evaluation>
+            <points>
+              <max>11.25</max>
+            </points>
+          </evaluation>
+          
+          <shape type="formula">clubs &gt;= 6</shape>
+        </and>
+      </bid>
     </bid>
 
     <bid id="431">
@@ -4582,6 +5043,21 @@ Law of total tricks.
       <condition type="include">
         <shape type="formula">diamonds &gt;= 4</shape>
       </condition>
+      
+      <bid id="4400">
+        <value>3d</value>
+        <desc>Weak, to play.</desc>
+        
+        <and>
+          <shape type="formula">diamonds &gt;= 6</shape>
+          
+          <evaluation>
+            <points>
+              <max>10.75</max>
+            </points>
+          </evaluation>
+        </and>
+      </bid>
     </bid>
 
     <bid id="441">
@@ -5424,11 +5900,19 @@ Law of total tricks.
     <bid id="800">
       <value>3c</value>
       <desc>5 clubs.</desc>
+      
+      <and>
+        <shape type="formula">clubs &gt;= 5</shape>
+      </and>
     </bid>
 
     <bid id="801">
       <value>3d</value>
       <desc>5 diamonds.</desc>
+      
+      <and>
+        <shape type="formula">diamonds &gt;= 5</shape>
+      </and>
     </bid>
   </bid>
 </bid>
@@ -5771,7 +6255,9 @@ Law of total tricks.
       <value>3n</value>
       <desc>Waiting for partner to declare their long minor.</desc>
       
-      <and></and>
+      <and>
+        <shape type="general">any</shape>
+      </and>
       
       <bid id="9300">
         <value>4c</value>

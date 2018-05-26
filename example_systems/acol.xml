@@ -69,6 +69,20 @@ Weak twos.
   <bid id="00">
     <value>1d</value>
     <desc>6-15 points, 4+ diamonds</desc>
+    
+    <and>
+      <evaluation>
+        <points>
+          <min>6</min>
+          <max>15</max>
+        </points>
+      </evaluation>
+      
+      <shape type="formula">diamonds &gt;= 4</shape>
+      <shape type="formula">diamonds &gt; hearts</shape>
+      <shape type="formula">diamonds &gt; spades</shape>
+      <shape type="formula">clubs &lt;= 5</shape>
+    </and>
   </bid>
 
   <bid id="01">
@@ -179,7 +193,7 @@ Weak twos.
 
 <bid id="1">
   <value>1d</value>
-  <desc></desc>
+  <desc>13-21 points, 4+ diamonds.</desc>
 
   <condition type="include">
     <evaluation>
@@ -243,6 +257,32 @@ Weak twos.
 
     <shape type="shape">4144</shape>
   </condition>
+  
+  <bid id="10">
+    <value>1h</value>
+    <desc>6-15 points, 4+ hearts.</desc>
+    
+    <and>
+      <evaluation>
+        <points>
+          <min>6</min>
+          <max>15</max>
+        </points>
+      </evaluation>
+      
+      <or>
+        <and>
+          <shape type="formula">hearts &gt;= 5</shape>
+          <shape type="formula">hearts &gt; spades</shape>
+        </and>
+        
+        <and>
+          <shape type="formula">hearts == 4</shape>
+          <shape type="formula">spades &lt;= 4</shape>
+        </and>
+      </or>
+    </and>
+  </bid>
 </bid>
 
 <bid id="2">
@@ -274,20 +314,142 @@ Weak twos.
 <bid id="4">
   <value>1n</value>
   <desc>12-14 balanced</desc>
+  
+  <and>
+    <evaluation>
+      <hcp>
+        <min>12</min>
+        <max>14</max>
+      </hcp>
+    </evaluation>
+    
+    <shape type="general">balanced</shape>
+  </and>
+  
+  <bid id="40">
+    <value>2c</value>
+    <desc>Stayman.</desc>
+    
+    <bid id="400">
+      <value>2d</value>
+      <desc>No 4cM.</desc>
+      
+      <and>
+        <shape type="formula">hearts &lt; 4</shape>
+        <shape type="formula">spades &lt; 4</shape>
+      </and>
+      
+      <bid id="4002">
+        <value>2n</value>
+        <desc>Invitational</desc>
+        
+        <and>
+          <evaluation>
+            <hcp>
+              <min>12</min>
+              <max>12</max>
+            </hcp>
+          </evaluation>
+          
+          <shape type="formula">hearts &lt; 5</shape>
+          <shape type="formula">spades &lt; 5</shape>
+        </and>
+      </bid>
+      
+      <bid id="4007">
+        <value>3n</value>
+        <desc>To play</desc>
+        
+        <and>
+          <evaluation>
+            <hcp>
+              <min>13</min>
+              <max>16</max>
+            </hcp>
+          </evaluation>
+          
+          <shape type="formula">hearts &lt; 5</shape>
+          <shape type="formula">spades &lt; 5</shape>
+        </and>      
+      </bid>
+    </bid>
+    
+    <bid id="401">
+      <value>2h</value>
+      <desc>4+ hearts.</desc>
+      
+      <and>
+        <shape type="formula">hearts &gt;= 4</shape>
+      </and>
+    </bid>
+    
+    <bid id="402">
+      <value>2s</value>
+      <desc>4+ spades (not 4 hearts).</desc>
+      
+      <and>
+        <shape type="formula">hearts &lt; 4</shape>
+        <shape type="formula">spades &gt;= 4</shape>
+      </and>
+    </bid>
+  </bid>
 </bid>
 
 <bid id="5">
   <value>2c</value>
   <desc>22+ points, near game force.</desc>
+  
+  <and>
+    <evaluation>
+      <points>
+        <min>22</min>
+      </points>
+    </evaluation>
+    
+    <or>
+      <shape type="general">unbalanced</shape>
+    
+      <evaluation>
+        <hcp>
+          <min>23</min>
+        </hcp>
+      </evaluation>
+    </or>
+  </and>
 </bid>
 
 <bid id="6">
   <value>2d</value>
   <desc>5-10 hcp, 6 diamonds</desc>
+  
+  <and>
+    <shape type="formula">diamonds == 6</shape>
+    <shape type="formula">clubs &lt; 6</shape>
+    <shape type="formula">hearts &lt; 6</shape>
+    <shape type="formula">spades &lt; 6</shape>
+    
+    <evaluation>
+      <points>
+        <max>12</max>
+      </points>
+      
+      <hcp>
+        <min>5</min>
+      </hcp>
+    </evaluation>
+  </and>
 
   <bid id="62">
     <value>2n</value>
     <desc>Ogust (strength and quality ask).</desc>
+    
+    <and>
+      <evaluation>
+        <points>
+          <min>16</min>
+        </points>
+      </evaluation>
+    </and>
 
     <bid id="620">
       <value>3c</value>
@@ -319,6 +481,23 @@ Weak twos.
 <bid id="7">
   <value>2h</value>
   <desc>5-10 hcp, 6 hearts.</desc>
+  
+  <and>
+    <shape type="formula">hearts == 6</shape>
+    <shape type="formula">clubs &lt; 6</shape>
+    <shape type="formula">diamonds &lt; 6</shape>
+    <shape type="formula">spades &lt; 6</shape>
+    
+    <evaluation>
+      <points>
+        <max>12</max>
+      </points>
+      
+      <hcp>
+        <min>5</min>
+      </hcp>
+    </evaluation>
+  </and>
 
   <bid id="62">
     <value>2n</value>
@@ -354,6 +533,21 @@ Weak twos.
 <bid id="8">
   <value>2s</value>
   <desc>5-10 hcp, 6 spades.</desc>
+  
+  <and>
+    <evaluation>
+      <hcp>
+        <min>5</min>
+        <max>10</max>
+      </hcp>
+      
+      <points>
+        <max>12</max>
+      </points>
+    </evaluation>
+    
+    <shape type="formula">spades == 6</shape>
+  </and>
 
   <bid id="62">
     <value>2n</value>
@@ -469,6 +663,16 @@ Weak twos.
 <bid id="a">
   <value>3c</value>
   <desc>Weak, 7+ clubs.</desc>
+  
+  <and>
+    <evaluation>
+      <points>
+        <max>12</max>
+      </points>
+    </evaluation>
+    
+    <shape type="formula">clubs &gt;= 7</shape>
+  </and>
 </bid>
 
 <bid id="b">

@@ -53,8 +53,7 @@ pass the hand if the hand does not fail any of the child conditional elements.
 An &lt;or&gt; element can have multiple conditional elements inside. It will
 pass the hand if the hand passes at least one of the child elements.
 
-Hence an empty &lt;and&gt; element will pass every hand while an empty
-&lt;or&gt; element will fail every hand.
+Empty logical elements will be ignored (and therefore will reject every hand).
 
 [Deprecated]
 Alternatively &lt;condition&gt; elements may be used.
