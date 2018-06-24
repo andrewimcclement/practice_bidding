@@ -287,9 +287,9 @@ Weak twos.
 
 <bid id="2">
   <value>1h</value>
-  <desc></desc>
+  <desc>13-21 points, 4+ hearts.</desc>
 
-  <condition type="include">
+  <and>
     <evaluation>
       <points>
         <min>13</min>
@@ -297,13 +297,94 @@ Weak twos.
       </points>
     </evaluation>
 
-    <shape type="general">unbalanced</shape>
+    <or>
+      <shape type="general">unbalanced</shape>
+    
+      <evaluation>
+        <hcp>
+          <min>15</min>
+          <max>19</max>
+        </hcp>
+      </evaluation>
+    </or>
 
-    <shape type="strictly_longer_than">
-      <longer_suit>hearts</longer_suit>
-      <shorter_suit>spades</shorter_suit>
-    </shape>
-  </condition>
+    <or>
+      <shape type="formula">hearts &gt; spades</shape>
+      
+      <and>
+        <shape type="formula">hearts == 4</shape>
+        <shape type="formula">spades == 4</shape>
+      </and>
+    </or>
+  </and>
+  
+  <bid id="20">
+    <value>1s</value>
+    <desc>6-15 points, 4+ spades</desc>
+    
+    <and>
+      <evaluation>
+        <points>
+          <min>6</min>
+          <max>15</max>
+        </points>
+      </evaluation>
+      
+      <shape type="formula">spades &gt;= 4</shape>
+      <shape type="formula">spades &gt; hearts</shape>
+    </and>
+  </bid>
+  
+  <bid id="21">
+    <value>1n</value>
+    <desc>6-9 hcp, no suit to declare.</desc>
+    
+    <and>
+      <evaluation>
+        <hcp>
+          <min>6</min>
+          <max>9</max>
+        </hcp>
+      </evaluation>
+      
+      <shape type="formula">spades &lt; 4</shape>
+      <shape type="formula">hearts &lt; 4</shape>
+      <shape type="formula">clubs &lt; 6</shape>
+      <shape type="formula">diamonds &lt; 6</shape>
+      <shape type="formula">clubs + diamonds &lt; 10</shape>
+    </and>    
+  </bid>
+  
+  <bid id="22">
+    <value>2c</value>
+    <desc>8+ points, 4+ clubs (5+ if not game force).</desc>
+    
+    <and>
+      <evaluation>
+        <points>
+          <min>8</min>
+          <max>15</max>
+        </points>
+      </evaluation>
+      
+      <shape type="formula">spades &lt; 4</shape>
+      <shape type="formula">clubs &gt;= hearts + 2</shape>
+      
+      <or>
+        <shape type="formula">clubs &gt; 4</shape>
+        
+        <and>
+          <shape type="formula">clubs == 4</shape>
+          
+          <evaluation>
+            <points>
+              <min>12</min>
+            </points>
+          </evaluation>
+        </and>
+      </or>
+    </and>
+  </bid>
 </bid>
 
 <bid id="3">

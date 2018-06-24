@@ -3943,6 +3943,54 @@ Law of total tricks.
   <bid id="31">
     <value>2c</value>
     <desc>2/1 gf.</desc>
+    
+    <and>
+      <evaluation>
+        <points>
+          <min>12</min>
+        </points>
+      </evaluation>
+      
+      <shape type="formula">clubs &gt;= 4</shape>
+      <shape type="formula">clubs &gt; spades + 1</shape>
+      <shape type="formula">clubs &gt;= hearts</shape>
+      <shape type="formula">clubs &gt;= diamonds</shape>
+    </and>
+    
+    <bid id="310">
+      <value>2d</value>
+      <desc>4+ diamonds.</desc>
+      
+      <and>
+        <shape type="formula">diamonds &gt;= 4</shape>
+        <shape type="formula">clubs &lt; 4</shape>
+      </and>
+    </bid>
+    
+    <bid id="311">
+      <value>2h</value>
+      <desc>4+ hearts</desc>
+      
+      <and>
+        <shape type="formula">hearts &gt;= 4</shape>
+        
+        <not>
+          <shape type="shape">5440</shape>
+        </not>
+      </and>
+    </bid>
+    
+    <bid id="312">
+      <value>2s</value>
+      <desc>6+ spades.</desc>
+      
+      <and>
+        <shape type="formula">spades &gt;= 6</shape>
+        <shape type="formula">clubs &lt; 4</shape>
+        <shape type="formula">diamonds &lt; 4</shape>
+        <shape type="formula">hearts &lt; 4</shape>
+      </and>
+    </bid>
   </bid>
 
   <bid id="32">
