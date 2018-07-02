@@ -283,6 +283,51 @@ Weak twos.
       </or>
     </and>
   </bid>
+  
+  <bid id="11">
+    <value>1s</value>
+    <desc>6-15 points, 4+ spades.</desc>
+    
+    <and>
+      <evaluation>
+        <points>
+          <min>6</min>
+          <max>15</max>
+        </points>
+      </evaluation>
+      
+      <or>
+        <and>
+          <shape type="formula">spades &gt;= 5</shape>
+          <shape type="formula">spades &gt;= hearts</shape>
+        </and>
+        
+        <and>
+          <shape type="formula">spades == 4</shape>
+          <shape type="formula">hearts &lt; 4</shape>
+        </and>
+      </or>
+    </and>
+  </bid>
+  
+  <bid id="12">
+    <value>1n</value>
+    <desc>6-9 points.</desc>
+    
+    <and>
+      <evaluation>
+        <hcp>
+          <min>6</min>
+          <max>9</max>
+        </hcp>
+      </evaluation>
+      
+      <shape type="formula">hearts &lt; 4</shape>
+      <shape type="formula">spades &lt; 4</shape>
+      <shape type="formula">diamonds &lt; 4</shape>
+      <shape type="formula">clubs &lt;= 6</shape>
+    </and>
+  </bid>
 </bid>
 
 <bid id="2">
@@ -333,6 +378,23 @@ Weak twos.
       <shape type="formula">spades &gt;= 4</shape>
       <shape type="formula">spades &gt; hearts</shape>
     </and>
+    
+    <bid id="200">
+      <value>1n</value>
+      <desc>15-17 balanced, 3- spades.</desc>
+      
+      <and>
+        <evaluation>
+          <hcp>
+            <min>15</min>
+            <max>17</max>
+          </hcp>
+        </evaluation>
+        
+        <shape type="formula">spades &lt; 4</shape>
+        <shape type="general">balanced</shape>
+      </and>
+    </bid>
   </bid>
   
   <bid id="21">
@@ -384,6 +446,77 @@ Weak twos.
         </and>
       </or>
     </and>
+    
+    <bid id="220">
+      <value>2d</value>
+      <desc>13-15 points, 4+ diamonds. 5+ hearts.</desc>
+      
+      <and>
+        <evaluation>
+          <points>
+            <min>13</min>
+            <max>15</max>
+          </points>
+        </evaluation>
+        
+        <shape type="formula">diamonds &gt;= 4</shape>
+        <shape type="formula">hearts &gt;= 5</shape>
+        <shape type="formula">clubs &lt; 4</shape>
+      </and>
+    </bid>
+    
+    <bid id="221">
+      <value>2h</value>
+      <desc>13-15 points. (5)6+ hearts. (Could be 4 spades.)</desc>
+      
+      <and>
+        <evaluation>
+          <points>
+            <min>13</min>
+            <max>15</max>
+          </points>
+        </evaluation>
+        
+        <shape type="formula">diamonds &lt; 4</shape>
+        <shape type="formula">clubs &lt; 4</shape>
+        <shape type="formula">hearts &gt;= 5</shape>
+        
+        <shape type="general">unbalanced</shape>
+      </and>
+    </bid>
+    
+    <bid id="222">
+      <value>2s</value>
+      <desc>16-21 points. 4+ spades (5+ hearts).</desc>
+      
+      <and>
+        <evaluation>
+          <points>
+            <min>16</min>
+            <max>21</max>
+          </points>
+        </evaluation>
+        
+        <shape type="formula">spades &gt;= 4</shape>
+        <shape type="formula">hearts &gt;= 5</shape>
+      </and>
+    </bid>
+    
+    <bid id="223">
+      <value>2n</value>
+      <desc>15-17 balanced.</desc>
+      
+      <and>
+        <evaluation>
+          <hcp>
+            <min>15</min>
+            <max>17</max>
+          </hcp>
+        </evaluation>
+        
+        <shape type="general">balanced</shape>
+      </and>
+    </bid>
   </bid>
 </bid>
 
@@ -764,5 +897,38 @@ Weak twos.
 <bid id="c">
   <value>3h</value>
   <desc>Weak, 7+ hearts.</desc>
+  
+  <and>
+    <shape type="formula">hearts &gt;= 7</shape>
+  
+    <evaluation>
+      <points>
+        <max>12</max>
+      </points>
+      
+      <tricks>
+        <max>7.5</max>
+      </tricks>
+    </evaluation>
+  </and>
+</bid>
+
+<bid id="d">
+  <value>3s</value>
+  <desc>Weak, 7+ spades.</desc>
+  
+  <and>
+    <shape type="formula">spades &gt;= 7</shape>
+    
+    <evaluation>
+      <points>
+        <max>12</max>
+      </points>
+      
+      <tricks>
+        <max>7.5</max>
+      </tricks>
+    </evaluation>
+  </and>
 </bid>
 </openingBids>
